@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - NBD</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <!--DropDownList Select2-->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    @RenderSection("Styles", required: false)
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">NBD</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Projects" asp-action="Index">Projects</a>
+                        </li>
+
+                        <!--DropDownList-->
+                        <li class="nav-item dropdown">
+                            <!--Dropdown Head-->
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" area-expanded="false">
+                                Bid Menu
+                            </a>
+
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                                <li class="nav-item dropdown">
+                                    <a class="dropdown-item" asp-area="" asp-controller="Bids" asp-action="Index">Bid</a>
+                                </li>
+
+
+                                <li>
+                                    <hr class="dropdown-divider" />
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="dropdown-item" asp-area="" asp-controller="Lookup" asp-action="Index">Materials & Labours</a>
+                                </li>
+                                <!--Delete this links-->
+                                <li class="nav-item dropdown">
+                                    <a class="dropdown-item" asp-area="" asp-controller="BidMaterials" asp-action="Index">Bid Materials</a>
+                                </li>
+                                
+                                <li class="nav-item dropdown">
+                                    <a class="dropdown-item" asp-area="" asp-controller="BidLabours" asp-action="Index">Bid Labours</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!--End DropDownList-->
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="UserRole" asp-action="Index">Maintains Roles</a>
+                        </li>
+
+                    </ul>
+                    <!--We are no able to access-->
+                    <partial name="_LoginPartial" />
+                </div>
+
+
+            </div>
+        </nav>
+    </header>
+
+
+    <div class="container">
+
+        @RenderBody()
+
+    </div>
+
+
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top bg-light fixed-bottom mb-0">
+        <p class="col-md-4 mb-0 text-muted">©<span>2024</span> NBD Landscaping. <a href="#">Back to top </a></p>
+
+        <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+            <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+        </a>
+
+        <ul class="nav col-md-4 justify-content-end">
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Projects" asp-action="Index">Projects</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Materials" asp-action="Index">Materials</a>
+            </li>
+
+        </ul>
+
+    </footer>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/alerts.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+@section Scripts {
+
+    <script type="text/javascript">
+        var currentYear = document.querySelectorAll('[data-bs-toggle="year"]');
+        var year = new Date().getFullYear();
+
+        currentYear.innerText = year;
+    </script>
+
+}

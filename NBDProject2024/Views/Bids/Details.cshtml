@@ -1,0 +1,111 @@
+﻿@model NBDProject2024.Models.Bid
+
+<partial name="_ViewHeading" />
+
+<div>
+    <h4>@Model.Project.ProjectName</h4>
+    <hr />
+</div>
+<div>
+    <!-- Nav tabs -->
+    <nav>
+        <div class="nav nav-tabs" id="myTabs" role="tablist">
+            <!--Tab 1: Bid Main Details-->
+            <button class="nav-link active" id="Basic-Tab" data-bs-toggle="tab"
+                    data-bs-target="#BasicPanel" type="button" role="tab"
+                    aria-controls="BasicPanel" aria-selected="true">
+                Basic Details
+            </button>
+            <!--Tab 2: Bid Materials Details-->
+            <button class="nav-link" id="Materials-Tab" data-bs-toggle="tab"
+                    data-bs-target="#MaterialsPanel" type="button" role="tab"
+                    aria-controls="MaterialsPanel" aria-selected="false">
+                Materials
+            </button>
+            <!--Tab 3: Bid Labours Details-->
+            <button class="nav-link" id="Labours-Tab" data-bs-toggle="tab"
+                    data-bs-target="#LaboursPanel" type="button" role="tab"
+                    aria-controls="LaboursPanel" aria-selected="false">
+                Labours
+            </button>
+
+        </div>
+    </nav>
+
+    <!-- Tab panes -->
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" role="tabpanel" id="BasicPanel">
+            <br />
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ID)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ID)
+                </dd>
+
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.BidDate)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.BidDate)
+                </dd>
+                
+                
+
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Project.ProjectName)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Project.ProjectName)
+                </dd>
+                <!--Add Material, labours Totals-->
+            </dl>
+
+
+
+        </div>
+
+        <!--Tab Pane:-->
+        <div class="tab-pane fade ml-3" role="tabpanel" id="MaterialsPanel"
+             aria-labelledby="Materials-tab">
+            <br />
+        </div>
+
+        <div class="tab-pane fade ml-3" role="tabpanel" id="LaboursPanel"
+             aria-labelledby="Labours-tab">
+            <br />
+        </div>
+
+    </div>
+</div>
+
+<hr />
+<br />
+
+<!--Buttons-->
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.ID" class="btn btn-primary">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+    <!--Poner BackTo List-->
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        $('.nav-link').click(function () {
+            var activeTab = $(this).attr("id");
+            switch (activeTab) {
+
+                case 'Materials-Tab': $('#MaterialsPanel').load('/Bids/ListOfMaterialsDetails/@Model.ID');
+                    break;
+                case 'Labours-Tab': $('#LaboursPanel').load('/Bids/ListOfLaboursDetails/@Model.ID');
+                    break;
+
+                default: break;
+            };
+        })
+    </script>
+}
+
+

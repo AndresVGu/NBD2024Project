@@ -1,0 +1,147 @@
+﻿@model IEnumerable<NBDProject2024.Models.Project>
+
+
+<partial name="_ViewHeading" />
+<!--Filtering Form-->
+<form asp-action="Index" method="get">
+    <input type="hidden" name="sortDirection" value="@ViewData["sortDirection"]" />
+    <input type="hidden" name="sortField" value="@ViewData["sortField"]" />
+    <div class="form-horizontal">
+        <button class="btn @ViewData["Filtering"]" type="button" data-bs-toggle="collapse" id="filterToggle" data-bs-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter">
+            Filter/Search @ViewData["numberFilters"]
+        </button><br /><br />
+        <div class="collapse @ViewData["ShowFilter"]" id="collapseFilter">
+            <div class="card card-body bg-light">
+
+                <!--Filters-->
+                <div class="row">
+                    <!--Select by string-->
+                    <div class="form-group col-md-4">
+                        <label class="control-label">Search Project:</label>
+                        @Html.TextBox("SearchString", null, new { @class = "form-control", @placeholder = "E.g. ProjectName/Client/Company/City " })
+                    </div>
+                    <!--Select by client-->
+                    <div class="form-group col-md-4">
+                        <label class="control-label">Select by Clients:</label>
+
+                        @Html.DropDownList("ClientID", null, "All Clients", htmlAttributes: new { @class = "form-control", id = "dropdownClients" })
+                    </div>
+                    <!--Select by Dates-->
+                    <div class="form-group col-md-4">
+                        <label class="control-label">Start Date: </label>
+                        @Html.TextBox("StartDate", @ViewData["StartDate"], new { @class = "form-control", type = "date" })
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label class="control-label">End Date: </label>
+                        @Html.TextBox("EndDate", @ViewData["EndDate"], new { @class = "form-control", type = "date" })
+                    </div>
+
+                    <!--Button-->
+                    <div class="form-group col-md-4 align-self-end">
+                        <input type="submit" name="actionButton" value="Filter" class="btn btn-outline-success" data-bs-toggle="tooltip" title="Apply filters" />
+                        <a asp-action="Index" class="btn btn-outline-danger" data-bs-toggle="tooltip" title="Clear all filters">Clear</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Alert Messages-->
+    @if (TempData["AlertMessage"] != null)
+    {
+        <br />
+        <div class="alert alert-success">
+            <strong>Success !</strong> @TempData["AlertMessage"]
+        </div>
+
+    }
+
+    <!--Index Table-->
+    <table class="table table-hover">
+
+        <thead>
+            <tr class="table-primary">
+                <th>
+                    <input type="submit" name="actionButton" value="ProjectName" class="btn btn-link " data-bs-toggle="tooltip" title="Sort by Project Name" />
+
+                </th>
+                <th>
+                    <input type="submit" name="actionButton" value="StartTime" class="btn btn-link " data-bs-toggle="tooltip" title="Sort by begin date" />
+
+                </th>
+                <th>
+                    <input type="submit" name="actionButton" value="EndTime" class="btn btn-link " data-bs-toggle="tooltip" title="Sort by complete date" />
+                </th>
+                <th>
+                    <input type="submit" name="actionButton" value="ProjectSite" class="btn btn-link " data-bs-toggle="tooltip" title="Sort by project site" />
+                </th>
+                <th>
+                    <input type="submit" name="actionButton" value="Client" class="btn btn-link " data-bs-toggle="tooltip" title="Sort by Client" />
+                </th>
+
+                <th>
+                    <input type="submit" name="actionButton" value="City" class="btn btn-link " data-bs-toggle="tooltip" title="Sort by city" />
+                </th>
+                <th class="text-center">
+                    <a asp-action="Create" class="btn btn-outline-success" fdprocessedid="k03am" data-bs-toggle="tooltip" title="Create a new project">Add Project</a>
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProjectName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProjectSite)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Client.FormalName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.City.Summary)
+                    </td>
+                    <!--CRUD buttons-->
+                    <td class="text-center">
+                        <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-outline-primary" fdprocessedid="t6a41e" data-bs-toggle="tooltip" title="Edit Project">&#x270E;</a>
+                        <a asp-controller="ProjectBid" asp-action="Index" asp-route-ProjectID="@item.ID" class="btn btn-outline-primary" fdprocessedid="rpbgq" data-bs-toggle="tooltip" title="Project Details">&#x1F50E;</a>
+                        <a asp-action="Delete" asp-route-id="@item.ID" class="btn btn-outline-danger" fdprocessedid="a09td" data-bs-toggle="tooltip" title="Delete Project">&#x274C;</a>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <partial name="_PagingNavBar" />
+</form>
+
+@section Styles {
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+}
+@section Scripts {
+
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <!--Tooltips-->
+    <script type="text/javascript">
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
+
+    <script>
+        $('#dropdownClients').select2({ placeholder: "Eg. John Doe", width: "100%" });
+    </script>
+}

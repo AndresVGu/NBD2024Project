@@ -1,0 +1,76 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+
+<h2>Lookup Values</h2>
+
+<div>
+    <!-- Nav tabs -->
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="Material-Tab" data-bs-toggle="tab" data-bs-target="#MaterialPanel" type="button" role="tab" aria-controls="MaterialPanel" aria-selected="true">Material</button>
+            <button class="nav-link" id="Labour-Tab" data-bs-toggle="tab" data-bs-target="#LabourPanel" type="button" role="tab" aria-controls="LabourPanel" aria-selected="false">Labour</button>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="MaterialPanel" role="tabpanel" aria-labelledby="Material-Tab"><br /></div>
+        <div class="tab-pane fade" id="LabourPanel" role="tabpanel" aria-labelledby="Labour-Tab"><br /></div>
+    </div>
+</div>
+<hr />
+<br />
+
+@section Scripts {
+    <script type="text/javascript">
+        function refreshTab(activeTab) {
+            switch (activeTab) {
+                case 'Material-Tab': $('#MaterialPanel').load('/Lookup/Material');
+                    break;
+                case 'Labour-Tab': $('#LabourPanel').load('/Lookup/Labour');
+                    break;
+
+                default: break;
+            };
+            return;
+        };
+        $('.nav-link').click(function () {
+            var activeTab = $(this).attr("id");
+            refreshTab(activeTab);
+        });
+
+        $(".tab-content").on("click", ".linkClick", function (event) {
+            event.preventDefault();
+            var address = $(this).attr("href");
+            var lookup = address.split("/")[1];
+            var id = $("#MaterialID").val();
+            var caption = $("#" + lookup).html();
+            if (id == null) {
+                alert("Error: no value selected from the " + caption + " list!");
+            } else {
+                window.location.href = address + "/" + id;
+            }
+        });
+
+        $(".tab-content").on("click", ".linkClickl", function (event) {
+            event.preventDefault();
+            var address = $(this).attr("href");
+            var lookup = address.split("/")[1];
+            var id = $("#LabourID").val();
+            var caption = $("#" + lookup).html();
+            if (id == null) {
+                alert("Error: no value selected from the " + caption + " list!");
+            } else {
+                window.location.href = address + "/" + id;
+            }
+        });
+
+        $(function () {
+            setTimeout(function () {
+                $("#@ViewData["Tab"]").trigger('click');
+            }, 10);
+        });
+
+
+    </script>
+}

@@ -1,0 +1,21 @@
+﻿FIRST STEPS:
+Install-Package Microsoft.EntityFrameworkCore.Sqlite -v 7.0.15
+Install-Package Microsoft.EntityFrameworkCore.Tools -v 7.0.15
+
+-----------------------Add Migration---------------
+Add-Migration -Context NBDContext -OutputDir Data\NBDMigrations Initial
+Update-Database -Context NBDContext
+
+ExtraMigration.Steps(migrationBuilder);
+
+----Just In case ---------
+
+EntityFrameworkCore\Add-Migration -Context NBDContext -OutputDir Data\NBDMigrations Initial
+EntityFrameworkCore\Update-Database -Context NBDContext
+
+------- Update AppDbContext-------------
+Add-Migration -Context ApplicationDbContext -OutputDir Data\Migrations Initial
+Update-Database -Context ApplicationDbContext
+
+-----Mail Kit---------
+NuGet\Install-Package MailKit -Version 4.4.0

@@ -1,0 +1,149 @@
+﻿@model IEnumerable<NBDProject2024.Models.Client>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Clients</h1>
+
+<p>
+
+</p>
+
+<!--Filtering Form-->
+<form asp-action="Index" method="get">
+    <!--Memory last sort direction-->
+    <input type="hidden" name="sortDirection" value="@ViewData["sortDirection"]" />
+    <input type="hidden" name="sortField" value="@ViewData["sortField"]" />
+
+
+    <div class="form-horizontal">
+        <button class="btn @ViewData["Filtering"]" type="button" data-bs-toggle="collapse" id="filterToggle" data-bs-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter">
+            Filter/Search @ViewData["numberFilters"]
+        </button><br /><br />
+        <div class="collapse @ViewData["ShowFilter"]" id="collapseFilter">
+            <div class="card card-body bg-light">
+                <!--Filters-->
+                <div class="row">
+
+                    <!--Select by string-->
+                    <div class="form-group col-md-4">
+                        <label class="control-label">Search Client:</label>
+                        @Html.TextBox("SearchString", null, new { @class = "form-control", @placeholder = "E.g. LastName/Company/Phone/Address/City " })
+                    </div>
+
+
+                    <!--Select by Province -->
+                    <div class="form-group col-md-4">
+                        <label class="control-label">Select by City:</label>
+                        @Html.DropDownList("CityID", null, "Select Cities",
+                                 htmlAttributes: new { @class = "form-control" })
+                    </div>
+
+                    <!--Button-->
+                    <div class="form-group col-md-4 align-self-end">
+                        <input type="submit" name="actionButton" value="Filter" class="btn btn-outline-success" data-bs-toggle="tooltip" title="Apply filters" />
+                        <a asp-action="Index" class="btn btn-outline-danger"
+                           data-bs-toggle="tooltip" title="Clear all filters">Clear</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["AlertMessageDelete"] != null)
+    {
+        <br />
+        <div class="alert alert-success">
+            <strong>Success !</strong> @TempData["AlertMessageDelete"]
+        </div>
+
+    }
+
+    <table class="table table-hover">
+        <thead>
+            <tr class="table-primary">
+                <th>
+                    <input type="submit" name="actionButton" value="Client" class="btn btn-link " data-bs-toggle="tooltip" title="Sort by Client Name" />
+
+                </th>
+
+                <th>
+                    <input type="submit" name="actionButton" value="Company" class="btn btn-link" data-bs-toggle="tooltip" title="Sort by Company Name" />
+
+                </th>
+
+                <th>
+                    <input type="submit" name="actionButton" value="City" class="btn btn-link" data-bs-toggle="tooltip" title="Sort by City" />
+
+                </th>
+                <th>
+                    <input type="submit" name="actionButton" value="Phone" class="btn btn-link" data-bs-toggle="tooltip" title="Sort by Phone Number" />
+
+                </th>
+
+                <th class="text-center">
+                    <a asp-action="Create" class="btn btn-outline-success" fdprocessedid="k03am" data-bs-toggle="tooltip" title="Add a new client">Add Client</a>
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FormalName)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.City.Summary)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PhoneFormatted)
+                    </td>
+                    <td class="text-center">
+                        <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-sm btn-outline-primary" fdprocessedid="t6a41e"
+                           data-bs-toggle="tooltip" title="Edit Client">&#x270E;</a>
+                        <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-sm btn-outline-primary" fdprocessedid="rpbgq"
+                           data-bs-toggle="tooltip" title="Client Details"> &#x1F50E;</a>
+                        <a asp-action="Delete" asp-route-id="@item.ID" class="btn btn-sm btn-outline-danger" fdprocessedid="a09td"
+                           data-bs-toggle="tooltip" title="Delete Client"> &#x274C;</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <partial name="_PagingNavBar" />
+</form>
+
+@section Styles {
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+}
+
+@section Scripts {
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+    <script type="text/javascript">
+        $('#SearchString').autocomplete({
+            minLength: 1,
+            source: '@Url.Action("GetClients", "Clients")'
+        });
+    </script>
+
+
+    <!--Tooltips-->
+    <script type="text/javascript">
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
+}

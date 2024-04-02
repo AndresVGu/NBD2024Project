@@ -1,0 +1,51 @@
+﻿@model IEnumerable<NBDProject2024.Models.BidMaterial>
+<br />
+<div class="panel panel-primary">
+    <div class="panel-body">
+        
+    
+
+      <div class="col-sm-8">
+                <div class="form-group" id="ListMaterial">
+                    
+                    <div class="col-md-offset-1" id="MaterialList">
+                        <table class="table table-hover">
+                    @{
+                            <tr>
+                                <th>Material Quantity</th>
+                                <th>Material Name</th>
+                                <th>Unit Price</th>
+                                <th>Total</th>
+                            </tr>
+
+                            var finalTotal = 0.0;
+                            foreach(var item in Model.OrderBy(m => m.Materials.Name))
+                            {
+                                var total = item.MaterialQuantity * item.Materials.Price;
+                                finalTotal += total;
+
+                                @:<tr><td>
+                                    @item.MaterialQuantity
+                                @:</td><td>
+                                    @item.Materials.Name
+                                @:</td><td>
+                                    @item.Materials.UnitPrice
+                                @:</td><td>
+                                    @total.ToString("C2")
+                                @:</td></tr>
+                        }
+
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <label>Total Materials: </label>
+            <label>
+                @finalTotal.ToString("C2")
+                </label>
+            </div>
+    </div>
+</div>

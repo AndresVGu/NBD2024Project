@@ -1,0 +1,136 @@
+﻿ @model NBDProject2024.Models.Client
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+
+<div>
+    <h4>@Model.FullName</h4>
+    <hr />
+</div>
+
+@if (TempData["AlertMessage"] != null)
+{
+
+    <div class="alert alert-success">
+        <strong>Success !</strong> @TempData["AlertMessage"]
+
+    </div>
+
+}
+
+<div>
+    <!--Nav Tabs-->
+    <nav>
+        <div class="nav nav-tabs" id="myTabs" role="tablist">
+            <!--Tab 1: Client Main Details-->
+            <button class="nav-link active" id="Basic-Tab" data-bs-toggle="tab"
+                    data-bs-target="#BasicPanel" type="button" role="tab" aria-controls="BasicPanel"
+                    aria-selected="true">
+                Main Details
+            </button>
+            <!--Tab 1: Project List-->
+            <button class="nav-link" id="Projects-Tab" data-bs-toggle="tab"
+                    data-bs-target="#ProjectsPanel" type="button" role="tab"
+                    aria-controls="ProjectsPanel" aria-selected="false">
+                Projects
+            </button>
+
+        </div>
+    </nav>
+
+    <!--Tab Panes-->
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" role="tabpanel" id="BasicPanel">
+            <br />
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.FirstName)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.MiddleName)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.MiddleName)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.LastName)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.LastName)
+                </dd>
+
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Phone)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.PhoneFormatted)
+                </dd>
+
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.CompanyName)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.CompanyName)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.AddressCountry)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.AddressCountry)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.AddressStreet)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.AddressStreet)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.City)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.City.Summary)
+                </dd>
+
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.PostalCode)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.PostalCode)
+                </dd>
+
+            </dl>
+            <a asp-action="Edit" asp-route-id="@Model?.ID" class="btn btn-primary" fdprocessedid="t6a41e">Edit</a>
+
+        </div>
+        <div class="tab-pane fade ml-3" role="tabpanel" id="ProjectsPanel"
+             aria-labelledby="Projects-tab">
+            <br />
+        </div>
+    </div>
+</div>
+<hr />
+<br />
+
+<div>
+    <a asp-action="Index" type="button" class="" fdprocessedid="rpbgq">Back to List</a>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $('.nav-link').click(function () {
+            var activeTab = $(this).attr("id");
+            switch (activeTab) {
+                case 'Projects-Tab': $('#ProjectsPanel').load('/Clients/ListOfProjectsDetails/@Model.ID');
+                    break;
+                default: break;
+            };
+        })
+
+    </script>
+}

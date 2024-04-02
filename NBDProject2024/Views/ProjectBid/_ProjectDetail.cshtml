@@ -1,0 +1,97 @@
+﻿@model NBDProject2024.Models.Project
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+
+<div>
+    <h2>@Model.ProjectName</h2>
+    <hr />
+</div>
+@if (TempData["AlertMessage"] != null)
+{
+    <br />
+    <div class="alert alert-success">
+        <strong>Success !</strong> @TempData["AlertMessage"]
+    </div>
+
+}
+
+<div class="row">
+    <div class="col-6">
+        <h5>Project Information:</h5>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.ProjectName)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.ProjectName)
+            </dd>
+
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.StartTime)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.StartTime)
+            </dd>
+
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.EndTime)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.EndTime)
+            </dd>
+
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.ProjectSite)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.ProjectSite)
+            </dd>
+
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.SetupNotes)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.SetupNotes)
+            </dd>
+        </dl>
+    </div>
+    <div class="col-6">
+        <h5>Client Information:</h5>
+        <hr />
+        <dl class="row">
+
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Client)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Client.FullName)
+            </dd>
+
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Client.Phone)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Client.PhoneFormatted)
+            </dd>
+
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.City.Province)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.City.ProvinceChar)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.City)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.City.CityChar)
+            </dd>
+
+        </dl>
+    </div>
+
+</div>

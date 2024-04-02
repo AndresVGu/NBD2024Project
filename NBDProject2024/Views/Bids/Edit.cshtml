@@ -1,0 +1,218 @@
+﻿@model NBDProject2024.Models.Bid
+
+<partial name="_ViewHeading" />
+<hr />
+<partial name="_addLabourModal" />
+<partial name="_addMaterialModal" />
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ID" />
+    <input type="hidden" asp-for="RowVersion" />
+            <div class="row">
+                <div class="col-md-4">
+
+                    <div class="form-group">
+                        <label asp-for="BidDate" class="control-label"></label>
+                        <input asp-for="BidDate" class="form-control" />
+                        <span asp-validation-for="BidDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ProjectID" class="control-label"></label>
+                <select asp-for="ProjectID" class="form-control" asp-items="ViewBag.ProjectID" id="dropdownProjects"></select>
+                        <span asp-validation-for="ProjectID" class="text-danger"></span>
+                    </div>
+                </div>
+
+                 <hr />
+                
+                 <div class="row">
+
+                     <!--Materials-->
+                     <div class="form-group col-md-6">
+
+                        <h4>Materials</h4>
+
+                                    <div class="">
+                                <div class="form-group" id="ListMaterial">
+                    
+
+                                    <button class="btn btn-sm btn-outline-success modal-link" id="#theMaterialModal"
+                                        tag="" name="CreateForm"            
+                                    data-bs-toggle="modal" data-bs-target="#theMaterialModal"
+                                                type="button" title="Add Material">
+                                            <strong>Add Material</strong>
+                                        </button>
+                                        <br />
+                        
+                                    <div class="col-md-offset-1" id="MaterialList">
+                                        <table>
+                                    @{
+                                        foreach(var item in Model.BidMaterials.OrderBy(m => m.Materials.Name))
+                                        {
+                                          @:<tr><td>
+                                             @item.MaterialQuantity
+                                          @:</td><td>
+                                             @item.Materials.Name
+                                          @:</td><td>
+                                             @:&nbsp; &nbsp;&nbsp;
+                                             <button class="btn btn-sm btn-outline-primary modal-link" tag="@item.ID" name="EditForm"
+                                                     data-bs-toggle="modal" data-bs-target="#theMaterialModal" title="Edit @item.Materials.Name"> &#x270E;</button>
+                                
+                                             <button class="btn btn-sm btn-outline-danger modal-link" tag="@item.ID" name="DeleteForm"
+                                                     data-bs-target="#theMaterialModal" title="Delete @item.Materials.Name">&#x274C;</button>
+                                           @:</td></tr>
+                                        }
+                                    }
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                     </div>
+
+                     <!-- Labours -->
+
+
+                     <div class="form-group col-md-6 ">
+                         <h4>Labours</h4>
+                         <div class="">
+                                <div class="form-group" id="ListMaterial">
+                    
+
+                                   
+                                    
+                      <button class="btn btn-sm btn-outline-success" id="nowAddLabour"
+                            data-bs-toggle="modal" data-bs-target="#addLabourModal"
+                            type="button">
+                                <strong>Add Labour</strong>
+                       </button>
+
+                                        <br />
+                        
+                                    <div class="col-md-offset-1" id="LabourList">
+                                        <table>
+                                @{
+
+                                    foreach(var item in Model.BidLabours.OrderBy(m => m.Labours.Name))
+                                    {
+                                        var hours = $"{@item.HoursQuantity.ToString("f2")} Hrs, ";
+                                        @:<tr><td>
+                                          @hours
+                                        @:</td><td>
+                                          @item.Labours.Name
+                                        @:</td><td>
+                                        @:&nbsp; &nbsp;&nbsp;
+                                          <button class="btn btn-sm btn-outline-primary modal-link" tag="@item.ID" name="EditForm"
+                                                  data-bs-toggle="tooltip" title="Edit Labour"> &#x270E;</button>
+                                
+                                          <button class="btn btn-sm btn-outline-danger modal-link" tag="@item.ID" name="EditForm"
+                                                  data-bs-toggle="tooltip" title="Delete Labour">&#x274C;</button>
+                                        @:</td></tr>
+                                        }
+                                    }
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                     </div>
+                 </div>
+
+           <hr />
+           
+
+           <!--Submit Button:-->
+            <div class="form-group">
+                <input type="submit" value="Update" class="btn btn-primary" />
+            </div>
+        </form>
+
+
+<div>
+    <partial name="_BackToList" />
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        $('#dropdownProjects').select2({ placeholder: "Select", width: "100%" });
+         $('#dropdownMaterials').select2({ placeholder: "Select Material", width: "100%" });
+    </script>
+    <script src="~/js/multiselect.js"></script>
+    <script src="~/js/refreshDDL.js"></script>
+   
+    <script type="text/javascript">
+        //New for modal
+            
+        function refreshModal(actionForm, materialID) {
+            switch (actionForm) {
+                case 'CreateForm': $('#formMaterialBody')
+                    .load('/BidMaterials/CreateMaterial/?MaterialID='
+                        + @Model.ID + '&BidID='+ @Model.ID);
+                    break;
+                case 'EditForm': $('#formMaterialBody')
+                    .load('/BidMaterials/EditMaterial/' + materialID);
+                    break;
+                case 'DeleteForm': $('#formMaterialBody')
+                    .load('/BidMaterials/DeleteMaterial/' + materialID)
+                    break;
+                default: break;
+            };
+            return;
+        };
+
+        $(document).on("click", ".modal-link", function () {
+            var actionForm = $(this).attr("name");
+            var materialID = $(this).attr("tag");
+            refreshModal(actionForm, materialID);
+        });    
+    
+        $(document).on("click", "#submitMaterialForm", function (event) {
+            event.preventDefault();
+
+            var form = $('#theMaterialForm');
+            if (form.valid()) {
+                $.ajax({
+                    type: "POST",
+                    url: form.attr('action'),
+                    data: form.serialize(),
+                    success: function () {
+                        $('#theMaterialModal').modal('hide');
+                    }
+                }),
+                    error: function(xhr) { // xhr is the XMLHttpRequest
+                        var errorMessages = [];
+                        switch (xhr.status) {
+                            case 401:
+                                errorMessages.push("You must logged in first.");
+                                break;
+                            case 403:
+                                errorMessages.push("You are not authorized for this action.");
+                                break;
+                            default:
+                                errorMessages = xhr.responseText.split("|").slice(0, -1);
+                        }
+                        if (!errorMessages.some((str) => str !== "")) {
+                            errorMessages.push("Error: Unable to complete operation.");
+                        }
+
+                        var ul = document.getElementById("ErrorList");
+                        for (var i = 0; i < errorMessages.length; i++) {
+                            var errorMessage = errorMessages[i];
+                            var li = document.createElement("li");
+                            li.innerHTML = errorMessage;
+                            ul.appendChild(li);
+                        }
+                    }
+            }
+            return false;
+        });
+
+        $('#theMaterialModal').on('hide.bs.modal', function () { 
+            $('#MaterialList').load('/Bids/MaterialBidList/@Model.ID');
+        });
+    
+    </script>
+
+    
+
+}
