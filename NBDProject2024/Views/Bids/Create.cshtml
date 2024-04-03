@@ -2,9 +2,6 @@
 
 <partial name="_ViewHeading" />
 <hr />
-<partial name="_addLabourModal" />
-<partial name="_addMaterialModal" />
-<partial name="_ExampleModal" />
 
 <form asp-action="Create" method="post" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -13,8 +10,8 @@
 
             <div class="form-group">
                 <label asp-for="BidDate" class="control-label"></label>
-                <input asp-for="BidDate" class="form-control" />
-                <span asp-validation-for="BidDate" class="text-danger"></span>
+                <input asp-for="BidDate" class="form-control" id="sDate" />
+                <span asp-validation-for="BidDate" class="text-danger" ></span>
             </div>
             <div class="form-group">
                 <label asp-for="ProjectID" class="control-label"></label>
@@ -27,101 +24,67 @@
 
     </div>
     <hr />
-    <!--Button Trigger Modal-->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-            data-bs-target="MaterialModal">
-        Add Materials
-    </button>
-    <!--Content-->
-    <input type="hidden" id="EmpID" />
 
-    <table class="table" id="materialTable">
-        @{
-            /*
-            foreach(var item in Model.BidMaterials.OrderBy(m => m.Materials.Name))
-            {
-            @:<tr><td>
-            @item.MaterialQuantity
-            @:</td><td>
-            @item.Materials.Name
-            @:</td><td>
-            @:&nbsp; &nbsp;&nbsp;
-            @:<a class="btn btn-primary" onclick="EditForm(@item.ID)" id="EditForm">Edit</a> |
-            @:<a id=showModal" class="btn btn-danger" onclick="Confirm(@item.ID)">Delete</a> |
-            @:</td></tr>
-            }
-            * */
+    <div class="row">
 
+                     <!--Materials-->
+                     <div class="form-group col-md-6">
 
-        }
+                        <h4>Materials</h4>
 
+                                    <div class="">
+                                <div class="form-group" id="ListMaterial">
+                    
 
-    </table>
+                                    <button class="btn btn-sm btn-outline-success modal-link" id="#theMaterialModal"
+                                        tag="" name="CreateForm"            
+                                    data-bs-toggle="modal" data-bs-target="#theMaterialModal"
+                                                type="button" title="Add Material">
+                                            <strong>Add Material</strong>
+                                        </button>
+                                        <br />
+                        
+                                    <div class="col-md-offset-1" id="MaterialList">
+                                        <table>
+                                   
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                     </div>
 
-    <!--EndContent-->
+                     <!-- Labours -->
 
 
+                     <div class="form-group col-md-6 ">
+                         <h4>Labours</h4>
+                         <div class="">
+                                <div class="form-group" id="ListMaterial">
+                    
 
-    <hr />
-    <!--Select Materials-->
-    <div class="col-md-8">
-        <div class="row">
-            <div class="form-group col-md-6">
-                <label class="control-label">Materials</label>
-                <button type="button" id="btnRight" class="btn btn-danger btn-sm">
-                    <strong>-</strong>
-                </button>
-                @Html.ListBox("selectedOptions", (MultiSelectList)ViewBag.selOpts, new { @size = 10, @class = "form-control", @style = "margin-top: 0.5rem;" })
-            </div>
+                                   
+                                    
+                      <button class="btn btn-sm btn-outline-success" id="nowAddLabour"
+                            data-bs-toggle="modal" data-bs-target="#addLabourModal"
+                            type="button">
+                                <strong>Add Labour</strong>
+                       </button>
 
-            <div class="form-group col-md-6">
-                <label class="control-label"> Choose Materials</label>
+                                        <br />
+                        
+                                    <div class="col-md-offset-1" id="LabourList">
+                                        <table>
+                              
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
 
-                <button type="button" id="btnLeft" class="btn btn-success btn-sm">
-                    <strong>+</strong>
-                </button>&nbsp;&nbsp;
+                     </div>
+                 </div>
 
-                <button class="btn btn-sm btn-outline-secondary" id="nowAddMaterial"
-                        data-bs-toggle="modal" data-bs-target="#addMaterialModal"
-                        type="button">
-                    <strong>Add Material</strong>
-                </button>
-
-
-                @Html.ListBox("availOptions", (MultiSelectList)ViewBag.availOpts, new { @size = 10, @class = "form-control", @style = "margin-top: 0.5rem;" })
-
-            </div>
-        </div>
-    </div>
-
-    <hr />
-
-
-    <h4>Labours</h4>
-    <div class="col-md-8">
-        <div class="row">
-            <div class="form-group col-md-6">
-                <label class="control-label">Labours</label>
-                <button type="button" id="btnRightl" class="btn btn-danger btn-sm">
-                    <strong>-</strong>
-                </button>
-                @Html.ListBox("selectedOptionsl", (MultiSelectList)ViewBag
-                         .selOpts, new { @size = 10, @class = "form-control", @style = "margin-top: 0.5rem;" })
-            </div>
-
-            <div class="form-group col-md-6">
-                <label class="control-label"> Choose Labours</label> <button type="button" id="btnLeftl" class="btn btn-success btn-sm">
-                    <strong>+</strong>
-                </button>&nbsp;&nbsp;
-                <button class="btn btn-sm btn-outline-secondary" id="nowAddLabour"
-                        data-bs-toggle="modal" data-bs-target="#addLabourModal"
-                        type="button">
-                    <strong>Add Labour</strong>
-                </button>
-                @Html.ListBox("availOptionsl", (MultiSelectList)ViewBag.availOpts, new { @size = 10, @class = "form-control", @style = "margin-top: 0.5rem;" })
-            </div>
-        </div>
-    </div>
+           <hr />
+   
 
 
     <div class="form-group">
@@ -217,6 +180,14 @@
         }
     </script>
 
+    <!--Set Today's date-->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var today = new Date();
+            document.getElementById('sDate').valueAsDate = today;
+        })
+    </script>
+
     <script type="text/javascript">
         $('#submitLabourCreate').click(function (event) {
             event.preventDefault();
@@ -288,5 +259,7 @@
     <script>
         $('#dropdownProjects').select2({ placeholder: "Select", width: "100%" });
     </script>
+
+    
 
 }

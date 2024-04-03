@@ -4,3 +4,28 @@
     background-size: cover;
 
 }
+
+
+.collapsible-header {
+    cursor: pointer;
+    padding: 10px;
+    background-color: #F0F0F0;
+    display: flex;
+    justify-content: space-between;
+}
+    .collapsible-header p {
+        margin: 0;
+    }
+    .collapsible-header:hover {
+        background-color: #80EAFF;
+        background-color: #E0E0E0;
+    }
+
+.collapsible-content {
+    padding: 0 10px;
+    display: none;
+}
+.info-text {
+    display: inline-block;
+    margin-left: 5px;
+}
