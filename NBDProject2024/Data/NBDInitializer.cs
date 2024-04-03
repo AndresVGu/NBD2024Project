@@ -133,6 +133,7 @@ namespace NBD2024.Data
                             LastName = "Benson",
                             CompanyName = "London Sq. Mall",
                             Phone = "4088945603",
+                            Email = "BensonAmy1@outlook.com",
                             AddressCountry = "Canada",
                             AddressStreet = "Scott Valley",
                             PostalCode = "LC34N7"
@@ -144,6 +145,7 @@ namespace NBD2024.Data
                              LastName = "Kellet",
                              CompanyName = "Quantum Innovations Co.",
                              Phone = GeneratePhoneNumber(random),
+                             Email = "BobJKellet@outlook.com",
                              AddressCountry = "Canada",
                              AddressStreet = "21 example Rd.",
                              PostalCode = "LC34N7"
@@ -156,7 +158,7 @@ namespace NBD2024.Data
                              CompanyName = "Fusion Enterprices International",
                              Phone = GeneratePhoneNumber(random),
                              AddressCountry = "Canada",
-
+                             Email = "JimCruz1@outlook.com",
                              AddressStreet = "21 example Rd.",
 
                              PostalCode = "LC34N7"
@@ -169,7 +171,7 @@ namespace NBD2024.Data
                              CompanyName = "Stellar Solutions Co.",
                              Phone = GeneratePhoneNumber(random),
                              AddressCountry = "Canada",
-
+                             Email = "SmithJoe1@outlook.com",
                              AddressStreet = "21 example Rd.",
                              PostalCode = "LC34N7"
                          },
@@ -181,7 +183,7 @@ namespace NBD2024.Data
                              CompanyName = "Nexus Dynamics Inc.",
                              Phone = GeneratePhoneNumber(random),
                              AddressCountry = "Canada",
-
+                             Email = "JackJHjones@outlook.com",
                              AddressStreet = GenerateAddress(random),
                              PostalCode = GeneratePostalCode(random)
                          }
@@ -289,6 +291,7 @@ namespace NBD2024.Data
                                 LastName = l,
                                 CompanyName = companyNames[random.Next(0, companyNameCount)],
                                 Phone = random.Next(2, 10).ToString() + random.Next(213214131, 989898989).ToString(),
+                                Email = $"{l}"+$"{f}"+ $"{random.Next(1,99)}" + "@outlook.com",
                                 AddressCountry = "Canada",
                                 AddressStreet = GenerateAddress(random),
                                 PostalCode = GeneratePostalCode(random)
@@ -603,6 +606,45 @@ namespace NBD2024.Data
                         context.SaveChanges();
                     }
                 }
+
+             /*   if(!context.Employees.Any())
+                {
+                    context.Employees.AddRange(
+                         new Employee
+                         {
+                             FirstName = "John",
+                             LastName = "Doe",
+                             Email = "admin@outlook.com"
+                             
+                         },
+                          new Employee
+                          {
+                              FirstName = "Gregory",
+                              LastName = "House",
+                              Email = "designer@outlook.com"
+                          },
+                           new Employee
+                           {
+                               FirstName = "Jane",
+                               LastName = "Doe",
+                               Email = "super@outlook.com"
+                           },
+                           new Employee
+                           {
+                               FirstName = "Fred",
+                               LastName = "Flintstone",
+                               Email = "sales@outlook.com"
+                           },
+                      new Employee
+                      {
+                          FirstName = "Betty",
+                          LastName = "Rubble",
+                          Email = "user@outlook.com"
+                      });
+                    context.SaveChanges(); 
+                }*/
+
+
             }
             catch (Exception ex)
             {

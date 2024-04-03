@@ -42,6 +42,8 @@ namespace NBDProject2024.Data
         public DbSet<BidMaterial> BidMaterials { get; set; }
         public DbSet<Material> Materials { get; set; }
 
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<Project> Projects { get; set; }
 
         public DbSet<Province> Provinces { get; set; }
@@ -52,7 +54,14 @@ namespace NBDProject2024.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           
+            modelBuilder.Entity<Employee>()
+                 .HasIndex(e => new { e.Email })
+                 .IsUnique();
+
+            modelBuilder.Entity<Client>()
+                .HasIndex(c  => new { c.Email })
+                .IsUnique();
+
 
             //Add a unique index to the City/Province
             modelBuilder.Entity<City>()

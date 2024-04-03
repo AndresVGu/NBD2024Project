@@ -12,6 +12,7 @@ using NBDProject2024.Models;
 
 namespace NBDProject2024.Controllers
 {
+    [Authorize(Roles = "Admin,Supervisor")]
     public class MaterialsController : LookupsController
     {
         private readonly NBDContext _context;
@@ -22,8 +23,8 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Inventories
-        //[Authorize(Roles = "Admin,Supervisor")]
-        [AllowAnonymous]
+        
+       
         public IActionResult Index()
         {
 
@@ -31,8 +32,8 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Inventories/Details/5
-        //[Authorize(Roles = "Admin,Supervisor")]
-        [AllowAnonymous]
+      
+      
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Materials == null)
@@ -51,8 +52,8 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Inventories/Create
-        // [Authorize(Roles = "Admin,Supervisor")]
-        [AllowAnonymous]
+       
+     
         public IActionResult Create()
         {
             return View();
@@ -91,8 +92,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Inventories/Edit/5
-        //[Authorize(Roles = "Admin,Supervisor")]
-        [AllowAnonymous]
+        
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Materials == null)
@@ -113,8 +113,7 @@ namespace NBDProject2024.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Admin,Supervisor")]
-        [AllowAnonymous]
+      
         public async Task<IActionResult> Edit(int id)
         {
             var inventoryToUpdate = await _context.Materials
@@ -161,8 +160,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Inventories/Delete/5
-        //[Authorize(Roles = "Admin,Supervisor")]
-        [AllowAnonymous]
+     
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Materials == null)
@@ -183,8 +181,7 @@ namespace NBDProject2024.Controllers
         // POST: Inventories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Admin,Supervisor")]
-        [AllowAnonymous]
+       
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Materials == null)

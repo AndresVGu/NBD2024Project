@@ -24,53 +24,60 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                        
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Projects" asp-action="Index">Projects</a>
-                        </li>
-
-                        <!--DropDownList-->
-                        <li class="nav-item dropdown">
-                            <!--Dropdown Head-->
-                            <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" area-expanded="false">
-                                Bid Menu
-                            </a>
-
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-
-                                <li class="nav-item dropdown">
-                                    <a class="dropdown-item" asp-area="" asp-controller="Bids" asp-action="Index">Bid</a>
-                                </li>
-
-
-                                <li>
-                                    <hr class="dropdown-divider" />
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="dropdown-item" asp-area="" asp-controller="Lookup" asp-action="Index">Materials & Labours</a>
-                                </li>
-                                <!--Delete this links-->
-                                <li class="nav-item dropdown">
-                                    <a class="dropdown-item" asp-area="" asp-controller="BidMaterials" asp-action="Index">Bid Materials</a>
-                                </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Projects" asp-action="Index">Projects</a>
+                            </li>
+                            @if (User.IsInRole("Admin") || User.IsInRole("Supervisor") || User.IsInRole("Designer"))
+                            {
                                 
+                                <!--DropDownList-->
                                 <li class="nav-item dropdown">
-                                    <a class="dropdown-item" asp-area="" asp-controller="BidLabours" asp-action="Index">Bid Labours</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <!--End DropDownList-->
+                                    <!--Dropdown Head-->
+                                    <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" area-expanded="false">
+                                        Bid Menu
+                                    </a>
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="UserRole" asp-action="Index">Maintains Roles</a>
-                        </li>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                                        <li class="nav-item dropdown">
+                                            <a class="dropdown-item" asp-area="" asp-controller="Bids" asp-action="Index">Bid</a>
+                                        </li>
+
+                                        @if (User.IsInRole("Admin") || User.IsInRole("Supervisor"))
+                                        {
+                                            
+                                        <li>
+                                            <hr class="dropdown-divider" />
+                                        </li>
+                                        <li class="nav-item dropdown">
+                                            <a class="dropdown-item" asp-area="" asp-controller="Lookup" asp-action="Index">Materials & Labours</a>
+                                        </li>
+                                        }
+
+                                
+                                    </ul>
+                                </li>
+                            }
+                            <!--End DropDownList-->
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="Index">Maintains Employees</a>
+                                </li>
+
+                            }
+                        }
 
                     </ul>
-                    <!--We are no able to access-->
+                  
                     <partial name="_LoginPartial" />
                 </div>
 

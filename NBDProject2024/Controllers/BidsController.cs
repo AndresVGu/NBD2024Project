@@ -26,8 +26,8 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Bids
-        //[Authorize(Roles = "Admin,Supervisor,Designer")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin,Supervisor,Designer")]
+        
         public async Task<IActionResult> Index(int? page, int? pageSizeID, string SearchString, string actionButton, int? MaterialID,
             int? LabourID, string sortDirection = "desc", string sortField = "Bid Date")
         {
@@ -157,8 +157,8 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Bids/Details/5
-        //[Authorize(Roles = "Admin,Supervisor")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin,Supervisor")]
+        
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Bids == null)
@@ -180,8 +180,8 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Bids/Create
-        //[Authorize(Roles = "Admin,Supervisor")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin,Supervisor")]
+       
         public IActionResult Create()
         {
             Bid bid = new Bid();
@@ -205,8 +205,8 @@ namespace NBDProject2024.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Admin,Supervisor")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin,Supervisor")]
+       
         public async Task<IActionResult> Create([Bind("ID,BidDate,ProjectID")] Bid bid,
             string[] selectedOptions)
         {
@@ -237,8 +237,8 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Bids/Edit/5
-        //[Authorize(Roles = "Admin,Supervisor")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin,Supervisor")]
+        
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Bids == null)
@@ -270,8 +270,8 @@ namespace NBDProject2024.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Admin,Supervisor")]
-        [AllowAnonymous]
+         [Authorize(Roles = "Admin,Supervisor")]
+       
         public async Task<IActionResult> Edit(int id, string[] selectedOptions, Byte[] RowVersion)
         {
             var bidToUpdate = await _context.Bids
@@ -328,8 +328,8 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Bids/Delete/5
-        // [Authorize(Roles = "Admin,Supervisor")]
-        [AllowAnonymous]
+         [Authorize(Roles = "Admin,Supervisor")]
+      
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Bids == null)
@@ -354,8 +354,8 @@ namespace NBDProject2024.Controllers
         // POST: Bids/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Admin,Supervisor")]
-        [AllowAnonymous]
+       [Authorize(Roles = "Admin,Supervisor")]
+       
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Bids == null)

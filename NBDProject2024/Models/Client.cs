@@ -70,6 +70,11 @@ namespace NBDProject2024.Models
         [StringLength(10)]
         public string Phone { get; set; }
 
+        [Required(ErrorMessage = "Email Address is required.")]
+        [StringLength(255)]
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
+
         //Client Address Info:
         //Country
         [Display(Name = "Country")]

@@ -53,6 +53,10 @@
               "target": "Package",
               "version": "[4.4.0, )"
             },
+            "MappingGenerator": {
+              "target": "Package",
+              "version": "[1.22.3, )"
+            },
             "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": {
               "target": "Package",
               "version": "[7.0.13, )"

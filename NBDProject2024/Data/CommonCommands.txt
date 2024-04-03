@@ -19,3 +19,6 @@ Update-Database -Context ApplicationDbContext
 
 -----Mail Kit---------
 NuGet\Install-Package MailKit -Version 4.4.0
+
+--Maping generator
+Install-Package MappingGenerator -v 1.22.3

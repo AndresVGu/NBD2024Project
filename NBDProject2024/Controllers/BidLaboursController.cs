@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using NBDProject2024.Models;
 
 namespace NBDProject2024.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class BidLaboursController : Controller
     {
         private readonly NBDContext _context;
