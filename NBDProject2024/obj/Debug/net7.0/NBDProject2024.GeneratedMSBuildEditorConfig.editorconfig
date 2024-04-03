@@ -9,267 +9,265 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = NBDProject2024
 build_property.RootNamespace = NBDProject2024
-build_property.ProjectDir = C:\Term 4\Demos\NBDProject2024\NBDProject2024\
-build_property.EnableComHosting = 
-build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.ProjectDir = C:\Users\lucci\Source\Repos\NBD2024Project\NBDProject2024\
 build_property.RazorLangVersion = 7.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Term 4\Demos\NBDProject2024\NBDProject2024
+build_property.MSBuildProjectDirectory = C:\Users\lucci\Source\Repos\NBD2024Project\NBDProject2024
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Areas/Identity/Pages/_ViewStart.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Areas/Identity/Pages/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/BidLabours/Create.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/BidLabours/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkTGFib3Vyc1xDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/BidLabours/Delete.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/BidLabours/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkTGFib3Vyc1xEZWxldGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/BidLabours/Details.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/BidLabours/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkTGFib3Vyc1xEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/BidLabours/Edit.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/BidLabours/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkTGFib3Vyc1xFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/BidLabours/Index.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/BidLabours/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkTGFib3Vyc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/BidMaterials/Create.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/BidMaterials/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkTWF0ZXJpYWxzXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/BidMaterials/Delete.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/BidMaterials/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkTWF0ZXJpYWxzXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/BidMaterials/Details.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/BidMaterials/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkTWF0ZXJpYWxzXERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/BidMaterials/Edit.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/BidMaterials/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkTWF0ZXJpYWxzXEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/BidMaterials/Index.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/BidMaterials/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkTWF0ZXJpYWxzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Bids/Create.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Bids/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkc1xDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Bids/Delete.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Bids/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkc1xEZWxldGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Bids/Details.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Bids/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkc1xEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Bids/Edit.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Bids/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkc1xFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Bids/Index.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Bids/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Bids/_addLabourModal.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Bids/_addLabourModal.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkc1xfYWRkTGFib3VyTW9kYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Bids/_addMaterialModal.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Bids/_addMaterialModal.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkc1xfYWRkTWF0ZXJpYWxNb2RhbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Bids/_LabourCreate.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Bids/_LabourCreate.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkc1xfTGFib3VyQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Bids/_ListOfLabours.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Bids/_ListOfLabours.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkc1xfTGlzdE9mTGFib3Vycy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Bids/_ListOfMaterials.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Bids/_ListOfMaterials.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkc1xfTGlzdE9mTWF0ZXJpYWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Bids/_MaterialBidList.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Bids/_MaterialBidList.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkc1xfTWF0ZXJpYWxCaWRMaXN0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Bids/_MaterialCreate.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Bids/_MaterialCreate.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkc1xfTWF0ZXJpYWxDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Clients/Create.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Clients/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50c1xDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Clients/Delete.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Clients/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50c1xEZWxldGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Clients/Details.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Clients/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50c1xEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Clients/Edit.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Clients/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50c1xFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Clients/Index.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Clients/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50c1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Clients/_ListOfProjects.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Clients/_ListOfProjects.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50c1xfTGlzdE9mUHJvamVjdHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Home/Index.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Home/Privacy.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Labours/Create.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Labours/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFib3Vyc1xDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Labours/Delete.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Labours/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFib3Vyc1xEZWxldGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Labours/Details.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Labours/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFib3Vyc1xEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Labours/Edit.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Labours/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFib3Vyc1xFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Labours/Index.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Labours/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFib3Vyc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Lookup/Index.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Lookup/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9va3VwXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Lookup/_Labour.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Lookup/_Labour.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9va3VwXF9MYWJvdXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Lookup/_Material.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Lookup/_Material.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9va3VwXF9NYXRlcmlhbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Materials/Create.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Materials/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0ZXJpYWxzXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Materials/Delete.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Materials/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0ZXJpYWxzXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Materials/Details.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Materials/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0ZXJpYWxzXERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Materials/Edit.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Materials/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0ZXJpYWxzXEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Materials/Index.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Materials/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0ZXJpYWxzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/ProjectBid/Index.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/ProjectBid/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamVjdEJpZFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/ProjectBid/_ProjectDetail.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/ProjectBid/_ProjectDetail.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamVjdEJpZFxfUHJvamVjdERldGFpbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Projects/Create.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Projects/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamVjdHNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Projects/Delete.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Projects/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamVjdHNcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Projects/Details.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Projects/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamVjdHNcRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Projects/Edit.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Projects/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamVjdHNcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Projects/Index.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Projects/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamVjdHNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Shared/Error.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Shared/_BackToList.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Shared/_BackToList.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9CYWNrVG9MaXN0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Shared/_LayoutAuth.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Shared/_LayoutAuth.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXRBdXRoLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Shared/_LoginPartial.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Shared/_LoginPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Mb2dpblBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Shared/_PageSizeModal.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Shared/_PageSizeModal.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9QYWdlU2l6ZU1vZGFsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Shared/_PagingNavBar.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Shared/_PagingNavBar.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9QYWdpbmdOYXZCYXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Shared/_ViewHeading.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Shared/_ViewHeading.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WaWV3SGVhZGluZy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/UserRole/Edit.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/UserRole/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclJvbGVcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/UserRole/Index.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/UserRole/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclJvbGVcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/_ViewImports.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/_ViewStart.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Shared/_Layout.cshtml]
+[C:/Users/lucci/Source/Repos/NBD2024Project/NBDProject2024/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-kto12yhu2j

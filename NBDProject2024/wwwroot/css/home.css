@@ -4,3 +4,18 @@
     background-size: cover;
 
 }
+
+.collapsible-header {
+    cursor: pointer;
+    padding: 10px;
+    background-color: #F0F0F0;
+}
+
+.collapsible-header:hover {
+    background-color: #80EAFF;
+}
+
+.collapsible-content {
+    padding: 0 10px;
+    display: none;
+}
