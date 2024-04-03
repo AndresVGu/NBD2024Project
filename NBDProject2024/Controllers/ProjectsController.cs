@@ -11,11 +11,11 @@ using NBDProject2024.CustomControllers;
 using NBDProject2024.Data;
 using NBDProject2024.Models;
 using NBDProject2024.Utilities;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Numeric;
 
 namespace NBDProject2024.Controllers
 {
-    [Authorize]
-    public class ProjectsController : ElephantController
+    public class ProjectsController :  ElephantController
     {
         private readonly NBDContext _context;
 
@@ -25,7 +25,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Projects
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin,Supervisor, Sales, Designer")]
         public async Task<IActionResult> Index(string SearchString, int? ClientID, string SearchClient, DateTime StartDate, DateTime EndDate,
            int? page, int? pageSizeID, string actionButton, string sortDirection = "asc", string sortField = "ClientID")
         {
@@ -53,6 +53,8 @@ namespace NBDProject2024.Controllers
 
             PopulateDropDownLists();
 
+            
+
             var projects = _context.Projects
                 .Include(p => p.Client)
                 .Include(p => p.City)
@@ -64,6 +66,8 @@ namespace NBDProject2024.Controllers
             #region Filters
             //filters:
 
+
+           
 
             if (ClientID.HasValue)
             {
@@ -209,8 +213,8 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Projects/Details/5
-        // [Authorize(Roles ="Admin,Supervisor,Designer")]
-        [AllowAnonymous]
+         [Authorize(Roles ="Admin,Supervisor,Designer")]
+        
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Projects == null)
@@ -223,7 +227,9 @@ namespace NBDProject2024.Controllers
                 .Include(p => p.Client)
                 .Include(p => p.City)
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (project == null)
+
+          
+                if (project == null)
             {
                 return NotFound();
             }
@@ -232,8 +238,8 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Projects/Create
-        //[Authorize(Roles = "Admin,Supervisor,Designer,Sales")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin,Supervisor,Designer,Sales")]
+        
         public IActionResult Create()
         {
             var project = new Project();
@@ -248,8 +254,8 @@ namespace NBDProject2024.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Admin,Supervisor,Designer,Sales")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin,Supervisor,Designer,Sales")]
+        
         public async Task<IActionResult> Create([Bind("ID,ProjectName,BidDate,StartTime,EndTime,ProjectSite,SetupNotes,CityID,ClientID")] Project project,
             string[] selectedOptions)
         {
@@ -280,8 +286,8 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Projects/Edit/5
-        // [Authorize(Roles = "Admin,Supervisor,Designer")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin,Supervisor,Designer")]
+       
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Projects == null)
@@ -307,8 +313,8 @@ namespace NBDProject2024.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Admin,Supervisor,Designer")]
-        [AllowAnonymous]
+         [Authorize(Roles = "Admin,Supervisor,Designer")]
+       
         public async Task<IActionResult> Edit(int id, string[] selectedOptions,
             Byte[] RowVersion)
         {
@@ -363,8 +369,8 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Projects/Delete/5
-        // [Authorize(Roles = "Admin,Supervisor")]
-        [AllowAnonymous]
+         [Authorize(Roles = "Admin,Supervisor")]
+        
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Projects == null)
@@ -389,8 +395,8 @@ namespace NBDProject2024.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Admin,Supervisor")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin,Supervisor")]
+        
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Projects == null)

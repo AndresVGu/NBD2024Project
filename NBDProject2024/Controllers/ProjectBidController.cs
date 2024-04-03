@@ -9,7 +9,7 @@ using NBDProject2024.Utilities;
 
 namespace NBDProject2024.Controllers
 {
-    [AllowAnonymous]
+    [Authorize(Roles = "Admin,Supervisor")]
     public class ProjectBidController : ElephantController
     {
         private readonly NBDContext _context;
@@ -20,8 +20,8 @@ namespace NBDProject2024.Controllers
         }
 
         //GET: BID
-        //[Authorize(Roles = "Admin,Supervisor")]
-        [AllowAnonymous]
+       
+        
         public async Task<IActionResult> Index(int? ProjectID, int? page, DateTime BidDate,
             int? pageSizeID, int? BidID, string actionButton,
             string SearchString, string sortDirection = "desc",

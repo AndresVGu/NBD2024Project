@@ -15,7 +15,7 @@ namespace NBDProject2024.Data.NBDMigrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.15");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.17");
 
             modelBuilder.Entity("NBDProject2024.Models.Bid", b =>
                 {
@@ -160,6 +160,11 @@ namespace NBDProject2024.Data.NBDMigrations
                     b.Property<DateTime?>("CreatedOn")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -200,7 +205,62 @@ namespace NBDProject2024.Data.NBDMigrations
 
                     b.HasIndex("CityID");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("Clients");
+                });
+
+            modelBuilder.Entity("NBDProject2024.Models.Employee", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MiddleName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Prescriber")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("NBDProject2024.Models.Labour", b =>
@@ -331,6 +391,34 @@ namespace NBDProject2024.Data.NBDMigrations
                     b.ToTable("Provinces");
                 });
 
+            modelBuilder.Entity("NBDProject2024.Models.Subscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("EmployeeID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PushAuth")
+                        .HasMaxLength(512)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PushEndpoint")
+                        .HasMaxLength(512)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PushP256DH")
+                        .HasMaxLength(512)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeID");
+
+                    b.ToTable("Subscriptions");
+                });
+
             modelBuilder.Entity("NBDProject2024.Models.Bid", b =>
                 {
                     b.HasOne("NBDProject2024.Models.Project", "Project")
@@ -417,6 +505,17 @@ namespace NBDProject2024.Data.NBDMigrations
                     b.Navigation("Client");
                 });
 
+            modelBuilder.Entity("NBDProject2024.Models.Subscription", b =>
+                {
+                    b.HasOne("NBDProject2024.Models.Employee", "Employee")
+                        .WithMany("Subscriptions")
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("NBDProject2024.Models.Bid", b =>
                 {
                     b.Navigation("BidLabours");
@@ -432,6 +531,11 @@ namespace NBDProject2024.Data.NBDMigrations
             modelBuilder.Entity("NBDProject2024.Models.Client", b =>
                 {
                     b.Navigation("Projects");
+                });
+
+            modelBuilder.Entity("NBDProject2024.Models.Employee", b =>
+                {
+                    b.Navigation("Subscriptions");
                 });
 
             modelBuilder.Entity("NBDProject2024.Models.Labour", b =>

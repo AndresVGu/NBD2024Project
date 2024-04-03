@@ -25,7 +25,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Clients
-        [Authorize(Roles = "Admin,Supervisor,Designer")]
+        [Authorize(Roles = "Admin,Supervisor,Designer,Sales")]
 
         public async Task<IActionResult> Index(string SearchString, int? CityID,
            int? page, int? pageSizeID, string actionButton, string sortDirection = "asc", string sortField = "Client")
@@ -175,7 +175,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Clients/Details/5
-        [Authorize(Roles = "Admin,Supervisor,Designer")]
+        [Authorize(Roles = "Admin,Supervisor,Designer , Sales")]
 
         public async Task<IActionResult> Details(int? id)
         {

@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="NBDLandscaping" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^C:\\Term\ 4\\Demos\\NBDProject2024\\NBDProject2024\\obj\\Debug\\net7\.0\\win-x86\\PubTmp\\Out\\$" />
+  </parameter>
+</parameters>

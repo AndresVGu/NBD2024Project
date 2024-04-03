@@ -6,7 +6,7 @@ using NBDProject2024.Data;
 
 namespace NBDProject2024.Controllers
 {
-    [AllowAnonymous]
+    [Authorize(Roles ="Admin,Supervisor")]
     public class LookupController : CognizantController
     {
         

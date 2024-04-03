@@ -8,7 +8,7 @@ using NBDProject2024.ViewModels;
 
 namespace NBDProject2024.Controllers
 {
-    [AllowAnonymous]
+ 
     public class UserRoleController : CognizantController
 
     {
@@ -97,7 +97,7 @@ namespace NBDProject2024.Controllers
             {
                 viewModel.Add(new RoleVM
                 {
-                    RoleID = r.Id,
+                    RoleId = r.Id,
                     RoleName = r.Name,
                     Assigned = currentRoles.Contains(r.Name)
                 });

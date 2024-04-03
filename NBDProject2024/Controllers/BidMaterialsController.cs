@@ -11,7 +11,7 @@ using NBDProject2024.Models;
 
 namespace NBDProject2024.Controllers
 {
-    [AllowAnonymous]
+    [Authorize(Roles ="Admin")]
     public class BidMaterialsController : Controller
     {
         private readonly NBDContext _context;

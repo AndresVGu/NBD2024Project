@@ -43,6 +43,13 @@
                 <input asp-for="CompanyName" class="form-control" placeholder="Acme Inc." />
                 <span asp-validation-for="CompanyName" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label asp-for="Email" class="control-label">Email*:</label>
+                <input asp-for="Email" class="form-control" placeholder="E.g. example@outlook.com" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <label asp-for="Phone" class="control-label">Phone Number*:</label>
                 <input asp-for="Phone" class="form-control" placeholder="E.g. 1234567891" />
