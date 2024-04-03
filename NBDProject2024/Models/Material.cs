@@ -40,6 +40,7 @@ namespace NBDProject2024.Models
         [Required(ErrorMessage = "You must a price.")]
         [DataType(DataType.Currency)]
         public double Price { get; set; }
+
         #endregion
         public ICollection<BidMaterial> BidMaterials { get; set; } = new HashSet<BidMaterial>();
 

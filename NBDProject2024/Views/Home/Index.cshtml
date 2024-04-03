@@ -16,25 +16,33 @@
 <!-- Three columns of text below the carousel -->
 <div class="row mt-lg-5">
     <div class="collapsible">
-        <div class="collapsible-header">Clients</div>
+        <div class="collapsible-header">
+            <a class="btn btn-primary" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a>
+            <p>&hellip;</p>
+        </div>
         <div class="collapsible-content">
-        <p>This link is going to redirect you to the client(s) main-page that have been added in the system. From this page you can view, create and edit the profiles for the clients. This is going to be the First Page that you will be using when a client comes in with a new project. From here you will be able to create the profile for a new client or find an existing client profile on the client to add the project to, and once that is done you will be able to create the project for the client right away from a link already provided to redirect you to the project(s) page, for efficiency purposes.</p>
-        <p><a class="btn btn-primary" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a></p>
-    </div><!-- /.col-lg-4 -->
+            <p>This link is going to redirect you to the client(s) main-page that have been added in the system. From this page you can view, create and edit the profiles for the clients. This is going to be the First Page that you will be using when a client comes in with a new project. From here you will be able to create the profile for a new client or find an existing client profile on the client to add the project to, and once that is done you will be able to create the project for the client right away from a link already provided to redirect you to the project(s) page, for efficiency purposes.</p>
+        </div>
     </div>
+    <div style="height: 5px;"></div>
     <div class="collapsible">
-        <div class="collapsible-header">Projects</div>
+        <div class="collapsible-header">
+            <a class="btn btn-primary" asp-area="" asp-controller="Projects" asp-action="Index">Projects</a>
+            <p>&hellip;</p>
+        </div>
         <div class="collapsible-content">
-        <p>This link is going to redirect you to the projects main-page with the projects that were created in the system, From here you can view, create and edit the Projects. This is going to essentially be your second step when you are in the process of creating a totally new project with a new customer.</p>
-        <p><a class="btn btn-primary" asp-area="" asp-controller="Projects" asp-action="Index">Projects</a></p>
-    </div><!-- /.col-lg-4 -->
+            <p>This link is going to redirect you to the projects main-page with the projects that were created in the system, From here you can view, create and edit the Projects. This is going to essentially be your second step when you are in the process of creating a totally new project with a new customer.</p>
+        </div>
     </div>
+    <div style="height: 5px;"></div>
     <div class="collapsible">
-        <div class="collapsible-header">Bid</div>
+        <div class="collapsible-header">
+            <a class="btn btn-primary" asp-area="" asp-controller="Bids" asp-action="Index">Bid</a>
+            <p>&hellip;</p>
+        </div>
         <div class="collapsible-content">
-        <p>This link is going to redirect you to the bid`s main-page, which is just similar to the client and project page in terms that you can view, edit and create a new bid in the system. This is going to be the final page in the process for you to fully setup a client profile with a project and proper bid, for which we can then wait for approval from the higher management on the bid status, You will be able to create a new bid and link up the Materials, Labour and Staff needed to finish this project with all the other necessary information plus a status label to show you if the bid has been approved, declined or still waiting for approval.</p>
-        <p><a class="btn btn-primary" asp-area="" asp-controller="Bids" asp-action="Index">Bid</a></p>
-    </div><!-- /.col-lg-4 -->
+            <p>This link is going to redirect you to the bid`s main-page, which is just similar to the client and project page in terms that you can view, edit and create a new bid in the system. This is going to be the final page in the process for you to fully setup a client profile with a project and proper bid, for which we can then wait for approval from the higher management on the bid status, You will be able to create a new bid and link up the Materials, Labour and Staff needed to finish this project with all the other necessary information plus a status label to show you if the bid has been approved, declined or still waiting for approval.</p>
+        </div>
     </div>
 
     <!--div to push blocks up and add some space at the bottom-->
