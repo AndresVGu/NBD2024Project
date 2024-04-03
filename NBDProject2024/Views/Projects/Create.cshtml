@@ -19,9 +19,10 @@
 
             <div class="form-group">
                 <label asp-for="StartTime" class="control-label">Start Date:*</label>
-                <input asp-for="StartTime" class="form-control" id="sDate" />
+                <input asp-for="StartTime" class="form-control" id="sDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
                 <span asp-validation-for="StartTime" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="EndTime" class="control-label"></label>
                 <input asp-for="EndTime" class="form-control" />

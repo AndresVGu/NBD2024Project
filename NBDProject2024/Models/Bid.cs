@@ -40,6 +40,9 @@ namespace NBDProject2024.Models
 
         public DateTime BidDate { get; set; } = DateTime.Today;
 
+        [Display(Name = "Bid Approval")]
+        public bool BidApproval { get; set; }
+
         //Concurrency:
         [ScaffoldColumn(false)]
         [Timestamp]
@@ -49,6 +52,7 @@ namespace NBDProject2024.Models
         [Display(Name = "Project")]
         public int ProjectID { get; set; }
         public Project Project { get; set; }
+
 
         #endregion
 
