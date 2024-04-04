@@ -186,8 +186,6 @@ C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Ou
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.AspNetCore.Connections.Abstractions.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.AspNetCore.CookiePolicy.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.AspNetCore.Cors.dll
-C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.AspNetCore.Cryptography.Internal.dll
-C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.AspNetCore.DataProtection.Abstractions.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.AspNetCore.DataProtection.Extensions.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.AspNetCore.DataProtection.dll
@@ -273,14 +271,11 @@ C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Ou
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.Extensions.Features.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.Extensions.FileProviders.Abstractions.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.Extensions.FileProviders.Composite.dll
-C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.Extensions.FileProviders.Embedded.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.Extensions.FileProviders.Physical.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.Extensions.FileSystemGlobbing.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.Extensions.Hosting.Abstractions.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.Extensions.Hosting.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.Extensions.Http.dll
-C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.Extensions.Identity.Core.dll
-C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.Extensions.Identity.Stores.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.Extensions.Localization.Abstractions.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.Extensions.Localization.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.Extensions.Logging.Abstractions.dll
@@ -325,6 +320,8 @@ C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Ou
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\EPPlus.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Humanizer.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\MailKit.dll
+C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.AspNetCore.Identity.UI.dll
@@ -352,6 +349,9 @@ C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Ou
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.EntityFrameworkCore.Sqlite.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.EntityFrameworkCore.SqlServer.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.Extensions.DependencyModel.dll
+C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.Extensions.FileProviders.Embedded.dll
+C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.Extensions.Identity.Core.dll
+C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.Extensions.Identity.Stores.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.Identity.Client.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.Identity.Client.Extensions.Msal.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\win-x86\PubTmp\Out\Microsoft.IdentityModel.Abstractions.dll

@@ -81,7 +81,45 @@ namespace NBD2024.Data
                 }
 
                 #endregion
-
+                if (!context.Employees.Any())
+                {
+                    context.Employees.AddRange(
+                        new Employee
+                        {
+                            FirstName = "Andres",
+                            LastName = "Villarreal",
+                            Email = "admin@outlook.com"
+                        },
+                        new Employee
+                        {
+                            FirstName = "John",
+                            LastName = "Doe",
+                            Email = "super@outlook.com",
+                            Phone = "1234567899"
+                        },
+                         new Employee
+                         {
+                             FirstName = "Jane",
+                             LastName = "Doe",
+                             Email = "designer@outlook.com",
+                             Phone = "1234567898"
+                         },
+                         new Employee
+                         {
+                             FirstName = "Fred",
+                             LastName = "Flintstone",
+                             Email = "sales@outlook.com",
+                             Phone = "1234567897"
+                         },
+                         new Employee
+                         {
+                             FirstName = "Betty",
+                             LastName = "Rubble",
+                             Email = "user@outlook.com",
+                             Phone = "1234567896"
+                         });
+                    context.SaveChanges();
+                }
                 //Provinces, Cities
                 if (!context.Provinces.Any())
                 {

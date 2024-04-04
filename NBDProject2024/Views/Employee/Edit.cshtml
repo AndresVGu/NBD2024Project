@@ -57,6 +57,34 @@
                 <label asp-for="Email" class="control-label">Email*:</label>
                 <input asp-for="Email" class="form-control" placeholder="E.g. example@outlook.com" />
                 <span asp-validation-for="Email" class="text-danger"></span>
+                <div>
+                    Note: Changing Email will reset the password for the new Login and the user will need to use Forgot Password with the new Email.
+                </div>
+            </div>
+
+            <div class="form-group form-switch">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Active" /> @Html.DisplayNameFor(model => model.Active)
+                </label>
+                @{
+                    if(Model.Active == true)
+                    {
+                        <div>
+                            <strong>
+                                Warning! If you make this user inactive, their login to the system will alse be removed.
+                                If you ever want to allow them to login again, make them Active and let them know they must use Forgot Password to set a new one.
+                            </strong>
+                        </div>
+                    }
+                    else
+                    {
+                        <div>
+                            <strong>
+                                If you make this user active, let them know to use Forgot Password to set a new one.
+                            </strong>
+                        </div>
+                    }
+                }
             </div>
 
             <div class="form-group">

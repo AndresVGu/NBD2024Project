@@ -69,9 +69,22 @@
                             <!--End DropDownList-->
                             @if (User.IsInRole("Admin"))
                             {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="Index">Maintains Employees</a>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" area-expanded="false">
+                                        Users
+                                    </a>
+
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <li class="nav-item">
+                                            <a class="dropdown-item" asp-area="" asp-controller="Employee" asp-action="Index">Maintain Employees</a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="dropdown-item" asp-area="" asp-controller="UserRole" asp-action="Index">Maintain Users</a>
+                                        </li>
+                                    </ul>
                                 </li>
+                                
 
                             }
                         }
@@ -136,4 +149,6 @@
         currentYear.innerText = year;
     </script>
 
+    
 }
+

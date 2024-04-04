@@ -15,7 +15,7 @@ using NBDProject2024.ViewModels;
 
 namespace NBDProject2024.Controllers
 {
-    [AllowAnonymous]
+    
     public class BidsController : ElephantController
     {
         private readonly NBDContext _context;
@@ -217,6 +217,7 @@ namespace NBDProject2024.Controllers
                 {
                     _context.Add(bid);
                     await _context.SaveChangesAsync();
+                    TempData["AlertMessage"] = "Bid Updated Successfully...!";
                     return RedirectToAction("Details", new { bid.ID });
                 }
             }
@@ -294,7 +295,7 @@ namespace NBDProject2024.Controllers
                 try
                 {
                     await _context.SaveChangesAsync();
-
+                    TempData["AlertMessage"] = "Bid Updated Successfully...!";
                     return RedirectToAction("Details", new { bidToUpdate.ID });
                 }
                 catch (RetryLimitExceededException /* dex */)
@@ -375,6 +376,7 @@ namespace NBDProject2024.Controllers
                     _context.Bids.Remove(bid);
                 }
                 await _context.SaveChangesAsync();
+                TempData["AlertMessageDelete"] = "Bid Deleted Sucessfully...!";
                 return Redirect(ViewData["returnURL"].ToString());
 
             }

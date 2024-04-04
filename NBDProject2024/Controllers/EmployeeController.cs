@@ -46,7 +46,7 @@ namespace NBDProject2024.Controllers
                     MiddleName = e.MiddleName,
                     LastName = e.LastName,
                     Phone = e.Phone,
-                    NumberOfPushSubscriptions = e.Subscriptions.Count
+                    NumberOfPushSubscriptions = e.Subscriptions.Count()
                 }).ToListAsync();
 
             foreach(var e in employees)
@@ -70,6 +70,7 @@ namespace NBDProject2024.Controllers
         {
             EmployeeAdminVM employee = new EmployeeAdminVM();
             PopulateAssignedRoleData(employee);
+
             return View(employee);
         }
 
@@ -88,6 +89,11 @@ namespace NBDProject2024.Controllers
                     await _context.SaveChangesAsync();
 
                     InsertIdentityUser(employee.Email, selectedRoles);
+                    TempData["AlertMessage"] = "Employee Created Successfully...!";
+
+                    //Send Email to new Employee - commented out till email configured
+                    await InviteUserToResetPassword(employee, null);
+
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -205,9 +211,10 @@ namespace NBDProject2024.Controllers
                         }
                         else
                         {
-                           // await UpdateUserRoles(selectedRoles, employeeToUpdate.Email);
+                            await UpdateUserRoles(selectedRoles, employeeToUpdate.Email);
                         }
                     }
+                    TempData["AlertMessage"] = "Employee Updated Successfully...!";
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
@@ -299,22 +306,70 @@ namespace NBDProject2024.Controllers
             }
         }
 
-        private async Task InviteUseToResetPassword(Employee employee, string message)
+        private async Task InviteUserToResetPassword(Employee employee, string message)
         {
-            message ??= "Hello" + employee.FirstName + "<br /><p>Please navigate to:<br />" +
-                "create a new password for" + employee.Email + "using Forgot Password</p>";
-
+            message ??= "Hello " + employee.FirstName + "<br /><p>Please navigate to:<br />" +
+                        "<a href='https://nbdlandscaping.azurewebsites.net' title='https://nbdlandscaping.azurewebsites.net' target='_blank' rel='noopener'>" +
+                        "https://nbdlandscaping.azurewebsites.net</a><br />" +
+                        " and create a new password for " + employee.Email + " using Forgot Password.</p>";
             try
             {
                 await _emailSender.SendOneAsync(employee.FullName, employee.Email,
-                    "Account Registration", message);
-                TempData["message"] = "Invitation email sent to" + employee.FullName + " at "
-                    + employee.Email;
+                "Account Registration", message);
+                TempData["message"] = "Invitation email sent to " + employee.FullName + " at " + employee.Email;
             }
-            catch (Exception )
+            catch (Exception)
             {
-                TempData["message"] = "Could not send Invitation email to "
-                    + employee.FullName + " at " + employee.Email;
+                TempData["message"] = "Could not send Invitation email to " + employee.FullName + " at " + employee.Email;
+            }
+
+
+        }
+
+        private async Task UpdateUserRoles(string[] selectedRoles, string Email)
+        {
+            var _user = await _userManager.FindByEmailAsync(Email);//IdentityUser
+            if (_user != null)
+            {
+                var UserRoles = (List<string>)await _userManager.GetRolesAsync(_user);//Current roles user is in
+
+                if (selectedRoles == null)
+                {
+                    //No roles selected so just remove any currently assigned
+                    foreach (var r in UserRoles)
+                    {
+                        await _userManager.RemoveFromRoleAsync(_user, r);
+                    }
+                }
+                else
+                {
+                    //At least one role checked so loop through all the roles
+                    //and add or remove as required
+
+                    //We need to do this next line because foreach loops don't always work well
+                    //for data returned by EF when working async.  Pulling it into an IList<>
+                    //first means we can safely loop over the colleciton making async calls and avoid
+                    //the error 'New transaction is not allowed because there are other threads running in the session'
+                    IList<IdentityRole> allRoles = _identityContext.Roles.ToList<IdentityRole>();
+
+                    foreach (var r in allRoles)
+                    {
+                        if (selectedRoles.Contains(r.Name))
+                        {
+                            if (!UserRoles.Contains(r.Name))
+                            {
+                                await _userManager.AddToRoleAsync(_user, r.Name);
+                            }
+                        }
+                        else
+                        {
+                            if (UserRoles.Contains(r.Name))
+                            {
+                                await _userManager.RemoveFromRoleAsync(_user, r.Name);
+                            }
+                        }
+                    }
+                }
             }
         }
 

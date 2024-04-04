@@ -1,0 +1,21 @@
+﻿
+
+<table>
+@{
+    foreach (var item in ViewBag.BidMaterial)
+    {
+        @:<tr><td>
+            @item.MaterialQuantity
+        @:</td><td>
+            @item.Materials.Name
+        @:</td><td>
+                                             @:&nbsp; &nbsp;&nbsp;
+                                             <button class="btn btn-sm btn-outline-primary modal-link" tag="@item.ID" name="EditForm"
+                                                     data-bs-toggle="modal" data-bs-target="#theMaterialModal" title="Edit @item.Materials.Name"> &#x270E;</button>
+                                
+                                             <button class="btn btn-sm btn-outline-danger modal-link" tag="@item.ID" name="DeleteForm"
+                                                     data-bs-target="#theMaterialModal" title="Delete @item.Materials.Name">&#x274C;</button>
+                                           @:</td></tr>
+    }
+}
+</table>
