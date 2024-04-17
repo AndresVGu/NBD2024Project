@@ -83,9 +83,18 @@
 
 
                 </th>
+                @if (User.IsInRole("Sales")){
+                    <th class="text-center">
+                        <label>Details</label>
+                    </th>
+                }
+                else
+                {
+                
                 <th class="text-center">
                     <a class="btn btn-outline-success" asp-action="Create">Add Bid</a>
                 </th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -210,6 +219,16 @@
                     </td>
 
                     <td class="text-center">
+                        @if (User.IsInRole("Sales"))
+                        {
+                            <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-sm btn-outline-primary"
+                               role="button" data-bs-toggle="tooltip" title="@ViewData["ControllerFriendlyName"] Details">
+                                &#x1F50E;
+                            </a>
+                        }
+                        else
+                        {
+
                         <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-sm btn-outline-primary"
                            role="button" data-bs-toggle="tooltip" title="Edit @ViewData["ControllerFriendlyName"]">
                             &#x270E;
@@ -222,6 +241,7 @@
                            role="button" data-bs-toggle="tooltip" title="Delete @ViewData["ControllerFriendlyName"]">
                             &#x274C;
                         </a>
+                        }
                     </td>
                 </tr>
             }

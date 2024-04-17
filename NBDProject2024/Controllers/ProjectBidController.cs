@@ -9,7 +9,7 @@ using NBDProject2024.Utilities;
 
 namespace NBDProject2024.Controllers
 {
-    [Authorize(Roles = "Admin,Supervisor")]
+    [Authorize(Roles = "Admin,Supervisor,Sales,Designer")]
     public class ProjectBidController : ElephantController
     {
         private readonly NBDContext _context;

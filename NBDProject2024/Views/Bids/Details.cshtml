@@ -94,8 +94,17 @@
 
 <!--Buttons-->
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.ID" class="btn btn-primary">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @if (User.IsInRole("Sales"))
+    {
+        <a asp-action="Index">Back to List</a>
+    }
+    else
+    {
+        <a asp-action="Edit" asp-route-id="@Model?.ID" class="btn btn-primary">Edit</a>
+         <a asp-action="Index">Back to List</a>
+    
+    }
+    
     <!--Poner BackTo List-->
 </div>
 

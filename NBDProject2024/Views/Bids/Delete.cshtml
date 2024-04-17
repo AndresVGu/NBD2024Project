@@ -4,12 +4,13 @@
     ViewData["Title"] = "Delete";
 }
 
-<h1>Delete</h1>
+<h1>Delete</h1> 
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
     <h4>Bid</h4>
     <hr />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.BidDate)
@@ -28,7 +29,7 @@
 
     <form asp-action="Delete" onsubmit="btnDelete(event)" id="del">
         <input type="hidden" asp-for="ID" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <input type="submit" @ViewData["NoSubmit"] value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>
 </div>

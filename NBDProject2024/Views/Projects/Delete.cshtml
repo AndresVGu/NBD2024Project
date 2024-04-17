@@ -59,7 +59,7 @@
 
     <form asp-action="Delete" onsubmit="btnDelete(event)" id="del">
         <input type="hidden" asp-for="ID" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <input type="submit" @ViewData["NoSubmit"] value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>
 </div>

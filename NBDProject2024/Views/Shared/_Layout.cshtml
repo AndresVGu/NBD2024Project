@@ -35,7 +35,7 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Projects" asp-action="Index">Projects</a>
                             </li>
-                            @if (User.IsInRole("Admin") || User.IsInRole("Supervisor") || User.IsInRole("Designer"))
+                            @if (User.IsInRole("Admin") || User.IsInRole("Supervisor"))
                             {
                                 
                                 <!--DropDownList-->
@@ -48,7 +48,7 @@
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 
                                         <li class="nav-item dropdown">
-                                            <a class="dropdown-item" asp-area="" asp-controller="Bids" asp-action="Index">Bid</a>
+                                            <a class="dropdown-item" asp-area="" asp-controller="Bids" asp-action="Index">Bids</a>
                                         </li>
 
                                         @if (User.IsInRole("Admin") || User.IsInRole("Supervisor"))
@@ -65,24 +65,22 @@
                                 
                                     </ul>
                                 </li>
+
+
+                            }
+                            else
+                            {
+                                <li>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Bids" asp-action="Index">Bids</a>
+                                </li>
                             }
                             <!--End DropDownList-->
                             @if (User.IsInRole("Admin"))
                             {
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" area-expanded="false">
-                                        Users
-                                    </a>
 
-                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <li class="nav-item">
-                                            <a class="dropdown-item" asp-area="" asp-controller="Employee" asp-action="Index">Maintain Employees</a>
-                                        </li>
-
-                                        
-                                    </ul>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="Index">Employees</a>
                                 </li>
-                                
 
                             }
                         }
