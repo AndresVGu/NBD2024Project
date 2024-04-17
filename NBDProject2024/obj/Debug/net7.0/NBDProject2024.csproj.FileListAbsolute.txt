@@ -293,10 +293,7 @@ C:\Term 4\Demos\NBDProject2024\NBDProject2024\bin\Debug\net7.0\BouncyCastle.Cryp
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\bin\Debug\net7.0\EPPlus.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\bin\Debug\net7.0\MailKit.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\bin\Debug\net7.0\MimeKit.dll
-C:\Term 4\Demos\NBDProject2024\NBDProject2024\bin\Debug\net7.0\System.Formats.Asn1.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\bin\Debug\net7.0\System.Security.Cryptography.Pkcs.dll
-C:\Term 4\Demos\NBDProject2024\NBDProject2024\bin\Debug\net7.0\System.Text.Encoding.CodePages.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\bin\Debug\net7.0\System.Xml.XPath.XmlDocument.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Security.Cryptography.Pkcs.dll
-C:\Term 4\Demos\NBDProject2024\NBDProject2024\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Text.Encoding.CodePages.dll
 C:\Term 4\Demos\NBDProject2024\NBDProject2024\obj\Debug\net7.0\NBDProject2024.sourcelink.json

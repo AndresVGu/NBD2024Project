@@ -149,7 +149,7 @@ namespace NBD2024.Data
                         new City { Name = "Toronto", ProvinceID="ON"},
                         new City { Name = "Halifax", ProvinceID="NS" },
                         new City { Name = "Calgary", ProvinceID="AB" },
-                        new City { Name = "Winnipeg", ProvinceID="MB", },
+                        new City { Name = "Winnipeg", ProvinceID="MB" },
                         new City { Name = "Stratford", ProvinceID="ON" },
                         new City { Name = "St. Catharines", ProvinceID="ON" },
                         new City { Name = "Welland", ProvinceID="ON" },

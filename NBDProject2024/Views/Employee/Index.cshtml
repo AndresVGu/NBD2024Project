@@ -27,9 +27,7 @@
                 @Html.DisplayNameFor(model => model.Position)
             </th>
         
-            <th>
-                @Html.DisplayNameFor(model => model.Prescriber)
-            </th>
+           
         
             <th>
                 @Html.DisplayNameFor(model => model.UserRoles)
@@ -64,12 +62,7 @@
                     @Html.DisplayFor(modelItem => item.Position)
                 </td>
 
-                <td>
-                    <div class="form-group form-switch">
-                        <input class="form-check-input" type="checkbox"
-                        disabled="disabled" @(Html.Raw(item.Prescriber ? "checked=\"checked\"" : "")) />
-                    </div>
-                </td>
+                
 
                 <td>
                     @{

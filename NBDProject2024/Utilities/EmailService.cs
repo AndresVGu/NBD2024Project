@@ -6,6 +6,10 @@ using MailKit.Net.Smtp;
 
 namespace NBDProject2024.Utilities
 {
+    /// <summary>
+    /// This implements the IEmailService from
+    /// Microsoft.AspNetCore.Identity.UI.Services for the Identity System
+    /// </summary>
     public class EmailSender : IEmailSender
     {
         private readonly IEmailConfiguration _emailConfiguration;
