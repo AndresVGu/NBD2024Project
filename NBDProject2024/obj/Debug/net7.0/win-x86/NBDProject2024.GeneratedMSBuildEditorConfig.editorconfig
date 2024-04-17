@@ -86,6 +86,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkTWF0ZXJpYWxzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/BidMaterials/_CreateMaterial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkTWF0ZXJpYWxzXF9DcmVhdGVNYXRlcmlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/BidMaterials/_EditMaterial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkTWF0ZXJpYWxzXF9FZGl0TWF0ZXJpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Bids/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkc1xDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -132,6 +140,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Bids/_MaterialCreate.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkc1xfTWF0ZXJpYWxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Bids/_MaterialList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlkc1xfTWF0ZXJpYWxMaXN0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Term 4/Demos/NBDProject2024/NBDProject2024/Views/Clients/Create.cshtml]

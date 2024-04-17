@@ -288,7 +288,7 @@ namespace NBDProject2024.Controllers
                     EmailConfirmed = true
                 };
 
-                string password = MakePassword.Generate();
+                string password = "Pa55w@rd";//MakePassword.Generate();
                 IdentityResult result = _userManager.CreateAsync(user, password).Result;
 
                 if(result.Succeeded)

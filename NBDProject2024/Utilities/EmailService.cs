@@ -44,6 +44,8 @@ namespace NBDProject2024.Utilities
             {
                 //Be careful that the SmtpClient class is the one from Mailkit not the framework!
                 using var emailClient = new SmtpClient();
+
+                //emailClient.ServerCertificateValidationCallback = (s, c, h, e) => true;
                 //The last parameter here is to use SSL (Which you should!)
                 emailClient.Connect(_emailConfiguration.SmtpServer, _emailConfiguration.SmtpPort, false);
 
