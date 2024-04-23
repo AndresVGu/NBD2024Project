@@ -112,7 +112,11 @@
                 </dd>
 
             </dl>
+            @if (User.IsInRole("Sales") || User.IsInRole("Admin") || User.IsInRole("Supervisor"))
+            {
+                
             <a asp-action="Edit" asp-route-id="@Model?.ID" class="btn btn-primary" fdprocessedid="t6a41e">Edit</a>
+            }
 
         </div>
         <div class="tab-pane fade ml-3" role="tabpanel" id="ProjectsPanel"

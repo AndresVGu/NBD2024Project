@@ -1,18 +1,19 @@
 ﻿<!-- Modal-->
-<div class="modal fade" id="theMaterialModal" tabindex="-1" role="dialog" aria-labelledby="MaterialModalLabel">
+<div class="modal fade" id="theSongModal" tabindex="-1"
+     role="dialog" aria-labelledby="SongModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="MaterialmyModalLabel">Maintain Materials</h4>
+                <h4 class="modal-title" id="SongmyModalLabel">Maintain Materials</h4>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
-            <div class="modal-body" id="formMaterialBody">
-                
+            <div class="modal-body" id="formSongBody">
+                <br />
 
-                @{
+                @* @{
                     var s = new NBDProject2024.Models.BidMaterial();
                     <partial name="_MaterialCreate" model="s" />
-                }
+                } *@
                 
                 <br />
             </div>

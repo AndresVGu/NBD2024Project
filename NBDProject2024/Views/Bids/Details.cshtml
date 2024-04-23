@@ -6,6 +6,14 @@
     <h4>@Model.Project.ProjectName</h4>
     <hr />
 </div>
+@if (TempData["AlertMessage"] != null)
+{
+    <br />
+    <div class="alert alert-success">
+        <strong>Success !</strong> @TempData["AlertMessage"]
+    </div>
+
+}
 <div>
     <!-- Nav tabs -->
     <nav>
@@ -66,6 +74,7 @@
 
         </div>
 
+
         <!--Tab Pane:-->
         <div class="tab-pane fade ml-3" role="tabpanel" id="MaterialsPanel"
              aria-labelledby="Materials-tab">
@@ -85,8 +94,17 @@
 
 <!--Buttons-->
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.ID" class="btn btn-primary">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @if (User.IsInRole("Sales"))
+    {
+        <a asp-action="Index">Back to List</a>
+    }
+    else
+    {
+        <a asp-action="Edit" asp-route-id="@Model?.ID" class="btn btn-primary">Edit</a>
+         <a asp-action="Index">Back to List</a>
+    
+    }
+    
     <!--Poner BackTo List-->
 </div>
 

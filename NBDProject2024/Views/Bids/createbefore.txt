@@ -1,0 +1,94 @@
+﻿ <!--Button Trigger Modal
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+            data-bs-target="MaterialModal">
+        Add Materials
+    button>
+    <!--Content
+    <input type="hidden" id="EmpID" />
+    table class="table" id="materialTable">
+        @{
+            /*
+            foreach(var item in Model.BidMaterials.OrderBy(m => m.Materials.Name))
+            {
+            @:<tr><td>
+            @item.MaterialQuantity
+            @:</td><td>
+            @item.Materials.Name
+            @:</td><td>
+            @:&nbsp; &nbsp;&nbsp;
+            @:<a class="btn btn-primary" onclick="EditForm(@item.ID)" id="EditForm">Edit</a> |
+            @:<a id=showModal" class="btn btn-danger" onclick="Confirm(@item.ID)">Delete</a> |
+            @:</td></tr>
+            }
+            * */ 
+
+
+        }
+
+
+    </table>
+
+    <!--EndContent-->
+
+
+
+    <hr />
+    <!--Select Materials-->
+    <div class="col-md-8">
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label class="control-label">Materials</label>
+                <button type="button" id="btnRight" class="btn btn-danger btn-sm">
+                    <strong>-</strong>
+                </button>
+                @Html.ListBox("selectedOptions", (MultiSelectList)ViewBag.selOpts, new { @size = 10, @class = "form-control", @style = "margin-top: 0.5rem;" })
+            </div>
+
+            <div class="form-group col-md-6">
+                <label class="control-label"> Choose Materials</label>
+
+                <button type="button" id="btnLeft" class="btn btn-success btn-sm">
+                    <strong>+</strong>
+                </button>&nbsp;&nbsp;
+
+                <button class="btn btn-sm btn-outline-secondary" id="nowAddMaterial"
+                        data-bs-toggle="modal" data-bs-target="#addMaterialModal"
+                        type="button">
+                    <strong>Add Material</strong>
+                </button>
+
+
+                @Html.ListBox("availOptions", (MultiSelectList)ViewBag.availOpts, new { @size = 10, @class = "form-control", @style = "margin-top: 0.5rem;" })
+
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+
+    <h4>Labours</h4>
+    <div class="col-md-8">
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label class="control-label">Labours</label>
+                <button type="button" id="btnRightl" class="btn btn-danger btn-sm">
+                    <strong>-</strong>
+                </button>
+                @Html.ListBox("selectedOptionsl", (MultiSelectList)ViewBag
+                         .selOpts, new { @size = 10, @class = "form-control", @style = "margin-top: 0.5rem;" })
+            </div>
+
+            <div class="form-group col-md-6">
+                <label class="control-label"> Choose Labours</label> <button type="button" id="btnLeftl" class="btn btn-success btn-sm">
+                    <strong>+</strong>
+                </button>&nbsp;&nbsp;
+                <button class="btn btn-sm btn-outline-secondary" id="nowAddLabour"
+                        data-bs-toggle="modal" data-bs-target="#addLabourModal"
+                        type="button">
+                    <strong>Add Labour</strong>
+                </button>
+                @Html.ListBox("availOptionsl", (MultiSelectList)ViewBag.availOpts, new { @size = 10, @class = "form-control", @style = "margin-top: 0.5rem;" })
+            </div>
+        </div>
+    </div>

@@ -198,7 +198,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Clients/Create
-        [Authorize(Roles = "Admin,Supervisor,Designer")]
+        [Authorize(Roles = "Admin,Supervisor,Sales")]
 
         public IActionResult Create()
         {
@@ -211,10 +211,10 @@ namespace NBDProject2024.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Supervisor,Designer")]
+        [Authorize(Roles = "Admin,Supervisor,Sales")]
 
         public async Task<IActionResult> Create([Bind("ID,FirstName, MiddleName,LastName, CompanyName," +
-            "Phone,AddressCountry,AddressStreet,CityID,PostalCode,")] Client client, string[] selectedOptions)
+            "Phone,Email,AddressCountry,AddressStreet,CityID,PostalCode,")] Client client, string[] selectedOptions)
         {
             try
             {
@@ -245,7 +245,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Clients/Edit/5
-        [Authorize(Roles = "Admin,Supervisor,Designer")]
+        [Authorize(Roles = "Admin,Supervisor,Sales")]
 
         public async Task<IActionResult> Edit(int? id)
         {
@@ -274,7 +274,7 @@ namespace NBDProject2024.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Supervisor,Designer")]
+        [Authorize(Roles = "Admin,Supervisor,Sales")]
 
         public async Task<IActionResult> Edit(int id, Byte[] RowVersion)
         {
@@ -291,6 +291,7 @@ namespace NBDProject2024.Controllers
             if (await TryUpdateModelAsync<Client>(clientToUpdate, "",
                 c => c.FirstName, c => c.MiddleName, c => c.LastName,
                 c => c.CompanyName, c => c.Phone,
+                c => c.Email,
                 c => c.AddressCountry, c => c.AddressStreet,
                 c => c.CityID, c => c.PostalCode))
             {
@@ -329,7 +330,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Clients/Delete/5
-        [Authorize(Roles = "Admin,Supervisor,Designer")]
+        [Authorize(Roles = "Admin,Supervisor,Sales")]
 
         public async Task<IActionResult> Delete(int? id)
         {
@@ -346,13 +347,13 @@ namespace NBDProject2024.Controllers
             {
                 return NotFound();
             }
-            if (User.IsInRole("Designer"))
+            if (User.IsInRole("Sales"))
             {
                 if (client.CreatedBy != User.Identity.Name)
                 {
-                    ModelState.AddModelError("", "As a Designer," +
+                    ModelState.AddModelError("", "As a Sales Advisor," +
                         "You cannot delete this client because" +
-                        "you did not enter them into the system. ");
+                        " you did not enter them into the system. ");
                     ViewData["NoSubmit"] = "disabled=disabled";
                 }
             }
@@ -363,7 +364,7 @@ namespace NBDProject2024.Controllers
         // POST: Clients/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Supervisor, Designer")]
+        [Authorize(Roles = "Admin,Supervisor, Sales")]
 
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -376,11 +377,11 @@ namespace NBDProject2024.Controllers
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
 
-            if (User.IsInRole("Designer"))
+            if (User.IsInRole("Sales"))
             {
                 if (client.CreatedBy != User.Identity.Name)
                 {
-                    ModelState.AddModelError("", "As a Designer," +
+                    ModelState.AddModelError("", "As a Sales Advisor," +
                         "you cannot delete this client because you did not" +
                         "enter them into the system.");
                     ViewData["NoSubmit"] = "disable=disable";

@@ -6,6 +6,10 @@ using MailKit.Net.Smtp;
 
 namespace NBDProject2024.Utilities
 {
+    /// <summary>
+    /// This implements the IEmailService from
+    /// Microsoft.AspNetCore.Identity.UI.Services for the Identity System
+    /// </summary>
     public class EmailSender : IEmailSender
     {
         private readonly IEmailConfiguration _emailConfiguration;
@@ -40,6 +44,8 @@ namespace NBDProject2024.Utilities
             {
                 //Be careful that the SmtpClient class is the one from Mailkit not the framework!
                 using var emailClient = new SmtpClient();
+
+                //emailClient.ServerCertificateValidationCallback = (s, c, h, e) => true;
                 //The last parameter here is to use SSL (Which you should!)
                 emailClient.Connect(_emailConfiguration.SmtpServer, _emailConfiguration.SmtpPort, false);
 

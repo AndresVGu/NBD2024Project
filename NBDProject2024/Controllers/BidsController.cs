@@ -12,10 +12,11 @@ using NBDProject2024.Data;
 using NBDProject2024.Models;
 using NBDProject2024.Utilities;
 using NBDProject2024.ViewModels;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Numeric;
 
 namespace NBDProject2024.Controllers
 {
-    [AllowAnonymous]
+    
     public class BidsController : ElephantController
     {
         private readonly NBDContext _context;
@@ -26,7 +27,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Bids
-        [Authorize(Roles = "Admin,Supervisor,Designer")]
+        [Authorize(Roles = "Admin,Supervisor,Designer,Sales")]
         
         public async Task<IActionResult> Index(int? page, int? pageSizeID, string SearchString, string actionButton, int? MaterialID,
             int? LabourID, string sortDirection = "desc", string sortField = "Bid Date")
@@ -157,7 +158,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Bids/Details/5
-        [Authorize(Roles = "Admin,Supervisor")]
+        [Authorize(Roles = "Admin,Supervisor,Designer,Sales")]
         
         public async Task<IActionResult> Details(int? id)
         {
@@ -180,7 +181,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Bids/Create
-        [Authorize(Roles = "Admin,Supervisor")]
+        [Authorize(Roles = "Admin,Supervisor,Designer")]
        
         public IActionResult Create()
         {
@@ -205,7 +206,7 @@ namespace NBDProject2024.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Supervisor")]
+        [Authorize(Roles = "Admin,Supervisor,Designer")]
        
         public async Task<IActionResult> Create([Bind("ID,BidDate,ProjectID")] Bid bid,
             string[] selectedOptions)
@@ -217,6 +218,7 @@ namespace NBDProject2024.Controllers
                 {
                     _context.Add(bid);
                     await _context.SaveChangesAsync();
+                    TempData["AlertMessage"] = "Bid Updated Successfully...!";
                     return RedirectToAction("Details", new { bid.ID });
                 }
             }
@@ -237,7 +239,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Bids/Edit/5
-        [Authorize(Roles = "Admin,Supervisor")]
+        [Authorize(Roles = "Admin,Supervisor,Designer")]
         
         public async Task<IActionResult> Edit(int? id)
         {
@@ -270,7 +272,7 @@ namespace NBDProject2024.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-         [Authorize(Roles = "Admin,Supervisor")]
+         [Authorize(Roles = "Admin,Supervisor,Designer")]
        
         public async Task<IActionResult> Edit(int id, string[] selectedOptions, Byte[] RowVersion)
         {
@@ -294,7 +296,7 @@ namespace NBDProject2024.Controllers
                 try
                 {
                     await _context.SaveChangesAsync();
-
+                    TempData["AlertMessage"] = "Bid Updated Successfully...!";
                     return RedirectToAction("Details", new { bidToUpdate.ID });
                 }
                 catch (RetryLimitExceededException /* dex */)
@@ -328,7 +330,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Bids/Delete/5
-         [Authorize(Roles = "Admin,Supervisor")]
+         [Authorize(Roles = "Admin,Supervisor,Designer")]
       
         public async Task<IActionResult> Delete(int? id)
         {
@@ -348,13 +350,24 @@ namespace NBDProject2024.Controllers
                 return NotFound();
             }
 
+            if (User.IsInRole("Designer"))
+            {
+                if (bid.CreatedBy != User.Identity.Name)
+                {
+                    ModelState.AddModelError("", "As a Designer," +
+                        "You cannot delete this client because" +
+                        " you did not enter them into the system. ");
+                    ViewData["NoSubmit"] = "disabled=disabled";
+                }
+            }
+
             return View(bid);
         }
 
         // POST: Bids/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-       [Authorize(Roles = "Admin,Supervisor")]
+       [Authorize(Roles = "Admin,Supervisor,Designer")]
        
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -368,6 +381,18 @@ namespace NBDProject2024.Controllers
                 .Include(b => b.Project)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
+            if (User.IsInRole("Designer"))
+            {
+                if (bid.CreatedBy != User.Identity.Name)
+                {
+                    ModelState.AddModelError("", "As a Designer," +
+                        "you cannot delete this client because you did not" +
+                        "enter them into the system.");
+                    ViewData["NoSubmit"] = "disable=disable";
+
+                    return View(bid); // this line prevents the attemp to delete
+                }
+            }
             try
             {
                 if (bid != null)
@@ -375,6 +400,7 @@ namespace NBDProject2024.Controllers
                     _context.Bids.Remove(bid);
                 }
                 await _context.SaveChangesAsync();
+                TempData["AlertMessageDelete"] = "Bid Deleted Sucessfully...!";
                 return Redirect(ViewData["returnURL"].ToString());
 
             }

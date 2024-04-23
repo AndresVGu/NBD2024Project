@@ -15,7 +15,7 @@ namespace NBDProject2024.Utilities
             string AllCharacters = Lowercase + Uppercase
                 + Digit + NonAlphanumeric;
 
-            var charsCount= AllCharacters.Length;
+            var charsCount= AllCharacters.Length; 
 
             var password = new char[NumberOfCharacters];
 

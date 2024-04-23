@@ -22,9 +22,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDbContext<NBDContext>(options =>
     options.UseSqlite(connectionString));
 
-builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -64,6 +61,11 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 
+builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+
+builder.Services.AddControllersWithViews();
+
 //For email Service configuration
 builder.Services.AddSingleton<IEmailConfiguration>(builder.Configuration
     .GetSection("EmailConfiguration").Get<EmailConfiguration>());
@@ -75,7 +77,7 @@ builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddTransient<IMyEmailSender, MyEmailSender>();
 
 
-builder.Services.AddControllersWithViews();
+
 
 //Commented ou to avoid issues with the Identity System
 //builder.Services.AddAuthorization(options =>

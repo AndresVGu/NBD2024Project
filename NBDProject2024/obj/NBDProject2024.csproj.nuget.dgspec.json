@@ -51,7 +51,7 @@
             },
             "MailKit": {
               "target": "Package",
-              "version": "[4.4.0, )"
+              "version": "[4.3.0, )"
             },
             "MappingGenerator": {
               "target": "Package",
@@ -63,19 +63,19 @@
             },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[7.0.13, )"
+              "version": "[7.0.17, )"
             },
             "Microsoft.AspNetCore.Identity.UI": {
               "target": "Package",
-              "version": "[7.0.13, )"
+              "version": "[7.0.17, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[7.0.13, )"
+              "version": "[7.0.17, )"
             },
             "Microsoft.EntityFrameworkCore.Sqlite": {
               "target": "Package",
-              "version": "[7.0.15, )"
+              "version": "[7.0.17, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",

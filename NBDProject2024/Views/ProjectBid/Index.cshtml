@@ -52,7 +52,15 @@
 
                     </th>
                     <th class="text-center">
+                        @if (User.IsInRole("Sales"))
+                        {
+                            <label>Bid Details</label>
+                        }
+                        else
+                        {
+                            
                         <a class="btn btn-outline-success" asp-action="Create" asp-controller="Bids">Add Bid</a>
+                        }
                     </th>
                 </tr>
 
@@ -174,6 +182,16 @@
                         </td>
 
                         <td class="text-center">
+                            @if (User.IsInRole("Sales"))
+                            {
+                                <a asp-action="Details" asp-route-id="@item.ID" asp-controller="Bids" class="btn btn-sm btn-outline-primary"
+                                   role="button" data-bs-toggle="tooltip" title="@ViewData["ControllerFriendlyName"] Details">
+                                    &#x1F50E;
+                                </a>
+                            }
+                            else
+                            {
+                                
                             <a asp-action="Edit" asp-route-id="@item.ID" asp-controller="Bids" class="btn btn-sm btn-outline-primary"
                                role="button" data-bs-toggle="tooltip" title="Edit @ViewData["ControllerFriendlyName"]">
                                 &#x270E;
@@ -186,6 +204,7 @@
                                role="button" data-bs-toggle="tooltip" title="Delete @ViewData["ControllerFriendlyName"]">
                                 &#x274C;
                             </a>
+                            }
                         </td>
 
                     </tr>
@@ -198,9 +217,17 @@
     <partial name="_PagingNavBar" />
 
     <div>
-        <a asp-action="Edit" asp-controller="Projects" asp-route-id="@project.ID">Edit @project.ProjectName</a> |
-        <a asp-action="Index" asp-controller="Projects">Back to Project List</a>  ||
+        @if (User.IsInRole("Sales"))
+        {
+            <a asp-action="Index" asp-controller="Projects">Back to Project List</a>
+        }
+        else
+        {
+            
+        <a asp-action="Edit" asp-controller="Projects" asp-route-id="@project.ID">Edit @project.ProjectName</a> 
+        <a asp-action="Index" asp-controller="Projects">Back to Project List</a>  
         <a asp-action="Delete" asp-controller="Projects" asp-route-id="@project?.ID">Delete Project</a>
+        }
     </div>
 </form>
 @section Scripts {

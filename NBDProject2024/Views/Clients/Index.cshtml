@@ -81,10 +81,20 @@
                     <input type="submit" name="actionButton" value="Phone" class="btn btn-link" data-bs-toggle="tooltip" title="Sort by Phone Number" />
 
                 </th>
-
+                @if (User.IsInRole("Designer"))
+                {
+                    <th class="text-center">
+                        <label>Details</label>
+                    </th>
+                }
+                else
+                {
+                    
                 <th class="text-center">
                     <a asp-action="Create" class="btn btn-outline-success" fdprocessedid="k03am" data-bs-toggle="tooltip" title="Add a new client">Add Client</a>
                 </th>
+                }
+
             </tr>
         </thead>
 
@@ -107,13 +117,24 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.PhoneFormatted)
                     </td>
+
+
                     <td class="text-center">
+                        @if (User.IsInRole("Designer"))
+                        {
+                            <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-sm btn-outline-primary" fdprocessedid="rpbgq"
+                               data-bs-toggle="tooltip" title="Client Details"> &#x1F50E;</a>
+                        }
+                        else
+                        {
+                            
                         <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-sm btn-outline-primary" fdprocessedid="t6a41e"
                            data-bs-toggle="tooltip" title="Edit Client">&#x270E;</a>
                         <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-sm btn-outline-primary" fdprocessedid="rpbgq"
                            data-bs-toggle="tooltip" title="Client Details"> &#x1F50E;</a>
                         <a asp-action="Delete" asp-route-id="@item.ID" class="btn btn-sm btn-outline-danger" fdprocessedid="a09td"
                            data-bs-toggle="tooltip" title="Delete Client"> &#x274C;</a>
+                        }
                     </td>
                 </tr>
             }

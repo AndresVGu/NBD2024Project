@@ -213,7 +213,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Projects/Details/5
-         [Authorize(Roles ="Admin,Supervisor,Designer")]
+         [Authorize(Roles ="Admin,Supervisor,Designer,Sales")]
         
         public async Task<IActionResult> Details(int? id)
         {
@@ -238,7 +238,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Projects/Create
-        [Authorize(Roles = "Admin,Supervisor,Designer,Sales")]
+        [Authorize(Roles = "Admin,Supervisor,Designer")]
         
         public IActionResult Create()
         {
@@ -254,7 +254,7 @@ namespace NBDProject2024.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Supervisor,Designer,Sales")]
+        [Authorize(Roles = "Admin,Supervisor,Designer")]
         
         public async Task<IActionResult> Create([Bind("ID,ProjectName,BidDate,StartTime,EndTime,ProjectSite,SetupNotes,CityID,ClientID")] Project project,
             string[] selectedOptions)
@@ -369,7 +369,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Projects/Delete/5
-         [Authorize(Roles = "Admin,Supervisor")]
+         [Authorize(Roles = "Admin,Supervisor,Designer")]
         
         public async Task<IActionResult> Delete(int? id)
         {
@@ -387,6 +387,16 @@ namespace NBDProject2024.Controllers
             {
                 return NotFound();
             }
+            if (User.IsInRole("Designer"))
+            {
+                if (project.CreatedBy != User.Identity.Name)
+                {
+                    ModelState.AddModelError("", "As a Designer," +
+                        "You cannot delete this client because" +
+                        " you did not enter them into the system. ");
+                    ViewData["NoSubmit"] = "disabled=disabled";
+                }
+            }
 
             return View(project);
         }
@@ -395,7 +405,7 @@ namespace NBDProject2024.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Supervisor")]
+        [Authorize(Roles = "Admin,Supervisor,Designer")]
         
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -407,6 +417,19 @@ namespace NBDProject2024.Controllers
                .Include(p => p.Client)
                .Include(p => p.City)
                .FirstOrDefaultAsync(m => m.ID == id);
+
+            if (User.IsInRole("Designer"))
+            {
+                if (project.CreatedBy != User.Identity.Name)
+                {
+                    ModelState.AddModelError("", "As a Designer," +
+                        "You cannot delete this client because" +
+                        " you did not enter them into the system. ");
+                    ViewData["NoSubmit"] = "disabled=disabled";
+
+                    return View(project);
+                }
+            }
             try
             {
                 if (project != null)
