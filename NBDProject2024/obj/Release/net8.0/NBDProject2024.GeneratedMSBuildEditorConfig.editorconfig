@@ -1,0 +1,339 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = NBDProject2024
+build_property.RootNamespace = NBDProject2024
+build_property.ProjectDir = /home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = /home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024
+build_property._RazorSourceGeneratorDebug = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Areas/Identity/Pages/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvSWRlbnRpdHkvUGFnZXMvQWNjb3VudC9Mb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Areas/Identity/Pages/Account/Manage/_ManageNav.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvSWRlbnRpdHkvUGFnZXMvQWNjb3VudC9NYW5hZ2UvX01hbmFnZU5hdi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Areas/Identity/Pages/Account/Manage/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvSWRlbnRpdHkvUGFnZXMvQWNjb3VudC9NYW5hZ2UvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Areas/Identity/Pages/Account/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvSWRlbnRpdHkvUGFnZXMvQWNjb3VudC9fVmlld0ltcG9ydHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Areas/Identity/Pages/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvSWRlbnRpdHkvUGFnZXMvX1ZhbGlkYXRpb25TY3JpcHRzUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Areas/Identity/Pages/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvSWRlbnRpdHkvUGFnZXMvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Areas/Identity/Pages/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvSWRlbnRpdHkvUGFnZXMvX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/BidLabours/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkTGFib3Vycy9DcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/BidLabours/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkTGFib3Vycy9EZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/BidLabours/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkTGFib3Vycy9EZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/BidLabours/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkTGFib3Vycy9FZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/BidLabours/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkTGFib3Vycy9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/BidMaterials/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkTWF0ZXJpYWxzL0NyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/BidMaterials/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkTWF0ZXJpYWxzL0RlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/BidMaterials/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkTWF0ZXJpYWxzL0RldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/BidMaterials/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkTWF0ZXJpYWxzL0VkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/BidMaterials/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkTWF0ZXJpYWxzL0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/BidMaterials/_CreateMaterial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkTWF0ZXJpYWxzL19DcmVhdGVNYXRlcmlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/BidMaterials/_EditMaterial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkTWF0ZXJpYWxzL19FZGl0TWF0ZXJpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Bids/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkcy9DcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Bids/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkcy9EZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Bids/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkcy9EZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Bids/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkcy9FZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Bids/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkcy9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Bids/_addLabourModal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkcy9fYWRkTGFib3VyTW9kYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Bids/_addMaterialModal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkcy9fYWRkTWF0ZXJpYWxNb2RhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Bids/_LabourCreate.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkcy9fTGFib3VyQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Bids/_ListOfLabours.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkcy9fTGlzdE9mTGFib3Vycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Bids/_ListOfMaterials.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkcy9fTGlzdE9mTWF0ZXJpYWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Bids/_MaterialBidList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkcy9fTWF0ZXJpYWxCaWRMaXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Bids/_MaterialCreate.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkcy9fTWF0ZXJpYWxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Bids/_MaterialList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmlkcy9fTWF0ZXJpYWxMaXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Clients/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xpZW50cy9DcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Clients/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xpZW50cy9EZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Clients/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xpZW50cy9EZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Clients/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xpZW50cy9FZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Clients/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xpZW50cy9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Clients/_ListOfProjects.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xpZW50cy9fTGlzdE9mUHJvamVjdHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Employee/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRW1wbG95ZWUvQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Employee/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRW1wbG95ZWUvRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Employee/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRW1wbG95ZWUvSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/EmployeeAccount/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRW1wbG95ZWVBY2NvdW50L0RldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/EmployeeAccount/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvRW1wbG95ZWVBY2NvdW50L0VkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9Qcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Labours/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTGFib3Vycy9DcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Labours/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTGFib3Vycy9EZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Labours/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTGFib3Vycy9EZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Labours/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTGFib3Vycy9FZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Labours/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTGFib3Vycy9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Lookup/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTG9va3VwL0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Lookup/_Labour.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTG9va3VwL19MYWJvdXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Lookup/_Material.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTG9va3VwL19NYXRlcmlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Materials/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWF0ZXJpYWxzL0NyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Materials/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWF0ZXJpYWxzL0RlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Materials/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWF0ZXJpYWxzL0RldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Materials/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWF0ZXJpYWxzL0VkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Materials/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWF0ZXJpYWxzL0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/ProjectBid/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvamVjdEJpZC9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/ProjectBid/_ProjectDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvamVjdEJpZC9fUHJvamVjdERldGFpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Projects/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvamVjdHMvQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Projects/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvamVjdHMvRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Projects/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvamVjdHMvRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Projects/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvamVjdHMvRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Projects/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvamVjdHMvSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL0Vycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Shared/_BackToList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19CYWNrVG9MaXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Shared/_LayoutAuth.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19MYXlvdXRBdXRoLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Shared/_LoginPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19Mb2dpblBhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Shared/_PageSizeModal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19QYWdlU2l6ZU1vZGFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Shared/_PagingNavBar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19QYWdpbmdOYXZCYXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Shared/_ViewHeading.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19WaWV3SGVhZGluZy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/UserRole/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVXNlclJvbGUvRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/UserRole/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVXNlclJvbGUvSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-ri71hvckq6

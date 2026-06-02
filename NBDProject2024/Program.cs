@@ -113,8 +113,11 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
-//Seed Sata
-NBDInitializer.Seed(app);
-ApplicationDbInitializer.Seed(app);
+// Seed data only in local development to avoid slow production cold starts.
+if (app.Environment.IsDevelopment())
+{
+    NBDInitializer.Seed(app);
+    ApplicationDbInitializer.Seed(app);
+}
 
 app.Run();
