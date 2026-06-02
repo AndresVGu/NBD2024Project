@@ -6,39 +6,37 @@ namespace NBDProject2024.Data
 {
     public static class ApplicationDbInitializer
     {
-        public static async void Seed(IApplicationBuilder applicationBuilder)
+        public static async Task SeedAsync(IApplicationBuilder applicationBuilder)
         {
-            ApplicationDbContext context = applicationBuilder.ApplicationServices
-                .CreateScope()
-                .ServiceProvider.GetRequiredService<ApplicationDbContext>();
             try
             {
-                //Create the database if it does not exist and apply the Migration
-                context.Database.Migrate();
+                using var scope = applicationBuilder.ApplicationServices.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+                // Only apply migrations if there are pending changes.
+                var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
+                if (pendingMigrations.Any())
+                {
+                    await context.Database.MigrateAsync();
+                }
 
                 //Create Roles
-                var RoleManager = applicationBuilder.ApplicationServices
-                    .CreateScope()
-                    .ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                
                 string[] roleNames = { "Admin", "Supervisor", "Sales", "Designer" };
-                
-                IdentityResult roleResult;
-                
+ 
                 foreach (var roleName in roleNames)
                 {
-                    var roleExist = await RoleManager.RoleExistsAsync(roleName);
+                    var roleExist = await roleManager.RoleExistsAsync(roleName);
                     if (!roleExist)
                     {
-                        roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+                        await roleManager.CreateAsync(new IdentityRole(roleName));
                     }
                 }
+
                 //Create Users:
                 //ADMIN
-                var userManager = applicationBuilder.ApplicationServices
-                    .CreateScope()
-                    .ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-                if (userManager.FindByEmailAsync("admin@outlook.com").Result == null)
+                if (await userManager.FindByEmailAsync("admin@outlook.com") == null)
                 {
                     IdentityUser user = new IdentityUser
                     {
@@ -47,18 +45,15 @@ namespace NBDProject2024.Data
                         EmailConfirmed = true
                     };
 
-                    IdentityResult result = userManager
-                        .CreateAsync(user, "Pa55w@rd")
-                        .Result;
+                    IdentityResult result = await userManager.CreateAsync(user, "Pa55w@rd");
 
                     if (result.Succeeded)
                     {
-                        userManager.AddToRoleAsync(user, "Admin").Wait();
-                        userManager.AddToRoleAsync(user, "Security").Wait();
+                        await userManager.AddToRoleAsync(user, "Admin");
                     }
                 }
                 //SUPERVISOR
-                if (userManager.FindByEmailAsync("super@outlook.com").Result == null)
+                if (await userManager.FindByEmailAsync("super@outlook.com") == null)
                 {
                     IdentityUser user = new IdentityUser
                     {
@@ -67,15 +62,15 @@ namespace NBDProject2024.Data
                         EmailConfirmed = true
                     };
 
-                    IdentityResult result = userManager.CreateAsync(user, "Pa55w@rd").Result;
+                    IdentityResult result = await userManager.CreateAsync(user, "Pa55w@rd");
 
                     if (result.Succeeded)
                     {
-                        userManager.AddToRoleAsync(user, "Supervisor").Wait();
+                        await userManager.AddToRoleAsync(user, "Supervisor");
                     }
                 }
                 //SALES
-                if (userManager.FindByEmailAsync("sales@outlook.com").Result == null)
+                if (await userManager.FindByEmailAsync("sales@outlook.com") == null)
                 {
                     IdentityUser user = new IdentityUser
                     {
@@ -84,15 +79,15 @@ namespace NBDProject2024.Data
                         EmailConfirmed = true
                     };
 
-                    IdentityResult result = userManager.CreateAsync(user, "Pa55w@rd").Result;
+                    IdentityResult result = await userManager.CreateAsync(user, "Pa55w@rd");
 
                     if (result.Succeeded)
                     {
-                        userManager.AddToRoleAsync(user, "Sales").Wait();
+                        await userManager.AddToRoleAsync(user, "Sales");
                     }
                 }
                 //DESIGNER
-                if (userManager.FindByEmailAsync("designer@outlook.com").Result == null)
+                if (await userManager.FindByEmailAsync("designer@outlook.com") == null)
                 {
                     IdentityUser user = new IdentityUser
                     {
@@ -101,15 +96,15 @@ namespace NBDProject2024.Data
                         EmailConfirmed = true
                     };
 
-                    IdentityResult result = userManager.CreateAsync(user, "Pa55w@rd").Result;
+                    IdentityResult result = await userManager.CreateAsync(user, "Pa55w@rd");
 
                     if (result.Succeeded)
                     {
-                        userManager.AddToRoleAsync(user, "Designer").Wait();
+                        await userManager.AddToRoleAsync(user, "Designer");
                     }
                 }
                 //USER
-                if (userManager.FindByEmailAsync("user@outlook.com").Result == null)
+                if (await userManager.FindByEmailAsync("user@outlook.com") == null)
                 {
                     IdentityUser user = new IdentityUser
                     {
@@ -118,7 +113,7 @@ namespace NBDProject2024.Data
                         EmailConfirmed = true
                     };
 
-                    IdentityResult result = userManager.CreateAsync(user, "Pa55w@rd").Result;
+                    await userManager.CreateAsync(user, "Pa55w@rd");
                     //Not in any role
                 }
             }

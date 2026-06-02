@@ -29,8 +29,16 @@ namespace NBDProject2024.Controllers
         public async Task<IActionResult> Index(string SearchString, int? ClientID, string SearchClient, DateTime StartDate, DateTime EndDate,
            int? page, int? pageSizeID, string actionButton, string sortDirection = "asc", string sortField = "ClientID")
         {
-            //set the range filter based in values in the database
-            if (EndDate == DateTime.MinValue)
+            //Set the range filter based on data only when records exist.
+            bool hasProjects = await _context.Projects.AnyAsync();
+            if (!hasProjects)
+            {
+                StartDate = DateTime.Today;
+                EndDate = DateTime.Today;
+                ViewData["StartDate"] = StartDate.ToString("yyyy/MM/dd");
+                ViewData["EndDate"] = EndDate.ToString("yyyy/MM/dd");
+            }
+            else if (EndDate == DateTime.MinValue)
             {
                 StartDate = _context.Projects.Min(p => p.StartTime).Date;
                 EndDate = _context.Projects.Max(p => p.StartTime).Date;
@@ -257,10 +265,18 @@ namespace NBDProject2024.Controllers
         [Authorize(Roles = "Admin,Supervisor,Designer")]
         
         public async Task<IActionResult> Create([Bind("ID,ProjectName,BidDate,StartTime,EndTime,ProjectSite,SetupNotes,CityID,ClientID")] Project project,
-            string[] selectedOptions)
+            string[] selectedOptions, string ProvinceID, string NewCityName)
         {
             try
             {
+                if ((project.CityID ?? 0) <= 0 &&
+                    !string.IsNullOrWhiteSpace(ProvinceID) &&
+                    !string.IsNullOrWhiteSpace(NewCityName))
+                {
+                    project.CityID = await GetOrCreateCityIdAsync(ProvinceID, NewCityName);
+                    ModelState.Remove("CityID");
+                }
+
                 if (ModelState.IsValid)
                 {
                     _context.Add(project);
@@ -514,6 +530,29 @@ namespace NBDProject2024.Controllers
         public JsonResult GetCities(string ProvinceID)
         {
             return Json(CitySelectList(ProvinceID, null));
+        }
+
+        private async Task<int> GetOrCreateCityIdAsync(string provinceID, string newCityName)
+        {
+            string cityName = newCityName.Trim();
+            var existingCity = await _context.Cities
+                .FirstOrDefaultAsync(c => c.ProvinceID == provinceID && c.Name.ToUpper() == cityName.ToUpper());
+
+            if (existingCity != null)
+            {
+                return existingCity.ID;
+            }
+
+            var city = new City
+            {
+                ProvinceID = provinceID,
+                Name = cityName
+            };
+
+            _context.Cities.Add(city);
+            await _context.SaveChangesAsync();
+
+            return city.ID;
         }
         #endregion
 

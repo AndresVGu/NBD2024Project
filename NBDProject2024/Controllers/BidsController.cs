@@ -56,6 +56,7 @@ namespace NBDProject2024.Controllers
                 .Include(b => b.BidMaterials).ThenInclude(b => b.Materials)
                 .Include(b => b.BidLabours).ThenInclude(b => b.Labours)
                  .Include(b => b.Project)
+                .AsSplitQuery()
                 .AsNoTracking();
 
             //Filters:

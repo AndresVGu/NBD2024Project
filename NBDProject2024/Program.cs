@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Data.Sqlite;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -13,14 +15,49 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Could not connect with connection string.");
+var rawConnectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Could not connect with connection string.");
+
+// In Azure App Service, keep SQLite under /home so the DB survives restarts/deploys.
+var nbdConnectionString = rawConnectionString;
+var identityConnectionString = rawConnectionString;
+if (!builder.Environment.IsDevelopment())
+{
+    var nbdBuilder = new SqliteConnectionStringBuilder(rawConnectionString);
+    if (!string.IsNullOrWhiteSpace(nbdBuilder.DataSource) && !Path.IsPathRooted(nbdBuilder.DataSource))
+    {
+        var persistentDataPath = "/home/data";
+        Directory.CreateDirectory(persistentDataPath);
+        var nbdFileName = Path.GetFileName(nbdBuilder.DataSource);
+        var identityFileName = Path.GetFileNameWithoutExtension(nbdFileName) + "_identity" + Path.GetExtension(nbdFileName);
+
+        nbdBuilder.DataSource = Path.Combine(persistentDataPath, nbdFileName);
+        nbdConnectionString = nbdBuilder.ToString();
+
+        var identityBuilder = new SqliteConnectionStringBuilder(rawConnectionString)
+        {
+            DataSource = Path.Combine(persistentDataPath, identityFileName)
+        };
+        identityConnectionString = identityBuilder.ToString();
+    }
+}
+else
+{
+    var nbdBuilder = new SqliteConnectionStringBuilder(rawConnectionString);
+    var nbdFileName = Path.GetFileNameWithoutExtension(nbdBuilder.DataSource);
+    var nbdFileExt = Path.GetExtension(nbdBuilder.DataSource);
+    var identityBuilder = new SqliteConnectionStringBuilder(rawConnectionString)
+    {
+        DataSource = nbdFileName + "_identity" + nbdFileExt
+    };
+    identityConnectionString = identityBuilder.ToString();
+}
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseSqlite(identityConnectionString));
 
 //Context:
 builder.Services.AddDbContext<NBDContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseSqlite(nbdConnectionString));
 
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -63,6 +100,25 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<BrotliCompressionProvider>();
+    options.Providers.Add<GzipCompressionProvider>();
+});
+
+builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+{
+    options.Level = System.IO.Compression.CompressionLevel.Fastest;
+});
+
+builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+{
+    options.Level = System.IO.Compression.CompressionLevel.Fastest;
+});
+
+builder.Services.AddResponseCaching();
+
 
 builder.Services.AddControllersWithViews();
 
@@ -102,10 +158,20 @@ else
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseResponseCompression();
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = ctx =>
+    {
+        const int durationInSeconds = 60 * 60 * 24 * 7;
+        ctx.Context.Response.Headers["Cache-Control"] = $"public,max-age={durationInSeconds}";
+    }
+});
 
 app.UseRouting();
 
+app.UseResponseCaching();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
@@ -113,11 +179,27 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
-// Seed data only in local development to avoid slow production cold starts.
+// Heavy domain seed only in local development to avoid slow production cold starts.
 if (app.Environment.IsDevelopment())
 {
     NBDInitializer.Seed(app);
-    ApplicationDbInitializer.Seed(app);
 }
+
+// Always ensure essential location lookups exist for client/project forms.
+await LookupDataInitializer.SeedAsync(app);
+
+// Keep schema up to date with a lightweight migration check.
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var nbdContext = scope.ServiceProvider.GetRequiredService<NBDContext>();
+    var nbdPendingMigrations = await nbdContext.Database.GetPendingMigrationsAsync();
+    if (nbdPendingMigrations.Any())
+    {
+        await nbdContext.Database.MigrateAsync();
+    }
+}
+
+// Lightweight identity seed in all environments (roles/users) so login always works.
+await ApplicationDbInitializer.SeedAsync(app);
 
 app.Run();

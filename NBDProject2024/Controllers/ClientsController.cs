@@ -214,10 +214,19 @@ namespace NBDProject2024.Controllers
         [Authorize(Roles = "Admin,Supervisor,Sales")]
 
         public async Task<IActionResult> Create([Bind("ID,FirstName, MiddleName,LastName, CompanyName," +
-            "Phone,Email,AddressCountry,AddressStreet,CityID,PostalCode,")] Client client, string[] selectedOptions)
+            "Phone,Email,AddressCountry,AddressStreet,CityID,PostalCode,")] Client client, string[] selectedOptions,
+            string ProvinceID, string NewCityName)
         {
             try
             {
+                if ((client.CityID ?? 0) <= 0 &&
+                    !string.IsNullOrWhiteSpace(ProvinceID) &&
+                    !string.IsNullOrWhiteSpace(NewCityName))
+                {
+                    client.CityID = await GetOrCreateCityIdAsync(ProvinceID, NewCityName);
+                    ModelState.Remove("CityID");
+                }
+
                 if (ModelState.IsValid)
                 {
 
@@ -490,6 +499,29 @@ namespace NBDProject2024.Controllers
                          select new { value = c.FirstName + " " + c.LastName };
 
             return Json(result);
+        }
+
+        private async Task<int> GetOrCreateCityIdAsync(string provinceID, string newCityName)
+        {
+            string cityName = newCityName.Trim();
+            var existingCity = await _context.Cities
+                .FirstOrDefaultAsync(c => c.ProvinceID == provinceID && c.Name.ToUpper() == cityName.ToUpper());
+
+            if (existingCity != null)
+            {
+                return existingCity.ID;
+            }
+
+            var city = new City
+            {
+                ProvinceID = provinceID,
+                Name = cityName
+            };
+
+            _context.Cities.Add(city);
+            await _context.SaveChangesAsync();
+
+            return city.ID;
         }
 
         #endregion

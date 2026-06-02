@@ -128,9 +128,10 @@ namespace NBDProject2024.Areas.Identity.Pages.Account
                 {
                     //Code
                     var emp = _context.Employees.Where(e => e.Email == Input.Email).FirstOrDefault();
-                    CookieHelper.CookieSet(HttpContext, "userName", emp.FullName, 3200);
+                    var displayName = emp?.FullName ?? Input.Email;
+                    CookieHelper.CookieSet(HttpContext, "userName", displayName, 3200);
 
-                    if (String.IsNullOrEmpty(emp.Phone))
+                    if (emp != null && String.IsNullOrEmpty(emp.Phone))
                     {
                         //Nag to complete the profile
                         TempData["message"] = "Please enter the phone number.";

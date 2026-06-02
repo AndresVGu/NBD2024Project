@@ -45,6 +45,7 @@ namespace NBDProject2024.Controllers
                        .Include(a => a.BidMaterials).ThenInclude(a => a.Materials)
                        .Include(a => a.BidLabours).ThenInclude(a => a.Labours)
                        .Include(a => a.Project)
+                       .AsSplitQuery()
 
                        where a.ProjectID == ProjectID.GetValueOrDefault()
                        select a;

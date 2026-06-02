@@ -83,6 +83,12 @@
                 </select>
                 <span asp-validation-for="CityID" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label class="control-label">Or Enter New City:</label>
+                <input type="text" name="NewCityName" class="form-control" placeholder="E.g. Niagara Falls" />
+                <small class="form-text text-muted">If the city is not listed, type it here after selecting a province.</small>
+            </div>
             <div class="form-group">
                 <label asp-for="PostalCode" class="control-label">Postal Code*:</label>
                 <input asp-for="PostalCode" class="form-control" placeholder="E.g. LC37L3" />
