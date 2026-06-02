@@ -43,9 +43,8 @@ namespace NBDProject2024.Controllers
 
             if(employee == null)
             {
-                return NotFound();
+                return RedirectToPage("/Account/Manage/Index", new { area = "Identity" });
             }
-            TempData["AlertMessage"] = "Employee Updated Successfully...!";
             return View(employee);
         }
 
@@ -69,9 +68,8 @@ namespace NBDProject2024.Controllers
 
             if(employee == null)
             {
-                return NotFound();
+                return RedirectToPage("/Account/Manage/Index", new { area = "Identity" });
             }
-            TempData["AlertMessage"] = "Employee Updated Successfully...!";
             return View(employee);
         }
 
@@ -82,6 +80,11 @@ namespace NBDProject2024.Controllers
         {
             var employeeToUpdate = await _context.Employees
                 .FirstOrDefaultAsync(e => e.ID == id);
+
+            if (employeeToUpdate == null)
+            {
+                return NotFound();
+            }
 
             if(await TryUpdateModelAsync<Employee>(employeeToUpdate, "",
                 c => c.FirstName, c=> c.MiddleName, c => c.LastName, c => c.Phone))
@@ -110,7 +113,18 @@ namespace NBDProject2024.Controllers
                     ModelState.AddModelError("", "Something went wrong in the database.");
                 }
             }
-            return View(employeeToUpdate);
+
+            var vm = new EmployeeVM
+            {
+                ID = employeeToUpdate.ID,
+                FirstName = employeeToUpdate.FirstName,
+                MiddleName = employeeToUpdate.MiddleName,
+                LastName = employeeToUpdate.LastName,
+                Phone = employeeToUpdate.Phone,
+                NumberOfPushSubscriptions = await _context.Subscriptions.CountAsync(s => s.EmployeeID == employeeToUpdate.ID)
+            };
+
+            return View(vm);
         }
 
         //METHODS:

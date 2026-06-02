@@ -7,11 +7,15 @@ namespace NBDProject2024.Models
         public int ID { get; set; }
 
         #region Summary Properties
+        public double MaterialTotalAmount => BidMaterials?.Sum(m => m.MaterialQuantity * m.Materials.Price) ?? 0;
+
+        public double LabourTotalAmount => BidLabours?.Sum(l => l.HoursQuantity * l.Labours.Price) ?? 0;
+
         public string Total
         {
             get
             {
-                return "Sumar MaterialsTotal + LabourTotal";
+                return (MaterialTotalAmount + LabourTotalAmount).ToString("C2");
             }
         }
 
@@ -19,7 +23,7 @@ namespace NBDProject2024.Models
         {
             get
             {
-                return "total material";
+                return MaterialTotalAmount.ToString("C2");
             }
         }
 
@@ -27,7 +31,7 @@ namespace NBDProject2024.Models
         {
             get
             {
-                return "Labour Total";
+                return LabourTotalAmount.ToString("C2");
             }
         }
         #endregion

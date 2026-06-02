@@ -11,8 +11,6 @@ using NBDProject2024.CustomControllers;
 using NBDProject2024.Data;
 using NBDProject2024.Models;
 using NBDProject2024.Utilities;
-using NBDProject2024.ViewModels;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Numeric;
 
 namespace NBDProject2024.Controllers
 {
@@ -142,22 +140,6 @@ namespace NBDProject2024.Controllers
             return View(pagedData);
         }
 
-
-
-
-        //PartialView Borrar
-        public PartialViewResult CreateMaterial(int? MaterialID, int? BidID)
-        {
-            //Having the Bid's MaterialID allow us to set it as 
-            //the default for the new Song
-            ViewData["MaterialID"] = new SelectList(_context.BidMaterials
-                .OrderBy(m => m.Materials.Name), "ID", "Name", MaterialID.GetValueOrDefault());
-
-            ViewData["BidID"] = BidID.GetValueOrDefault();
-
-            return PartialView("_MaterialCreate");
-        }
-
         // GET: Bids/Details/5
         [Authorize(Roles = "Admin,Supervisor,Designer,Sales")]
         
@@ -186,19 +168,9 @@ namespace NBDProject2024.Controllers
        
         public IActionResult Create()
         {
-            Bid bid = new Bid();
-
-            PopulateAssignedMaterialData(bid);
-            PopulateAssignedLabourData(bid);
-
-            var mat = _context.BidMaterials;
-            MaterialsViewModel vm = new MaterialsViewModel();
-            //vm.BidMaterial = mat.ToList();
-
-            //Agregar labour
             ViewData["ProjectID"] = new SelectList(_context.Projects, "ID", "ProjectName");
             ViewData["MaterialID"] = new SelectList(_context.Materials, "ID", "Name");
-            // Populate();
+            ViewData["LabourID"] = new SelectList(_context.Labours, "ID", "Name");
             return View();
         }
 
@@ -210,16 +182,77 @@ namespace NBDProject2024.Controllers
         [Authorize(Roles = "Admin,Supervisor,Designer")]
        
         public async Task<IActionResult> Create([Bind("ID,BidDate,ProjectID")] Bid bid,
-            string[] selectedOptions)
+            int[] materialIds, int[] materialQuantities, int[] labourIds, double[] labourHours)
         {
             try
             {
-                // UpdateBidMaterials(selectedOptions, bid);
                 if (ModelState.IsValid)
                 {
                     _context.Add(bid);
                     await _context.SaveChangesAsync();
-                    TempData["AlertMessage"] = "Bid Updated Successfully...!";
+
+                    // Consolidate repeated selections into a single line per material.
+                    var materialMap = new Dictionary<int, int>();
+                    int materialLength = Math.Min(materialIds?.Length ?? 0, materialQuantities?.Length ?? 0);
+                    for (int i = 0; i < materialLength; i++)
+                    {
+                        int materialId = materialIds[i];
+                        int quantity = materialQuantities[i];
+
+                        if (materialId > 0 && quantity > 0)
+                        {
+                            if (!materialMap.ContainsKey(materialId))
+                            {
+                                materialMap[materialId] = 0;
+                            }
+                            materialMap[materialId] += quantity;
+                        }
+                    }
+
+                    foreach (var item in materialMap)
+                    {
+                        bid.BidMaterials.Add(new BidMaterial
+                        {
+                            BidID = bid.ID,
+                            MaterialID = item.Key,
+                            MaterialQuantity = item.Value
+                        });
+                    }
+
+                    // Consolidate repeated selections into a single line per labour type.
+                    var labourMap = new Dictionary<int, double>();
+                    int labourLength = Math.Min(labourIds?.Length ?? 0, labourHours?.Length ?? 0);
+                    for (int i = 0; i < labourLength; i++)
+                    {
+                        int labourId = labourIds[i];
+                        double hours = labourHours[i];
+
+                        if (labourId > 0 && hours > 0)
+                        {
+                            if (!labourMap.ContainsKey(labourId))
+                            {
+                                labourMap[labourId] = 0;
+                            }
+                            labourMap[labourId] += hours;
+                        }
+                    }
+
+                    foreach (var item in labourMap)
+                    {
+                        bid.BidLabours.Add(new BidLabour
+                        {
+                            BidID = bid.ID,
+                            LabourID = item.Key,
+                            HoursQuantity = item.Value
+                        });
+                    }
+
+                    if (materialMap.Count > 0 || labourMap.Count > 0)
+                    {
+                        await _context.SaveChangesAsync();
+                    }
+
+                    TempData["AlertMessage"] = "Bid Created Successfully...!";
                     return RedirectToAction("Details", new { bid.ID });
                 }
             }
@@ -232,10 +265,9 @@ namespace NBDProject2024.Controllers
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
 
-            PopulateAssignedMaterialData(bid);
-            PopulateAssignedLabourData(bid);
             ViewData["ProjectID"] = new SelectList(_context.Projects, "ID", "ProjectName", bid.ProjectID);
-            ViewData["MaterialID"] = new SelectList(_context.Materials, "ID", "Name", bid.BidMaterials);
+            ViewData["MaterialID"] = new SelectList(_context.Materials, "ID", "Name");
+            ViewData["LabourID"] = new SelectList(_context.Labours, "ID", "Name");
             return View(bid);
         }
 
@@ -260,11 +292,9 @@ namespace NBDProject2024.Controllers
             {
                 return NotFound();
             }
-            PopulateAssignedMaterialData(bid);
-            PopulateAssignedLabourData(bid);
             ViewData["ProjectID"] = new SelectList(_context.Projects, "ID", "ProjectName", bid.ProjectID);
-            ViewData["MaterialID"] = new SelectList(_context.Materials, "ID", "Name", bid.BidMaterials);
-            //Populate();
+            ViewData["MaterialID"] = new SelectList(_context.Materials, "ID", "Name");
+            ViewData["LabourID"] = new SelectList(_context.Labours, "ID", "Name");
             return View(bid);
         }
 
@@ -275,7 +305,8 @@ namespace NBDProject2024.Controllers
         [ValidateAntiForgeryToken]
          [Authorize(Roles = "Admin,Supervisor,Designer")]
        
-        public async Task<IActionResult> Edit(int id, string[] selectedOptions, Byte[] RowVersion)
+        public async Task<IActionResult> Edit(int id, Byte[] RowVersion,
+            int[] materialIds, int[] materialQuantities, int[] labourIds, double[] labourHours)
         {
             var bidToUpdate = await _context.Bids
                 .Include(b => b.BidMaterials).ThenInclude(b => b.Materials)
@@ -287,8 +318,6 @@ namespace NBDProject2024.Controllers
             {
                 return NotFound();
             }
-            //For the moment we comment this:
-            UpdateBidMaterials(selectedOptions, bidToUpdate);
             _context.Entry(bidToUpdate).Property("RowVersion").OriginalValue = RowVersion;
 
             if (await TryUpdateModelAsync<Bid>(bidToUpdate, "",
@@ -296,6 +325,63 @@ namespace NBDProject2024.Controllers
             {
                 try
                 {
+                    _context.BidMaterials.RemoveRange(bidToUpdate.BidMaterials);
+                    _context.BidLabours.RemoveRange(bidToUpdate.BidLabours);
+
+                    var materialMap = new Dictionary<int, int>();
+                    int materialLength = Math.Min(materialIds?.Length ?? 0, materialQuantities?.Length ?? 0);
+                    for (int i = 0; i < materialLength; i++)
+                    {
+                        int materialId = materialIds[i];
+                        int quantity = materialQuantities[i];
+
+                        if (materialId > 0 && quantity > 0)
+                        {
+                            if (!materialMap.ContainsKey(materialId))
+                            {
+                                materialMap[materialId] = 0;
+                            }
+                            materialMap[materialId] += quantity;
+                        }
+                    }
+
+                    foreach (var item in materialMap)
+                    {
+                        bidToUpdate.BidMaterials.Add(new BidMaterial
+                        {
+                            BidID = bidToUpdate.ID,
+                            MaterialID = item.Key,
+                            MaterialQuantity = item.Value
+                        });
+                    }
+
+                    var labourMap = new Dictionary<int, double>();
+                    int labourLength = Math.Min(labourIds?.Length ?? 0, labourHours?.Length ?? 0);
+                    for (int i = 0; i < labourLength; i++)
+                    {
+                        int labourId = labourIds[i];
+                        double hours = labourHours[i];
+
+                        if (labourId > 0 && hours > 0)
+                        {
+                            if (!labourMap.ContainsKey(labourId))
+                            {
+                                labourMap[labourId] = 0;
+                            }
+                            labourMap[labourId] += hours;
+                        }
+                    }
+
+                    foreach (var item in labourMap)
+                    {
+                        bidToUpdate.BidLabours.Add(new BidLabour
+                        {
+                            BidID = bidToUpdate.ID,
+                            LabourID = item.Key,
+                            HoursQuantity = item.Value
+                        });
+                    }
+
                     await _context.SaveChangesAsync();
                     TempData["AlertMessage"] = "Bid Updated Successfully...!";
                     return RedirectToAction("Details", new { bidToUpdate.ID });
@@ -322,10 +408,10 @@ namespace NBDProject2024.Controllers
                 }
 
             }
-            PopulateAssignedMaterialData(bidToUpdate);
-            PopulateAssignedLabourData(bidToUpdate);
+
             ViewData["ProjectID"] = new SelectList(_context.Projects, "ID", "ProjectName", bidToUpdate.ProjectID);
-            ViewData["MaterialID"] = new SelectList(_context.Materials, "ID", "Name", bidToUpdate.BidMaterials);
+            ViewData["MaterialID"] = new SelectList(_context.Materials, "ID", "Name");
+            ViewData["LabourID"] = new SelectList(_context.Labours, "ID", "Name");
 
             return View(bidToUpdate);
         }
@@ -409,7 +495,7 @@ namespace NBDProject2024.Controllers
             {
                 if (dex.GetBaseException().Message.Contains("FOREIGN KEY constraint failed"))
                 {
-                    ModelState.AddModelError("", "Unable to Delete Doctor. Remember, you cannot delete a Doctor that has patients assigned.");
+                    ModelState.AddModelError("", "Unable to delete Bid. Remove related records and try again.");
                 }
                 else
                 {
@@ -419,7 +505,6 @@ namespace NBDProject2024.Controllers
 
             return View(bid);
         }
-
 
         public PartialViewResult ListOfMaterialsDetails(int id)
         {
@@ -442,201 +527,6 @@ namespace NBDProject2024.Controllers
 
             return PartialView("_ListOfLabours", query.ToList());
         }
-        //Adding Material and Labour
-        private SelectList MaterialSelectList(string skip)
-        {
-            var MaterialQuery = _context.Materials
-                .AsNoTracking();
-
-            if (!String.IsNullOrEmpty(skip))
-            {
-                string[] avoidStrings = skip.Split('|');
-                int[] skipKeys = Array.ConvertAll(avoidStrings, s => int.Parse(s));
-                MaterialQuery = MaterialQuery
-                    .Where(s => !skipKeys.Contains(s.ID));
-            }
-            return new SelectList(MaterialQuery.OrderBy(b => b.Name.ToLower()),
-                "ID", "Name", "Price");
-        }
-
-        private SelectList LabourSelectList(string skip)
-        {
-            var LabourQuery = _context.Labours
-                .AsNoTracking();
-
-            if (!String.IsNullOrEmpty(skip))
-            {
-                string[] avoidStrings = skip.Split('|');
-                int[] skipKeys = Array.ConvertAll(avoidStrings, s => int.Parse(s));
-                LabourQuery = LabourQuery
-                    .Where(s => !skipKeys.Contains(s.ID));
-            }
-            return new SelectList(LabourQuery.OrderBy(b => b.Name.ToLower()),
-                "ID", "Name", "Price");
-        }
-
-        [HttpGet]
-        public JsonResult GetMaterials(string skip)
-        {
-            return Json(MaterialSelectList(skip));
-        }
-
-        [HttpGet]
-        public JsonResult GetLaboours(string skip)
-        {
-            return Json(LabourSelectList(skip));
-        }
-
-        //Hacer lo mismo para Labour
-        private void PopulateAssignedMaterialData(Bid bid)
-        {
-            var allOptions = _context.Materials;
-            var currentOprionsHS = new HashSet<int>(bid.BidMaterials
-                .Select(b => b.MaterialID));
-
-            var selected = new List<ListOptionVM>();
-            var available = new List<ListOptionVM>();
-            foreach (var m in allOptions)
-            {
-                if (currentOprionsHS.Contains(m.ID))
-                {
-                    selected.Add(new ListOptionVM
-                    {
-                        ID = m.ID,
-                        DisplayText = m.Name,
-                        Price = m.Price
-                    });
-                }
-                else
-                {
-                    available.Add(new ListOptionVM
-                    {
-                        ID = m.ID,
-                        DisplayText = m.Name,
-                        Price = m.Price
-                    });
-                }
-            }
-
-            ViewData["selOpts"] = new MultiSelectList(selected
-                .OrderBy(s => s.DisplayText), "ID", "DisplayText", "Price");
-            ViewData["availOpts"] = new MultiSelectList(available
-                .OrderBy(s => s.DisplayText), "ID", "DisplayText", "Price");
-        }
-
-        private void PopulateAssignedLabourData(Bid bid)
-        {
-            var allOptions = _context.Labours;
-            var currentOprionsHS = new HashSet<int>(bid.BidLabours
-                .Select(b => b.LabourID));
-
-            var selected = new List<ListOptionVM>();
-            var available = new List<ListOptionVM>();
-            foreach (var m in allOptions)
-            {
-                if (currentOprionsHS.Contains(m.ID))
-                {
-                    selected.Add(new ListOptionVM
-                    {
-                        ID = m.ID,
-                        DisplayText = m.Name,
-                        Price = m.Price
-                    });
-                }
-                else
-                {
-                    available.Add(new ListOptionVM
-                    {
-                        ID = m.ID,
-                        DisplayText = m.Name,
-                        Price = m.Price
-                    });
-                }
-            }
-
-            ViewData["selOpts"] = new MultiSelectList(selected
-                .OrderBy(s => s.DisplayText), "ID", "DisplayText", "Price");
-            ViewData["availOpts"] = new MultiSelectList(available
-                .OrderBy(s => s.DisplayText), "ID", "DisplayText", "Price");
-        }
-
-        private void UpdateBidMaterials(string[] selectedOptions, Bid bidToUpdate)
-        {
-            if (selectedOptions == null)
-            {
-                bidToUpdate.BidMaterials = new List<BidMaterial>();
-                return;
-            }
-
-            var selectedOptionsHs = new HashSet<string>(selectedOptions);
-            var currentOptionsHs = new HashSet<int>(bidToUpdate.BidMaterials.Select(m =>
-                m.ID));
-
-            foreach (var m in _context.Materials)
-            {
-                if (selectedOptionsHs.Contains(m.ID.ToString()))
-                {
-                    if (!currentOptionsHs.Contains(m.ID))
-                    {
-                        bidToUpdate.BidMaterials.Add(new BidMaterial
-                        {
-                            BidID = m.ID,
-                            MaterialID = bidToUpdate.ID
-                        });
-
-                    }
-                }
-                else
-                {
-                    if (currentOptionsHs.Contains(m.ID))
-                    {
-                        BidMaterial specToRemove = bidToUpdate.BidMaterials
-                            .FirstOrDefault(b => b.MaterialID == m.ID);
-                        _context.Remove(specToRemove);
-                    }
-                }
-            }
-        }
-
-        private void UpdateBidLabours(string[] selectedOptions, Bid bidToUpdate)
-        {
-            if (selectedOptions == null)
-            {
-                bidToUpdate.BidLabours = new List<BidLabour>();
-                return;
-            }
-
-            var selectedOptionsHs = new HashSet<string>(selectedOptions);
-            var currentOptionsHs = new HashSet<int>(bidToUpdate.BidLabours.Select(m =>
-                m.ID));
-
-            foreach (var m in _context.Labours)
-            {
-                if (selectedOptionsHs.Contains(m.ID.ToString()))
-                {
-                    if (!currentOptionsHs.Contains(m.ID))
-                    {
-                        bidToUpdate.BidLabours.Add(new BidLabour
-                        {
-                            BidID = m.ID,
-                            LabourID = bidToUpdate.ID
-                        });
-
-                    }
-                }
-                else
-                {
-                    if (currentOptionsHs.Contains(m.ID))
-                    {
-                        BidLabour specToRemove = bidToUpdate.BidLabours
-                            .FirstOrDefault(b => b.LabourID == m.ID);
-                        _context.Remove(specToRemove);
-                    }
-                }
-            }
-        }
-
-
         private bool BidExists(int id)
         {
             return _context.Bids.Any(e => e.ID == id);

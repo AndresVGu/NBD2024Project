@@ -1,0 +1,189 @@
+@model NBDProject2024.ViewModels.DashboardVM
+
+@{
+    ViewData["Title"] = "Dashboard";
+    var isPersonalRecentFeed = Model.IsDesigner || Model.IsSales;
+}
+
+<h2>Dashboard</h2>
+<p class="text-muted">Simple dashboard with live data by role. We can redesign later.</p>
+
+@if (Model.CanToggleScope)
+{
+    <div class="mb-3">
+        <a class="btn btn-sm @(Model.UseMyScope ? "btn-primary" : "btn-outline-primary")" asp-action="Dashboard" asp-route-mine="true">My records</a>
+        <a class="btn btn-sm @(!Model.UseMyScope ? "btn-primary" : "btn-outline-primary")" asp-action="Dashboard" asp-route-mine="false">Global</a>
+    </div>
+}
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">@(Model.UseMyScope ? "My Clients" : "Clients")</h6>
+                <h3 class="card-title">@Model.ScopedClients</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">@(Model.UseMyScope ? "My Projects" : "Projects")</h6>
+                <h3 class="card-title">@Model.ScopedProjects</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Bids</h6>
+                <h3 class="card-title">@Model.TotalBids</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">@(Model.UseMyScope ? "My Bids This Month" : "Bids This Month")</h6>
+                <h3 class="card-title">@Model.BidsThisMonth</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.IsAdmin || Model.IsSupervisor)
+{
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">Total Employees</h6>
+                    <h4 class="card-title">@Model.TotalEmployees</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">Active Employees</h6>
+                    <h4 class="card-title">@Model.ActiveEmployees</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">Inactive Employees</h6>
+                    <h4 class="card-title">@Model.InactiveEmployees</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.IsDesigner || Model.IsSales)
+{
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">My Created Clients</h6>
+                    <h4 class="card-title">@Model.MyCreatedClients</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">My Created Projects</h6>
+                    <h4 class="card-title">@Model.MyCreatedProjects</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">My Created Bids</h6>
+                    <h4 class="card-title">@Model.MyCreatedBids</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header">Operational Alerts</div>
+            <div class="card-body">
+                <p class="mb-1">
+                    <strong>@(Model.UseMyScope ? "My projects without bids:" : "Projects without bids:")</strong>
+                    @Model.ProjectsWithoutBids
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header">Quick Actions</div>
+            <div class="card-body">
+                <a class="btn btn-outline-primary btn-sm mb-1" asp-controller="Clients" asp-action="Index">Clients</a>
+                <a class="btn btn-outline-primary btn-sm mb-1" asp-controller="Projects" asp-action="Index">Projects</a>
+                <a class="btn btn-outline-primary btn-sm mb-1" asp-controller="Bids" asp-action="Index">Bids</a>
+                @if (Model.IsAdmin)
+                {
+                    <a class="btn btn-outline-primary btn-sm mb-1" asp-controller="Employee" asp-action="Index">Employees</a>
+                }
+                @if (Model.IsAdmin || Model.IsSupervisor)
+                {
+                    <a class="btn btn-outline-primary btn-sm mb-1" asp-controller="Lookup" asp-action="Index">Materials & Labours</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-header">@(isPersonalRecentFeed ? "My Recent Clients" : "Recent Clients")</div>
+            <ul class="list-group list-group-flush">
+                @foreach (var item in Model.RecentClients)
+                {
+                    <li class="list-group-item">
+                        <div><strong>@item.Title</strong></div>
+                        <small class="text-muted">@item.SubTitle</small>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-header">@(isPersonalRecentFeed ? "My Recent Projects" : "Recent Projects")</div>
+            <ul class="list-group list-group-flush">
+                @foreach (var item in Model.RecentProjects)
+                {
+                    <li class="list-group-item">
+                        <div><strong>@item.Title</strong></div>
+                        <small class="text-muted">@item.SubTitle</small>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-header">@(isPersonalRecentFeed ? "My Recent Bids" : "Recent Bids")</div>
+            <ul class="list-group list-group-flush">
+                @foreach (var item in Model.RecentBids)
+                {
+                    <li class="list-group-item">
+                        <div><strong>@item.Title</strong></div>
+                        <small class="text-muted">@item.SubTitle</small>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

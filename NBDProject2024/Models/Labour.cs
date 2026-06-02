@@ -34,7 +34,7 @@ namespace NBDProject2024.Models
         [Display(Name = "Labour Description")]
         [StringLength(3000, ErrorMessage = "Description cannot be more than 3000 characters long")]
         [DataType(DataType.MultilineText)]
-        public string? Description { get; set; }
+        public string Description { get; set; }
 
         [Display(Name = "Price per Hour")]
         [Required(ErrorMessage = "You must a price.")]

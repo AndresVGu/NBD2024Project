@@ -1,6 +1,21 @@
 /home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/NBDProject2024
+/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/publish/publish/publish/web.config
+/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/publish/publish/web.config
+/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/publish/web.config
 /home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/appsettings.Development.json
 /home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/appsettings.json
+/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/publish/appsettings.Development.json
+/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/publish/appsettings.json
+/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/publish/NBDProject2024.deps.json
+/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/publish/NBDProject2024.runtimeconfig.json
+/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/publish/publish/appsettings.Development.json
+/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/publish/publish/appsettings.json
+/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/publish/publish/NBDProject2024.deps.json
+/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/publish/publish/NBDProject2024.runtimeconfig.json
+/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/publish/publish/publish/appsettings.Development.json
+/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/publish/publish/publish/appsettings.json
+/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/publish/publish/publish/NBDProject2024.deps.json
+/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/publish/publish/publish/NBDProject2024.runtimeconfig.json
 /home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/NBDProject2024.dll
 /home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/NBDProject2024.runtimeconfig.json
 /home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/NBDProject2024.pdb
@@ -94,6 +109,7 @@
 /home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/System.Memory.Data.dll
 /home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/System.Reflection.MetadataLoadContext.dll
 /home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/System.Runtime.Caching.dll
+/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/System.Security.Cryptography.Pkcs.dll
 /home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/System.Security.Cryptography.ProtectedData.dll
 /home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/System.Security.Permissions.dll
 /home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/System.Windows.Extensions.dll
@@ -266,6 +282,7 @@
 /home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/runtimes/win-x86/native/e_sqlite3.dll
 /home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/runtimes/win/lib/net7.0/System.Drawing.Common.dll
 /home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/runtimes/win/lib/net6.0/System.Runtime.Caching.dll
+/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/runtimes/win/lib/net8.0/System.Security.Cryptography.Pkcs.dll
 /home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/runtimes/win/lib/net7.0/System.Security.Cryptography.ProtectedData.dll
 /home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/runtimes/win/lib/net7.0/System.Windows.Extensions.dll
 /home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/publish/NBDProject2024.deps.json

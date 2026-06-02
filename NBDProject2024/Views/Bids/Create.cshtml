@@ -18,6 +18,7 @@
                 <select asp-for="ProjectID" class="form-control" asp-items="ViewBag.ProjectID" id="dropdownProjects">
                     <option value="">Select a Project</option>
                 </select>
+                <span asp-validation-for="ProjectID" class="text-danger"></span>
             </div>
 
         </div>
@@ -26,65 +27,48 @@
     <hr />
 
     <div class="row">
+        <div class="col-md-6">
+            <h4>Materials</h4>
+            <div id="materialRows">
+                <div class="row g-2 material-row mb-2">
+                    <div class="col-6">
+                        <select name="materialIds" class="form-control" asp-items="ViewBag.MaterialID">
+                            <option value="0">Select Material</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <input type="number" min="1" step="1" name="materialQuantities" class="form-control" value="1" />
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="btn btn-outline-danger remove-material">X</button>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="addMaterialRow" class="btn btn-sm btn-outline-success">Add Material</button>
+        </div>
 
-                     <!--Materials-->
-                     <div class="form-group col-md-6">
+        <div class="col-md-6">
+            <h4>Labours</h4>
+            <div id="labourRows">
+                <div class="row g-2 labour-row mb-2">
+                    <div class="col-6">
+                        <select name="labourIds" class="form-control" asp-items="ViewBag.LabourID">
+                            <option value="0">Select Labour</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <input type="number" min="0" step="0.25" name="labourHours" class="form-control" value="1" />
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="btn btn-outline-danger remove-labour">X</button>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="addLabourRow" class="btn btn-sm btn-outline-success">Add Labour</button>
+        </div>
+    </div>
 
-                        <h4>Materials</h4>
-
-                                    <div class="">
-                                <div class="form-group" id="ListMaterial">
-                    
-
-                                    <button class="btn btn-sm btn-outline-success modal-link" id="#theMaterialModal"
-                                        tag="" name="CreateForm"            
-                                    data-bs-toggle="modal" data-bs-target="#theMaterialModal"
-                                                type="button" title="Add Material">
-                                            <strong>Add Material</strong>
-                                        </button>
-                                        <br />
-                        
-                                    <div class="col-md-offset-1" id="MaterialList">
-                                        <table>
-                                   
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                     </div>
-
-                     <!-- Labours -->
-
-
-                     <div class="form-group col-md-6 ">
-                         <h4>Labours</h4>
-                         <div class="">
-                                <div class="form-group" id="ListMaterial">
-                    
-
-                                   
-                                    
-                      <button class="btn btn-sm btn-outline-success" id="nowAddLabour"
-                            data-bs-toggle="modal" data-bs-target="#addLabourModal"
-                            type="button">
-                                <strong>Add Labour</strong>
-                       </button>
-
-                                        <br />
-                        
-                                    <div class="col-md-offset-1" id="LabourList">
-                                        <table>
-                              
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                     </div>
-                 </div>
-
-           <hr />
-   
+    <hr />
 
 
     <div class="form-group">
@@ -101,165 +85,42 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script src="~/js/multiselect.js"></script>
-
-    <script src="~/js/refreshDDL.js"></script>
-
-    <script type="text/javascript">
-        var mtable = $("#materialTable");
-        if (mtable === 0) {
-            mtable.innerHTML = "No Materials";
-        }
-    </script>
-
-    <script type="text/javascript">
-        $('#submitMaterialCreate').click(function (event) {
-            event.preventDefault();
-            ClearErrors();
-            var form = $('#createMaterialForm');
-            if (form.valid()) {
-                $.ajax({
-                    type: "POST",
-                    url: form.attr('action'),
-                    data: form.serialize(),
-                    success: function () {
-                        $('#addMaterialModal').modal('hide');
-                    },
-                    error: function (xhr) { //Note: xhr is the XMLHttpRequest
-                        var errorMessages = [];
-                        switch (xhr.status) {
-                            case 401:
-                                errorMessages.push("You must be logged in first.");
-                                break;
-                            case 403:
-                                errorMessages.push("You are not authorized for this action.");
-                                break;
-                            default:
-                                //Messages coming from the Model State Errors
-                                //We split on the | delimeter and the .slice removes the last one
-                                errorMessages = xhr.responseText.split("|").slice(0, -1);
-                        }
-                        //This checks if there are any elements with some content
-                        //and if not then it provides a default feedback message.
-                        if (!errorMessages.some((str) => str !== "")) {
-                            errorMessages.push("Error: Unable to complete operation");
-                        }
-                        //Put the messages in the ErrorList ul contained in the 'ValidaitonSummary' div.
-                        var ul = document.getElementById("ErrorList");
-                        for (var i = 0; i < errorMessages.length; i++) {
-                            var errorMessage = errorMessages[i];
-                            var li = document.createElement("li");
-                            li.innerHTML = errorMessage;
-                            ul.appendChild(li);
-                        }
-                    }
-                });
-            }
-            return false;
-        });
-        $('#addMaterialModal').on('hide.bs.modal', function () {
-            document.getElementById("createMaterialForm").reset();//to clear the data in the popup form
-            ClearErrors();
-            //This will create a delimited list of the keys of the selected options and
-            //we will pass it as a QueryString parameter when we get the new data
-            var qstring = "";
-            //Get the collection of currently selected options
-            var skipData = $("#selectedOptions option");
-            $.each(skipData, function () {
-                qstring += $(this).val() + "|";
-            });
-            var URI = "/Bids/GetMaterials?skip=" + qstring.slice(0, -1);
-            refreshDDL("availOptions", URI, true, "No Data Available", false, null, false);
-        });
-        function ClearErrors() {
-            //Empty out the list of validation errors if there are any
-            var ul = document.getElementById("ErrorList");
-            while (ul.firstChild) {
-                ul.removeChild(ul.firstChild);
-            }
-        }
-    </script>
-
     <!--Set Today's date-->
     <script type="text/javascript">
         $(document).ready(function () {
             var today = new Date();
             document.getElementById('sDate').valueAsDate = today;
-        })
-    </script>
-
-    <script type="text/javascript">
-        $('#submitLabourCreate').click(function (event) {
-            event.preventDefault();
-            ClearErrors();
-            var form = $('#createLabourForm');
-            if (form.valid()) {
-                $.ajax({
-                    type: "POST",
-                    url: form.attr('action'),
-                    data: form.serialize(),
-                    success: function () {
-                        $('#addLabourModal').modal('hide');
-                    },
-                    error: function (xhr) { //Note: xhr is the XMLHttpRequest
-                        var errorMessages = [];
-                        switch (xhr.status) {
-                            case 401:
-                                errorMessages.push("You must be logged in first.");
-                                break;
-                            case 403:
-                                errorMessages.push("You are not authorized for this action.");
-                                break;
-                            default:
-                                //Messages coming from the Model State Errors
-                                //We split on the | delimeter and the .slice removes the last one
-                                errorMessages = xhr.responseText.split("|").slice(0, -1);
-                        }
-                        //This checks if there are any elements with some content
-                        //and if not then it provides a default feedback message.
-                        if (!errorMessages.some((str) => str !== "")) {
-                            errorMessages.push("Error: Unable to complete operation");
-                        }
-                        //Put the messages in the ErrorList ul contained in the 'ValidaitonSummary' div.
-                        var ul = document.getElementById("ErrorList");
-                        for (var i = 0; i < errorMessages.length; i++) {
-                            var errorMessage = errorMessages[i];
-                            var li = document.createElement("li");
-                            li.innerHTML = errorMessage;
-                            ul.appendChild(li);
-                        }
-                    }
-                });
-            }
-            return false;
         });
-        $('#addLabourModal').on('hide.bs.modal', function () {
-            document.getElementById("createLabourForm").reset();//to clear the data in the popup form
-            ClearErrors();
-            //This will create a delimited list of the keys of the selected options and
-            //we will pass it as a QueryString parameter when we get the new data
-            var qstring = "";
-            //Get the collection of currently selected options
-            var skipData = $("#selectedOptionsl option");
-            $.each(skipData, function () {
-                qstring += $(this).val() + "|";
-            });
-            var URI = "/Bids/GetLabours?skip=" + qstring.slice(0, -1);
-            refreshDDL("availOptionsl", URI, true, "No Data Available", false, null, false);
-        });
-        function ClearErrors() {
-            //Empty out the list of validation errors if there are any
-            var ul = document.getElementById("ErrorList");
-            while (ul.firstChild) {
-                ul.removeChild(ul.firstChild);
-            }
-        }
     </script>
 
     <script>
         $('#dropdownProjects').select2({ placeholder: "Select", width: "100%" });
-    </script>
 
-    
+        $('#addMaterialRow').on('click', function () {
+            var row = $('.material-row').first().clone();
+            row.find('select').val('0');
+            row.find('input').val('1');
+            $('#materialRows').append(row);
+        });
+
+        $('#addLabourRow').on('click', function () {
+            var row = $('.labour-row').first().clone();
+            row.find('select').val('0');
+            row.find('input').val('1');
+            $('#labourRows').append(row);
+        });
+
+        $(document).on('click', '.remove-material', function () {
+            if ($('.material-row').length > 1) {
+                $(this).closest('.material-row').remove();
+            }
+        });
+
+        $(document).on('click', '.remove-labour', function () {
+            if ($('.labour-row').length > 1) {
+                $(this).closest('.labour-row').remove();
+            }
+        });
+    </script>
 
 }

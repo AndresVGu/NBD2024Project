@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Humanizer.Localisation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,7 +12,7 @@ using NBDProject2024.Utilities;
 
 namespace NBDProject2024.Controllers
 {
-    [AllowAnonymous]
+    [Authorize(Roles = "Admin,Supervisor,Designer")]
     public class BidMaterialsController : Controller
     {
         private readonly NBDContext _context;
@@ -28,20 +27,6 @@ namespace NBDProject2024.Controllers
         {
             var nBDContext = _context.BidMaterials.Include(b => b.Bid).Include(b => b.Materials);
             return View(await nBDContext.ToListAsync());
-        }
-
-        public PartialViewResult CreateMaterial(int? GenreID, int? AlbumID)
-        {
-            //Having the Album's GenreID allows us to set it as
-            //the default for the new song.
-            ViewData["BidID"] = new
-                SelectList(_context.Bids
-                .OrderBy(a => a.BidDate), "ID", "Date", GenreID.GetValueOrDefault());
-
-            //So we can save it in the Form
-            ViewData["BiID"] = AlbumID.GetValueOrDefault();
-
-            return PartialView("_CreateMaterial");
         }
 
         // GET: BidMaterials/Details/5
@@ -106,21 +91,6 @@ namespace NBDProject2024.Controllers
             ViewData["BidID"] = new SelectList(_context.Bids, "ID", "ID", bidMaterial.BidID);
             ViewData["MaterialID"] = new SelectList(_context.Materials, "ID", "Name", bidMaterial.MaterialID);
             return View(bidMaterial);
-        }
-
-        public async Task<PartialViewResult> EditMaterial(int ID)
-        {
-            //Get the Song to edit
-            Material song = await _context.Materials
-                .Include(p => p.BidMaterials)
-                .Where(p => p.ID == ID)
-                .FirstOrDefaultAsync();
-
-            ViewData["BidID"] = new
-                SelectList(_context.Bids
-                .OrderBy(a => a.BidDate), "ID", "Date", song.ID);
-
-            return PartialView("_EditMaterial", song);
         }
 
         // POST: BidMaterials/Edit/5
