@@ -1,31 +1,254 @@
-﻿.back {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("../assets/bg.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-
+:root {
+  --brand-green: #4caf50;
+  --brand-dark-green: #2e7d32;
+  --brand-light-green: #81c784;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --text-primary: #212121;
+  --text-secondary: #555555;
+  --card-bg: #ffffff;
+  --border-color: #e0e0e0;
 }
 
+body[data-bs-theme="dark"] {
+  --bg-primary: #121212;
+  --bg-secondary: #1e1e1e;
+  --text-primary: #f0f0f0;
+  --text-secondary: #aaaaaa;
+  --card-bg: #2a2a2a;
+  --border-color: #444444;
+}
 
-.collapsible-header {
-    cursor: pointer;
-    padding: 10px;
-    background-color: #F0F0F0;
+.veridia-landing {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: Inter, Roboto, "Segoe UI", sans-serif;
+}
+
+.veridia-navbar {
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.veridia-navbar .navbar-brand,
+.veridia-navbar .navbar-brand i {
+  color: var(--brand-dark-green);
+}
+
+.veridia-navbar .nav-link {
+  color: var(--text-primary);
+  opacity: 0.9;
+}
+
+.veridia-navbar .nav-link:hover {
+  color: var(--brand-dark-green);
+}
+
+.landing-theme-toggle {
+  min-width: 38px;
+}
+
+.landing-section {
+  background: var(--bg-primary);
+}
+
+.landing-section-alt {
+  background: var(--bg-secondary);
+}
+
+.landing-chip {
+  display: inline-block;
+  background: rgba(76, 175, 80, 0.12);
+  color: var(--brand-dark-green);
+  border: 1px solid rgba(76, 175, 80, 0.25);
+  border-radius: 999px;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.landing-hero-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.15;
+  font-weight: 800;
+}
+
+.landing-hero-copy {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+}
+
+.hero-image-wrap .floating-stat {
+  position: absolute;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 0.9rem;
+}
+
+.hero-image-wrap .floating-stat i {
+  color: var(--brand-dark-green);
+  font-size: 1.1rem;
+}
+
+.stat-top {
+  top: 1rem;
+  right: 1rem;
+}
+
+.stat-bottom {
+  left: 1rem;
+  bottom: 1rem;
+}
+
+.card {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.feature-icon {
+  color: var(--brand-dark-green);
+}
+
+.feature-card {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0.5rem 1.1rem rgba(0, 0, 0, 0.12) !important;
+}
+
+.package-img {
+  min-height: 260px;
+}
+
+.veridia-accordion .accordion-item,
+.veridia-accordion .accordion-button,
+.veridia-accordion .accordion-body {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.veridia-accordion .accordion-button:not(.collapsed) {
+  color: var(--brand-dark-green);
+  box-shadow: none;
+  background: rgba(76, 175, 80, 0.12);
+}
+
+.veridia-accordion .accordion-button:focus {
+  box-shadow: none;
+  border-color: var(--border-color);
+}
+
+.cta-green {
+  background: linear-gradient(135deg, #2e7d32, #4caf50);
+}
+
+.enterprise-ready-box {
+  background: linear-gradient(135deg, #2e7d32, #3f9a47);
+}
+
+.enterprise-ready-image {
+  max-height: 280px;
+  object-fit: contain;
+}
+
+.enterprise-cta-btn {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.cta-btn {
+  color: var(--brand-dark-green);
+  font-weight: 600;
+}
+
+.veridia-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.55rem;
+}
+
+.veridia-list i {
+  color: var(--brand-dark-green);
+}
+
+.floating-cert {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 0.9rem;
+}
+
+.floating-cert i {
+  color: var(--brand-dark-green);
+}
+
+.veridia-footer {
+  background: var(--bg-primary);
+  border-color: var(--border-color) !important;
+  color: var(--text-secondary);
+}
+
+.btn-success {
+  background-color: var(--brand-dark-green);
+  border-color: var(--brand-dark-green);
+}
+
+.btn-success:hover,
+.btn-success:focus {
+  background-color: #27692b;
+  border-color: #27692b;
+}
+
+.btn-outline-success {
+  color: var(--brand-dark-green);
+  border-color: var(--brand-dark-green);
+}
+
+.btn-outline-success:hover,
+.btn-outline-success:focus {
+  color: #fff;
+  background-color: var(--brand-dark-green);
+  border-color: var(--brand-dark-green);
+}
+
+@media (max-width: 991.98px) {
+  .stat-top {
+    right: 0.6rem;
+    top: 0.6rem;
+  }
+
+  .stat-bottom {
+    left: 0.6rem;
+    bottom: 0.6rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .hero-image-wrap .floating-stat,
+  .floating-cert {
+    position: static;
+    margin-top: 0.8rem;
+  }
+
+  .hero-image-wrap {
     display: flex;
-    justify-content: space-between;
-}
-    .collapsible-header p {
-        margin: 0;
-    }
-    .collapsible-header:hover {
-        background-color: #80EAFF;
-        background-color: #E0E0E0;
-    }
-
-.collapsible-content {
-    padding: 0 10px;
-    display: none;
-}
-.info-text {
-    display: inline-block;
-    margin-left: 5px;
+    flex-direction: column;
+  }
 }

@@ -5,6 +5,26 @@
       "PackagePath": "staticwebassets/NBDProject2024.bundle.scp.css"
     },
     {
+      "Id": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/assets/1.png",
+      "PackagePath": "staticwebassets/assets/1.png"
+    },
+    {
+      "Id": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/assets/2.png",
+      "PackagePath": "staticwebassets/assets/2.png"
+    },
+    {
+      "Id": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/assets/3.png",
+      "PackagePath": "staticwebassets/assets/3.png"
+    },
+    {
+      "Id": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/assets/4.png",
+      "PackagePath": "staticwebassets/assets/4.png"
+    },
+    {
+      "Id": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/assets/5.png",
+      "PackagePath": "staticwebassets/assets/5.png"
+    },
+    {
       "Id": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/assets/bg.jpg",
       "PackagePath": "staticwebassets/assets/bg.jpg"
     },

@@ -3,6 +3,9 @@
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? string.Empty;
     var isAuthenticated = User.Identity?.IsAuthenticated ?? false;
     var useDashboardShell = isAuthenticated;
+    var useLandingLayout = !useDashboardShell
+        && string.Equals(currentController, "Home", StringComparison.OrdinalIgnoreCase)
+        && string.Equals(currentAction, "Index", StringComparison.OrdinalIgnoreCase);
     var isGuestMode = User.HasClaim("GuestMode", "true") || User.IsInRole("Guest");
 
     var profileName = Context.Request.Cookies["userName"] ?? User.Identity?.Name ?? "User";
@@ -73,7 +76,7 @@
     @RenderSection("Styles", required: false)
 </head>
 <body class="@(useDashboardShell ? "dashboard-layout" : "standard-layout")">
-    @if (!useDashboardShell)
+    @if (!useDashboardShell && !useLandingLayout)
     {
         <button type="button" id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle color theme" title="Switch theme">
             <i class="fa-regular fa-moon"></i>
@@ -280,7 +283,7 @@
             </div>
         </div>
     }
-    else
+    else if (!useLandingLayout)
     {
         <header>
             <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
@@ -312,6 +315,10 @@
                 <a class="text-decoration-none" asp-area="" asp-controller="Bids" asp-action="Index">Bids</a>
             </span>
         </footer>
+    }
+    else
+    {
+        @RenderBody()
     }
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
