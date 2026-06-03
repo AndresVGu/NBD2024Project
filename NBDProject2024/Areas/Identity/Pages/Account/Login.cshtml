@@ -37,6 +37,11 @@
                 <div>
                     <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
                 </div>
+                <div class="mt-2">
+                    <a class="w-100 btn btn-outline-secondary" asp-area="" asp-controller="Login" asp-action="Guest" asp-route-returnUrl="@Model.ReturnUrl">
+                        Continue as Guest
+                    </a>
+                </div>
                 <div>
                     <br />
                     <p>

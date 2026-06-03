@@ -16,29 +16,29 @@
                 <!--Filters-->
                 <div class="row">
                     <!--Select by string-->
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-12 col-md-4">
                         <label class="control-label">Search Project:</label>
                         @Html.TextBox("SearchString", null, new { @class = "form-control", @placeholder = "E.g. ProjectName/Client/Company/City " })
                     </div>
                     <!--Select by client-->
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-12 col-md-4">
                         <label class="control-label">Select by Clients:</label>
 
                         @Html.DropDownList("ClientID", null, "All Clients", htmlAttributes: new { @class = "form-control", id = "dropdownClients" })
                     </div>
                     <!--Select by Dates-->
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-12 col-md-4">
                         <label class="control-label">Start Date: </label>
                         @Html.TextBox("StartDate", @ViewData["StartDate"], new { @class = "form-control", type = "date" })
                     </div>
 
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-12 col-md-4">
                         <label class="control-label">End Date: </label>
                         @Html.TextBox("EndDate", @ViewData["EndDate"], new { @class = "form-control", type = "date" })
                     </div>
 
                     <!--Button-->
-                    <div class="form-group col-md-4 align-self-end">
+                    <div class="form-group col-12 col-md-4 align-self-end">
                         <input type="submit" name="actionButton" value="Filter" class="btn btn-outline-success" data-bs-toggle="tooltip" title="Apply filters" />
                         <a asp-action="Index" class="btn btn-outline-danger" data-bs-toggle="tooltip" title="Clear all filters">Clear</a>
                     </div>
@@ -58,7 +58,8 @@
     }
 
     <!--Index Table-->
-    <table class="table table-hover">
+    <div class="table-responsive">
+    <table class="table table-hover align-middle">
 
         <thead>
             <tr class="table-primary">
@@ -140,6 +141,7 @@
             }
         </tbody>
     </table>
+    </div>
 
     <partial name="_PagingNavBar" />
 </form>

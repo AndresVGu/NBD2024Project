@@ -1,150 +1,330 @@
-﻿<!DOCTYPE html>
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? string.Empty;
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? string.Empty;
+    var isAuthenticated = User.Identity?.IsAuthenticated ?? false;
+    var useDashboardShell = isAuthenticated;
+    var isGuestMode = User.HasClaim("GuestMode", "true") || User.IsInRole("Guest");
+
+    var profileName = Context.Request.Cookies["userName"] ?? User.Identity?.Name ?? "User";
+    var profileEmail = User.Identity?.Name ?? string.Empty;
+    var profileInitials = "US";
+
+    if (!string.IsNullOrWhiteSpace(profileName))
+    {
+        var profileTokens = profileName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (profileTokens.Length == 1)
+        {
+            profileInitials = profileTokens[0][0].ToString().ToUpperInvariant();
+        }
+        else if (profileTokens.Length > 1)
+        {
+            profileInitials = (profileTokens[0][0].ToString() + profileTokens[^1][0].ToString()).ToUpperInvariant();
+        }
+    }
+
+    Func<string, string> navClass = (controller) =>
+        string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase)
+            ? "db-nav-item active"
+            : "db-nav-item";
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - NBD</title>
+    <script>
+        (function () {
+            var storageKey = "nbd-theme";
+            var sidebarThemeKey = "nbd-sidebar-theme";
+            var topbarThemeKey = "nbd-topbar-theme";
+            var savedThemeMode = localStorage.getItem(storageKey);
+            var savedSidebarTheme = localStorage.getItem(sidebarThemeKey);
+            var savedTopbarTheme = localStorage.getItem(topbarThemeKey);
+            var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+            var mode = savedThemeMode === "light" || savedThemeMode === "dark" || savedThemeMode === "system"
+                ? savedThemeMode
+                : "system";
+            var theme = mode === "system"
+                ? (prefersDark ? "dark" : "light")
+                : mode;
+            var sideTheme = savedSidebarTheme === "light" || savedSidebarTheme === "dark"
+                ? savedSidebarTheme
+                : theme;
+            var topTheme = savedTopbarTheme === "light" || savedTopbarTheme === "dark"
+                ? savedTopbarTheme
+                : theme;
+
+            document.documentElement.setAttribute("data-theme", theme);
+            document.documentElement.setAttribute("data-theme-mode", mode);
+            document.documentElement.setAttribute("data-sidebar-theme", sideTheme);
+            document.documentElement.setAttribute("data-topbar-theme", topTheme);
+        })();
+    </script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-
-    <!--DropDownList Select2-->
+    @if (useDashboardShell)
+    {
+        <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+    }
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     @RenderSection("Styles", required: false)
-
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
+<body class="@(useDashboardShell ? "dashboard-layout" : "standard-layout")">
+    @if (!useDashboardShell)
+    {
+        <button type="button" id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle color theme" title="Switch theme">
+            <i class="fa-regular fa-moon"></i>
+        </button>
+    }
 
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Dashboard">NBD</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        @if (User.Identity.IsAuthenticated)
+    @if (useDashboardShell)
+    {
+        <div class="dashboard-page">
+            <aside class="db-sidebar d-none d-lg-flex">
+                <div class="db-sidebar-inner">
+                    <div class="db-logo-wrap">
+                        <div class="db-logo-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                        <div>
+                            <div class="db-logo-title">NBD Insights</div>
+                            <small class="text-muted">Corporate Panel</small>
+                        </div>
+                    </div>
+
+                    <nav class="db-nav">
+                        <div class="db-nav-section">Main</div>
+                        <a class="@navClass("Dashboard")" asp-area="" asp-controller="Dashboard" asp-action="Index"><i class="fa-solid fa-gauge"></i><span>Dashboard</span></a>
+                        <a class="@navClass("Clients")" asp-area="" asp-controller="Clients" asp-action="Index"><i class="fa-solid fa-address-book"></i><span>Clients</span></a>
+
+                        <div class="db-nav-section">Operations</div>
+                        <a class="@navClass("Projects")" asp-area="" asp-controller="Projects" asp-action="Index"><i class="fa-solid fa-diagram-project"></i><span>Projects</span></a>
+                        <a class="@navClass("Bids")" asp-area="" asp-controller="Bids" asp-action="Index"><i class="fa-solid fa-file-signature"></i><span>Bids</span></a>
+                        <a class="@navClass("Lookup")" asp-area="" asp-controller="Lookup" asp-action="Index"><i class="fa-solid fa-layer-group"></i><span>Materials & Labours</span></a>
+
+                        <div class="db-nav-section">Management</div>
+                        @if (!isGuestMode)
                         {
-                        
-
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Projects" asp-action="Index">Projects</a>
-                            </li>
-                            @if (User.IsInRole("Admin") || User.IsInRole("Supervisor"))
-                            {
-                                
-                                <!--DropDownList-->
-                                <li class="nav-item dropdown">
-                                    <!--Dropdown Head-->
-                                    <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" area-expanded="false">
-                                        Bid Menu
-                                    </a>
-
-                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-
-                                        <li class="nav-item dropdown">
-                                            <a class="dropdown-item" asp-area="" asp-controller="Bids" asp-action="Index">Bids</a>
-                                        </li>
-
-                                        @if (User.IsInRole("Admin") || User.IsInRole("Supervisor"))
-                                        {
-                                            
-                                        <li>
-                                            <hr class="dropdown-divider" />
-                                        </li>
-                                        <li class="nav-item dropdown">
-                                            <a class="dropdown-item" asp-area="" asp-controller="Lookup" asp-action="Index">Materials & Labours</a>
-                                        </li>
-                                        }
-
-                                
-                                    </ul>
-                                </li>
-
-
-                            }
-                            else
-                            {
-                                <li>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Bids" asp-action="Index">Bids</a>
-                                </li>
-                            }
-                            <!--End DropDownList-->
-                            @if (User.IsInRole("Admin"))
-                            {
-
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="Index">Employees</a>
-                                </li>
-
-                            }
+                            <a class="@navClass("Employee")" asp-area="" asp-controller="Employee" asp-action="Index"><i class="fa-solid fa-user-tie"></i><span>Employees</span></a>
                         }
-
-                    </ul>
-                  
-                    <partial name="_LoginPartial" />
+                    </nav>
                 </div>
+            </aside>
 
+            <div class="offcanvas offcanvas-start db-mobile-sidebar" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="mobileSidebarLabel">NBD Insights</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <nav class="db-nav">
+                        <div class="db-nav-section">Main</div>
+                        <a class="@navClass("Dashboard")" asp-area="" asp-controller="Dashboard" asp-action="Index"><i class="fa-solid fa-gauge"></i><span>Dashboard</span></a>
+                        <a class="@navClass("Clients")" asp-area="" asp-controller="Clients" asp-action="Index"><i class="fa-solid fa-address-book"></i><span>Clients</span></a>
 
+                        <div class="db-nav-section">Operations</div>
+                        <a class="@navClass("Projects")" asp-area="" asp-controller="Projects" asp-action="Index"><i class="fa-solid fa-diagram-project"></i><span>Projects</span></a>
+                        <a class="@navClass("Bids")" asp-area="" asp-controller="Bids" asp-action="Index"><i class="fa-solid fa-file-signature"></i><span>Bids</span></a>
+                        <a class="@navClass("Lookup")" asp-area="" asp-controller="Lookup" asp-action="Index"><i class="fa-solid fa-layer-group"></i><span>Materials & Labours</span></a>
+
+                        <div class="db-nav-section">Management</div>
+                        @if (!isGuestMode)
+                        {
+                            <a class="@navClass("Employee")" asp-area="" asp-controller="Employee" asp-action="Index"><i class="fa-solid fa-user-tie"></i><span>Employees</span></a>
+                        }
+                    </nav>
+                </div>
             </div>
-        </nav>
-    </header>
 
+            <div class="db-main-content">
+                <header class="db-topbar">
+                    <div class="d-flex align-items-center gap-2">
+                        <button class="btn btn-light border" type="button" id="sidebarToggleBtn" aria-controls="mobileSidebar" aria-label="Toggle menu">
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
+                        <div>
+                            <div class="fw-semibold">@(!string.IsNullOrWhiteSpace(ViewData["Title"]?.ToString()) ? ViewData["Title"] : currentController)</div>
+                            <small class="text-muted">@currentController / @currentAction</small>
+                        </div>
+                    </div>
 
-    <div class="container">
+                    <div class="d-flex align-items-center gap-3">
+                        <button type="button" class="btn btn-light border" id="topbarLanguageBtn" title="Language">
+                            <i class="fa-solid fa-language me-1"></i>
+                            <span>EN</span>
+                        </button>
 
-        @RenderBody()
+                        <button type="button" class="btn btn-light border" id="fullscreenToggleBtn" title="Enter fullscreen" aria-label="Enter fullscreen">
+                            <i class="fa-solid fa-expand"></i>
+                        </button>
 
-    </div>
+                        <button type="button" class="btn btn-light border db-notification-btn" title="Notifications">
+                            <i class="fa-regular fa-bell"></i>
+                            <span class="db-notification-dot"></span>
+                        </button>
 
+                        <div class="dropdown">
+                            <button class="btn btn-light border db-profile-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="db-profile-avatar-sm">@profileInitials</span>
+                                <span class="d-none d-md-inline">@profileName</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end db-profile-dropdown">
+                                <li>
+                                    <div class="dropdown-item-text">
+                                        <small class="text-muted d-block mb-1">Account Email</small>
+                                        <div class="d-flex align-items-center justify-content-between gap-2">
+                                            <span id="profileEmailText" class="small text-break">@profileEmail</span>
+                                            <button type="button" id="copyEmailBtn" class="btn btn-sm btn-outline-secondary" data-email="@profileEmail">Copy</button>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li><hr class="dropdown-divider" /></li>
+                                @if (!isGuestMode)
+                                {
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="EmployeeAccount" asp-action="Details">
+                                            <i class="fa-regular fa-user me-2"></i>My Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">
+                                            <i class="fa-solid fa-sliders me-2"></i>Settings
+                                        </a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li><span class="dropdown-item-text text-muted">Guest Mode enabled</span></li>
+                                }
+                                <li><hr class="dropdown-divider" /></li>
+                                <li>
+                                    @if (isGuestMode)
+                                    {
+                                        <form class="px-3" asp-area="" asp-controller="Login" asp-action="ExitGuest" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-outline-danger btn-sm w-100">Exit Guest Mode</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form class="px-3" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm w-100">Logout</button>
+                                        </form>
+                                    }
+                                </li>
+                            </ul>
+                        </div>
 
-    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top bg-light fixed-bottom mb-0">
-        <p class="col-md-4 mb-0 text-muted">©<span>2024</span> NBD Landscaping. <a href="#">Back to top </a></p>
+                        <button type="button" class="btn btn-light border" data-bs-toggle="offcanvas" data-bs-target="#uiSettingsDrawer" aria-controls="uiSettingsDrawer" title="UI Settings">
+                            <i class="fa-solid fa-gear"></i>
+                        </button>
+                    </div>
+                </header>
 
-        <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-            <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
-        </a>
+                <main class="db-content">
+                    @RenderBody()
+                </main>
 
-        <ul class="nav col-md-4 justify-content-end">
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Projects" asp-action="Index">Projects</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Materials" asp-action="Index">Materials</a>
-            </li>
+                <footer class="db-footer">
+                    <span>2026 &copy; NBD Landscaping</span>
+                    <span class="d-flex align-items-center gap-2 flex-wrap justify-content-end">
+                        <span>Created By Andres Villarreal</span>
+                        <span class="text-muted">|</span>
+                        <a class="text-decoration-none" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a>
+                        <a class="text-decoration-none" asp-area="" asp-controller="Projects" asp-action="Index">Projects</a>
+                        <a class="text-decoration-none" asp-area="" asp-controller="Bids" asp-action="Index">Bids</a>
+                    </span>
+                </footer>
+            </div>
 
-        </ul>
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="uiSettingsDrawer" aria-labelledby="uiSettingsDrawerLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="uiSettingsDrawerLabel">Display Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Theme</label>
+                        <div class="form-check form-switch mb-2">
+                            <input class="form-check-input" type="checkbox" id="themeDarkToggle">
+                            <label class="form-check-label" for="themeDarkToggle">Use Dark Mode</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="themeSystemCheckbox">
+                            <label class="form-check-label" for="themeSystemCheckbox">Use System Preference</label>
+                        </div>
+                        <small id="themeModeText" class="text-muted d-block mt-2"></small>
+                    </div>
 
-    </footer>
+                    <hr />
 
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Sidebar Style</label>
+                        <div class="form-check form-switch mb-2">
+                            <input class="form-check-input" type="checkbox" id="sidebarDarkToggle">
+                            <label class="form-check-label" for="sidebarDarkToggle">Use Dark Sidebar</label>
+                        </div>
+                        <small id="sidebarThemeText" class="text-muted d-block mt-2"></small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Topbar Style</label>
+                        <div class="form-check form-switch mb-2">
+                            <input class="form-check-input" type="checkbox" id="topbarDarkToggle">
+                            <label class="form-check-label" for="topbarDarkToggle">Use Dark Topbar</label>
+                        </div>
+                        <small id="topbarThemeText" class="text-muted d-block mt-2"></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+                <div class="container-fluid px-3 px-lg-4">
+                    <a class="navbar-brand fw-semibold" asp-area="" asp-controller="Home" asp-action="Index">NBD</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="mainNavbar">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+                        <partial name="_LoginPartial" />
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main class="container-fluid app-content py-3 px-3 px-lg-4">
+            @RenderBody()
+        </main>
+
+        <footer class="db-footer mt-4">
+            <span>2026 &copy; NBD Landscaping</span>
+            <span class="d-flex align-items-center gap-2 flex-wrap justify-content-end">
+                <span>Created By Andres Villarreal</span>
+                <span class="text-muted">|</span>
+                <a class="text-decoration-none" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a>
+                <a class="text-decoration-none" asp-area="" asp-controller="Projects" asp-action="Index">Projects</a>
+                <a class="text-decoration-none" asp-area="" asp-controller="Bids" asp-action="Index">Bids</a>
+            </span>
+        </footer>
+    }
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/js/alerts.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    @if (useDashboardShell)
+    {
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+        <script src="~/js/dashboard.js" asp-append-version="true"></script>
+    }
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
-@section Scripts {
-
-    <script type="text/javascript">
-        var currentYear = document.querySelectorAll('[data-bs-toggle="year"]');
-        var year = new Date().getFullYear();
-
-        currentYear.innerText = year;
-    </script>
-
-    
-}
-

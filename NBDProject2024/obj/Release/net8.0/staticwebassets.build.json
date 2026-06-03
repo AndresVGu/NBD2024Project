@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "erlWkuWwYDYpWPVulzXH7OnfcP9JJeGzNQfTryBWQUM=",
+  "Hash": "oTbt77XQya490x2TyPRdCHhitXg319fs9gIruzFdr9A=",
   "Source": "NBDProject2024",
   "BasePath": "_content/NBDProject2024",
   "Mode": "Default",
@@ -1214,6 +1214,25 @@
       "OriginalItemSpec": "wwwroot/assets/bg.jpg"
     },
     {
+      "Identity": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/css/dashboard.css",
+      "SourceId": "NBDProject2024",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/",
+      "BasePath": "_content/NBDProject2024",
+      "RelativePath": "css/dashboard.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/css/dashboard.css"
+    },
+    {
       "Identity": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/css/home.css",
       "SourceId": "NBDProject2024",
       "SourceType": "Discovered",
@@ -1288,6 +1307,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/js/alerts.js"
+    },
+    {
+      "Identity": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/js/dashboard.js",
+      "SourceId": "NBDProject2024",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/",
+      "BasePath": "_content/NBDProject2024",
+      "RelativePath": "js/dashboard.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/js/dashboard.js"
     },
     {
       "Identity": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/js/multiselect.js",

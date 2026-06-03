@@ -6,7 +6,7 @@
 <form asp-action="Edit">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-12 col-md-6 col-xl-4">
             
             <input type="hidden" asp-for="ID" />
             <div class="form-group ">
@@ -36,7 +36,7 @@
 
         </div>
 
-        <div class="col-md-4">
+        <div class="col-12 col-md-6 col-xl-4">
             <div class="form-group ">
                 <label asp-for="Position" class="control-label">Position*:</label>
                 <select asp-for="Position" class="form-control"
@@ -84,7 +84,8 @@
 
             <div class="form-group">
                 <label asp-for="UserRoles" class="control-label"></label>
-                <table>
+                <div class="table-responsive">
+                <table class="table table-borderless table-sm align-middle mb-0">
                     <tr>
                         @{
                             int cnt = 0;
@@ -117,6 +118,7 @@
                         @:</tr>
                         }
                     </table>
+                    </div>
                 </div>
 
         </div>

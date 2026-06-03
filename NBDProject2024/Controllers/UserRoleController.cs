@@ -8,7 +8,7 @@ using NBDProject2024.ViewModels;
 
 namespace NBDProject2024.Controllers
 {
- 
+    [Authorize(Roles = "Admin")]
     public class UserRoleController : CognizantController
 
     {

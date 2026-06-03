@@ -2,188 +2,249 @@
 
 @{
     ViewData["Title"] = "Dashboard";
-    var isPersonalRecentFeed = Model.IsDesigner || Model.IsSales;
 }
 
-<h2>Dashboard</h2>
-<p class="text-muted">Simple dashboard with live data by role. We can redesign later.</p>
+@section Styles {
+    <style>
+        .dashboard-shell {
+            background: linear-gradient(165deg, #f4f7fb 0%, #e9f2f8 40%, #f9fafb 100%);
+            border: 1px solid #dce6ef;
+            border-radius: 18px;
+            padding: 1.25rem;
+        }
 
-@if (Model.CanToggleScope)
-{
-    <div class="mb-3">
-        <a class="btn btn-sm @(Model.UseMyScope ? "btn-primary" : "btn-outline-primary")" asp-action="Dashboard" asp-route-mine="true">My records</a>
-        <a class="btn btn-sm @(!Model.UseMyScope ? "btn-primary" : "btn-outline-primary")" asp-action="Dashboard" asp-route-mine="false">Global</a>
-    </div>
+        .kpi-card {
+            border: 0;
+            border-radius: 14px;
+            box-shadow: 0 8px 20px rgba(15, 40, 70, 0.08);
+        }
+
+        .kpi-label {
+            font-size: 0.78rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: #567;
+        }
+
+        .kpi-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #15314b;
+            margin: 0;
+        }
+
+        .panel-card {
+            border: 0;
+            border-radius: 14px;
+            box-shadow: 0 6px 14px rgba(12, 31, 54, 0.08);
+        }
+
+        .progress-thin {
+            height: 8px;
+            border-radius: 999px;
+        }
+
+        .activity-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background-color: #1f7a8c;
+            margin-top: 0.5rem;
+            flex: 0 0 auto;
+        }
+    </style>
 }
 
-<div class="row g-3 mb-4">
-    <div class="col-md-3">
-        <div class="card">
-            <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-muted">@(Model.UseMyScope ? "My Clients" : "Clients")</h6>
-                <h3 class="card-title">@Model.ScopedClients</h3>
-            </div>
+<div class="dashboard-shell">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+        <div>
+            <h2 class="mb-0">Operations Dashboard</h2>
+            <p class="text-muted mb-0">Weekly project and bid performance snapshot</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-secondary btn-sm">Export</button>
+            <button type="button" class="btn btn-primary btn-sm">New Project</button>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card">
-            <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-muted">@(Model.UseMyScope ? "My Projects" : "Projects")</h6>
-                <h3 class="card-title">@Model.ScopedProjects</h3>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card">
-            <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-muted">Bids</h6>
-                <h3 class="card-title">@Model.TotalBids</h3>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card">
-            <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-muted">@(Model.UseMyScope ? "My Bids This Month" : "Bids This Month")</h6>
-                <h3 class="card-title">@Model.BidsThisMonth</h3>
-            </div>
-        </div>
-    </div>
-</div>
 
-@if (Model.IsAdmin || Model.IsSupervisor)
-{
     <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="card">
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card kpi-card h-100">
                 <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">Total Employees</h6>
-                    <h4 class="card-title">@Model.TotalEmployees</h4>
+                    <div class="kpi-label">Active Clients</div>
+                    <p class="kpi-number">128</p>
+                    <small class="text-success">+6.4% vs last month</small>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card">
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card kpi-card h-100">
                 <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">Active Employees</h6>
-                    <h4 class="card-title">@Model.ActiveEmployees</h4>
+                    <div class="kpi-label">Open Projects</div>
+                    <p class="kpi-number">42</p>
+                    <small class="text-success">+3 new this week</small>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card">
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card kpi-card h-100">
                 <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">Inactive Employees</h6>
-                    <h4 class="card-title">@Model.InactiveEmployees</h4>
+                    <div class="kpi-label">Bids Pending</div>
+                    <p class="kpi-number">19</p>
+                    <small class="text-warning">5 require review today</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card kpi-card h-100">
+                <div class="card-body">
+                    <div class="kpi-label">Team Utilization</div>
+                    <p class="kpi-number">87%</p>
+                    <small class="text-muted">Target: 85%</small>
                 </div>
             </div>
         </div>
     </div>
-}
 
-@if (Model.IsDesigner || Model.IsSales)
-{
-    <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">My Created Clients</h6>
-                    <h4 class="card-title">@Model.MyCreatedClients</h4>
+    <div class="row g-3">
+        <div class="col-12 col-xl-8">
+            <div class="card panel-card h-100">
+                <div class="card-header bg-white border-0 pt-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong>Project Pipeline</strong>
+                        <span class="badge bg-primary-subtle text-primary">Q2 2026</span>
+                    </div>
+                </div>
+                <div class="card-body pt-2">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Commercial Installations</span>
+                            <span>72%</span>
+                        </div>
+                        <div class="progress progress-thin">
+                            <div class="progress-bar bg-success" style="width: 72%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Maintenance Contracts</span>
+                            <span>58%</span>
+                        </div>
+                        <div class="progress progress-thin">
+                            <div class="progress-bar bg-info" style="width: 58%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Residential Design</span>
+                            <span>81%</span>
+                        </div>
+                        <div class="progress progress-thin">
+                            <div class="progress-bar bg-warning" style="width: 81%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="d-flex justify-content-between">
+                            <span>Municipal Tenders</span>
+                            <span>44%</span>
+                        </div>
+                        <div class="progress progress-thin">
+                            <div class="progress-bar bg-danger" style="width: 44%"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">My Created Projects</h6>
-                    <h4 class="card-title">@Model.MyCreatedProjects</h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">My Created Bids</h6>
-                    <h4 class="card-title">@Model.MyCreatedBids</h4>
-                </div>
-            </div>
-        </div>
-    </div>
-}
 
-<div class="row g-3 mb-4">
-    <div class="col-md-6">
-        <div class="card h-100">
-            <div class="card-header">Operational Alerts</div>
-            <div class="card-body">
-                <p class="mb-1">
-                    <strong>@(Model.UseMyScope ? "My projects without bids:" : "Projects without bids:")</strong>
-                    @Model.ProjectsWithoutBids
-                </p>
+        <div class="col-12 col-xl-4">
+            <div class="card panel-card h-100">
+                <div class="card-header bg-white border-0 pt-3">
+                    <strong>Today Schedule</strong>
+                </div>
+                <div class="card-body pt-2">
+                    <div class="d-flex gap-2 mb-3">
+                        <span class="activity-dot"></span>
+                        <div>
+                            <div class="fw-semibold">Site Review - Riverfront Plaza</div>
+                            <small class="text-muted">08:30 AM • Design Team</small>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2 mb-3">
+                        <span class="activity-dot"></span>
+                        <div>
+                            <div class="fw-semibold">Client Proposal Presentation</div>
+                            <small class="text-muted">11:00 AM • Sales</small>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2 mb-3">
+                        <span class="activity-dot"></span>
+                        <div>
+                            <div class="fw-semibold">Internal Budget Alignment</div>
+                            <small class="text-muted">02:00 PM • Admin</small>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <span class="activity-dot"></span>
+                        <div>
+                            <div class="fw-semibold">Bid Submission Deadline</div>
+                            <small class="text-muted">04:30 PM • Bids Team</small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="card h-100">
-            <div class="card-header">Quick Actions</div>
-            <div class="card-body">
-                <a class="btn btn-outline-primary btn-sm mb-1" asp-controller="Clients" asp-action="Index">Clients</a>
-                <a class="btn btn-outline-primary btn-sm mb-1" asp-controller="Projects" asp-action="Index">Projects</a>
-                <a class="btn btn-outline-primary btn-sm mb-1" asp-controller="Bids" asp-action="Index">Bids</a>
-                @if (Model.IsAdmin)
-                {
-                    <a class="btn btn-outline-primary btn-sm mb-1" asp-controller="Employee" asp-action="Index">Employees</a>
-                }
-                @if (Model.IsAdmin || Model.IsSupervisor)
-                {
-                    <a class="btn btn-outline-primary btn-sm mb-1" asp-controller="Lookup" asp-action="Index">Materials & Labours</a>
-                }
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="row g-3">
-    <div class="col-md-4">
-        <div class="card h-100">
-            <div class="card-header">@(isPersonalRecentFeed ? "My Recent Clients" : "Recent Clients")</div>
-            <ul class="list-group list-group-flush">
-                @foreach (var item in Model.RecentClients)
-                {
-                    <li class="list-group-item">
-                        <div><strong>@item.Title</strong></div>
-                        <small class="text-muted">@item.SubTitle</small>
-                    </li>
-                }
-            </ul>
+    <div class="row g-3 mt-1">
+        <div class="col-12 col-lg-6">
+            <div class="card panel-card h-100">
+                <div class="card-header bg-white border-0 pt-3">
+                    <strong>Recent Bid Activity</strong>
+                </div>
+                <div class="table-responsive">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Bid</th>
+                                <th>Client</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#B-1043</td>
+                                <td>Northbridge Estates</td>
+                                <td><span class="badge text-bg-warning">In Review</span></td>
+                            </tr>
+                            <tr>
+                                <td>#B-1042</td>
+                                <td>City of St. Catharines</td>
+                                <td><span class="badge text-bg-success">Approved</span></td>
+                            </tr>
+                            <tr>
+                                <td>#B-1039</td>
+                                <td>Hawkins Retail Park</td>
+                                <td><span class="badge text-bg-secondary">Draft</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card h-100">
-            <div class="card-header">@(isPersonalRecentFeed ? "My Recent Projects" : "Recent Projects")</div>
-            <ul class="list-group list-group-flush">
-                @foreach (var item in Model.RecentProjects)
-                {
-                    <li class="list-group-item">
-                        <div><strong>@item.Title</strong></div>
-                        <small class="text-muted">@item.SubTitle</small>
-                    </li>
-                }
-            </ul>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card h-100">
-            <div class="card-header">@(isPersonalRecentFeed ? "My Recent Bids" : "Recent Bids")</div>
-            <ul class="list-group list-group-flush">
-                @foreach (var item in Model.RecentBids)
-                {
-                    <li class="list-group-item">
-                        <div><strong>@item.Title</strong></div>
-                        <small class="text-muted">@item.SubTitle</small>
-                    </li>
-                }
-            </ul>
+
+        <div class="col-12 col-lg-6">
+            <div class="card panel-card h-100">
+                <div class="card-header bg-white border-0 pt-3">
+                    <strong>Quick Actions</strong>
+                </div>
+                <div class="card-body d-flex flex-wrap gap-2">
+                    <a class="btn btn-outline-primary" asp-controller="Clients" asp-action="Index">Clients</a>
+                    <a class="btn btn-outline-primary" asp-controller="Projects" asp-action="Index">Projects</a>
+                    <a class="btn btn-outline-primary" asp-controller="Bids" asp-action="Index">Bids</a>
+                    <a class="btn btn-outline-primary" asp-controller="Employee" asp-action="Index">Employees</a>
+                    <a class="btn btn-outline-primary" asp-controller="Lookup" asp-action="Index">Materials & Labours</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -18,12 +18,12 @@
                 <!--Filters-->
                 <div class="row">
                     <!--Select by string-->
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-12 col-md-4">
                         <label class="control-label">Search By Bid:</label>
                         @Html.TextBox("SearchString", null, new { @class = "form-control", @placeholder = "Eg Date(yyyy-mm-dd)/ProjectName" })
                     </div>
                     <!--Button-->
-                    <div class="form-group col-md-4 align-self-end">
+                    <div class="form-group col-12 col-md-4 align-self-end">
                         <input type="submit" name="actionButton" value="Filter" class="btn btn-outline-success" data-bs-toggle="tooltip" title="Apply filters" />
                         <a asp-action="Index" class="btn btn-outline-danger" data-bs-toggle="tooltip" title="Clear all filters">Clear</a>
                     </div>
@@ -39,7 +39,8 @@
         </div>
 
     }
-    <table class="table table-hover">
+    <div class="table-responsive">
+    <table class="table table-hover align-middle">
         <thead>
             <tr class="table-primary">
                 <th>
@@ -247,6 +248,7 @@
             }
         </tbody>
     </table>
+    </div>
     <partial name="_PagingNavBar" />
 </form>
 

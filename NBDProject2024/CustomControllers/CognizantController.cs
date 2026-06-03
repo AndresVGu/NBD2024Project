@@ -5,6 +5,13 @@ namespace NBDProject2024.CustomControllers
 {
     public class CognizantController : Controller
     {
+        private static readonly HashSet<string> GuestBlockedControllers = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "Employee",
+            "EmployeeAccount",
+            "UserRole"
+        };
+
         internal string ControllerName()
         {
             return ControllerContext.RouteData.Values["controller"].ToString();
@@ -40,6 +47,16 @@ namespace NBDProject2024.CustomControllers
             ViewData["ControllerFriendlyName"] = SplitCamelCase(ControllerName());
             ViewData["ActionName"] = ActionName();
             ViewData["Title"] = ControllerName() + " " + ActionName();
+
+            if (User?.Identity?.IsAuthenticated == true
+                && User.HasClaim("GuestMode", "true")
+                && GuestBlockedControllers.Contains(ControllerName()))
+            {
+                TempData["AlertMessage"] = "Guest Mode cannot access Employees or User Administration.";
+                context.Result = RedirectToAction("Index", "Dashboard");
+                return;
+            }
+
             base.OnActionExecuting(context);
         }
 
@@ -58,6 +75,16 @@ namespace NBDProject2024.CustomControllers
             ViewData["ControllerFriendlyName"] = SplitCamelCase(ControllerName());
             ViewData["ActionName"] = ActionName();
             ViewData["Title"] = ControllerName() + " " + ActionName();
+
+            if (User?.Identity?.IsAuthenticated == true
+                && User.HasClaim("GuestMode", "true")
+                && GuestBlockedControllers.Contains(ControllerName()))
+            {
+                TempData["AlertMessage"] = "Guest Mode cannot access Employees or User Administration.";
+                context.Result = RedirectToAction("Index", "Dashboard");
+                return Task.CompletedTask;
+            }
+
             return base.OnActionExecutionAsync(context, next);
         }
     }

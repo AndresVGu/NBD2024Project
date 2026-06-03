@@ -1,0 +1,302 @@
+@model NBDProject2024.ViewModels.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="row g-4">
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card db-metric-card">
+            <div class="card-body">
+                <div class="db-metric-head">
+                    <span>Total Revenue</span>
+                    <div class="db-icon-circle text-success"><i class="fa-solid fa-chart-line"></i></div>
+                </div>
+                <h4 class="db-metric-value">$@Model.Revenue.ToString("N0")</h4>
+                <small class="text-success fw-semibold">+2.65%</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card db-metric-card">
+            <div class="card-body">
+                <div class="db-metric-head">
+                    <span>Orders</span>
+                    <div class="db-icon-circle text-warning"><i class="fa-solid fa-shopping-cart"></i></div>
+                </div>
+                <h4 class="db-metric-value">@Model.Orders.ToString("N0")</h4>
+                <small class="text-warning fw-semibold">-0.82%</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card db-metric-card">
+            <div class="card-body">
+                <div class="db-metric-head">
+                    <span>Customers</span>
+                    <div class="db-icon-circle text-primary"><i class="fa-solid fa-users"></i></div>
+                </div>
+                <h4 class="db-metric-value">@Model.Customers.ToString("N0")</h4>
+                <small class="text-primary fw-semibold">-6.24%</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card db-metric-card">
+            <div class="card-body">
+                <div class="db-metric-head">
+                    <span>Growth</span>
+                    <div class="db-icon-circle text-success"><i class="fa-solid fa-arrow-trend-up"></i></div>
+                </div>
+                <h4 class="db-metric-value">@Model.Growth.ToString("N2")%</h4>
+                <small class="text-success fw-semibold">+10.51%</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-1">
+    <div class="col-12 col-xl-9">
+        <div class="card db-panel-card db-sales-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+                    <h5 class="mb-0">Sales Analytics</h5>
+                    <div class="db-sales-metrics">
+                        <span>Income: <strong>$2,371</strong></span>
+                        <span>Sales: <strong>258</strong></span>
+                        <span>Conversion Rate: <strong>3.6%</strong></span>
+                    </div>
+                </div>
+                <div id="salesAnalyticsChart" class="db-chart-height"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-xl-3">
+        <div class="d-flex flex-column gap-4 h-100">
+            <div class="card db-promo-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h6 class="mb-0 text-white">Improve Business Performance</h6>
+                        <i class="fa-solid fa-chart-pie fa-lg text-white-50"></i>
+                    </div>
+                    <p class="text-white-50 my-3">Use insights to optimize your strategy this quarter.</p>
+                    <button class="btn btn-light btn-sm fw-semibold">View Reports</button>
+                </div>
+            </div>
+
+            <div class="card db-panel-card flex-grow-1">
+                <div class="card-body">
+                    <h6 class="mb-3">Top Categories</h6>
+
+                    <div class="db-progress-item">
+                        <div class="d-flex justify-content-between"><span>Electronics</span><span>75%</span></div>
+                        <div class="progress"><div class="progress-bar w-75"></div></div>
+                    </div>
+                    <div class="db-progress-item">
+                        <div class="d-flex justify-content-between"><span>Software</span><span>68%</span></div>
+                        <div class="progress"><div class="progress-bar" style="width: 68%"></div></div>
+                    </div>
+                    <div class="db-progress-item">
+                        <div class="d-flex justify-content-between"><span>Services</span><span>60%</span></div>
+                        <div class="progress"><div class="progress-bar" style="width: 60%"></div></div>
+                    </div>
+                    <div class="db-progress-item">
+                        <div class="d-flex justify-content-between"><span>Hardware</span><span>84%</span></div>
+                        <div class="progress"><div class="progress-bar" style="width: 84%"></div></div>
+                    </div>
+                    <div class="db-progress-item">
+                        <div class="d-flex justify-content-between"><span>Accessories</span><span>71%</span></div>
+                        <div class="progress"><div class="progress-bar" style="width: 71%"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-1">
+    <div class="col-12">
+        <div class="card db-panel-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                    <h6 class="mb-0">Latest Projects</h6>
+                    <a href="#" class="btn btn-sm btn-outline-primary">See More</a>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle mb-0 db-table">
+                        <thead>
+                            <tr>
+                                <th>Project ID</th>
+                                <th>Name</th>
+                                <th>Date</th>
+                                <th>Total Payment</th>
+                                <th>Status</th>
+                                <th class="text-center">View Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>PRJ-2041</td>
+                                <td>Riverfront Plaza Renewal</td>
+                                <td>2026-06-02</td>
+                                <td>$58,900</td>
+                                <td><span class="badge text-bg-success">Completed</span></td>
+                                <td class="text-center"><button type="button" class="btn btn-sm btn-outline-primary">View Details</button></td>
+                            </tr>
+                            <tr>
+                                <td>PRJ-2040</td>
+                                <td>Northbridge Commercial Gardens</td>
+                                <td>2026-06-01</td>
+                                <td>$41,300</td>
+                                <td><span class="badge text-bg-warning">In Progress</span></td>
+                                <td class="text-center"><button type="button" class="btn btn-sm btn-outline-primary">View Details</button></td>
+                            </tr>
+                            <tr>
+                                <td>PRJ-2039</td>
+                                <td>Greenway Residential Design</td>
+                                <td>2026-05-31</td>
+                                <td>$22,480</td>
+                                <td><span class="badge text-bg-info">Review</span></td>
+                                <td class="text-center"><button type="button" class="btn btn-sm btn-outline-primary">View Details</button></td>
+                            </tr>
+                            <tr>
+                                <td>PRJ-2038</td>
+                                <td>Lakeside Maintenance Contract</td>
+                                <td>2026-05-30</td>
+                                <td>$17,950</td>
+                                <td><span class="badge text-bg-success">Completed</span></td>
+                                <td class="text-center"><button type="button" class="btn btn-sm btn-outline-primary">View Details</button></td>
+                            </tr>
+                            <tr>
+                                <td>PRJ-2037</td>
+                                <td>Metro Civic Park Upgrade</td>
+                                <td>2026-05-29</td>
+                                <td>$76,200</td>
+                                <td><span class="badge text-bg-warning">In Progress</span></td>
+                                <td class="text-center"><button type="button" class="btn btn-sm btn-outline-primary">View Details</button></td>
+                            </tr>
+                            <tr>
+                                <td>PRJ-2036</td>
+                                <td>Hillcrest Corporate Campus</td>
+                                <td>2026-05-28</td>
+                                <td>$33,740</td>
+                                <td><span class="badge text-bg-secondary">Pending</span></td>
+                                <td class="text-center"><button type="button" class="btn btn-sm btn-outline-primary">View Details</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-1">
+    <div class="col-12 col-xl-4">
+        <div class="card db-panel-card h-100">
+            <div class="card-body">
+                <h6 class="mb-3">Top Users</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle mb-0 db-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Location</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Andres Villarreal</td>
+                                <td>Toronto</td>
+                                <td>$250</td>
+                                <td><span class="badge text-bg-warning">Pending</span></td>
+                            </tr>
+                            <tr>
+                                <td>Maria Gomez</td>
+                                <td>Bogota</td>
+                                <td>$110</td>
+                                <td><span class="badge text-bg-success">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>John Smith</td>
+                                <td>New York</td>
+                                <td>$320</td>
+                                <td><span class="badge text-bg-success">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>Sarah Johnson</td>
+                                <td>Chicago</td>
+                                <td>$180</td>
+                                <td><span class="badge text-bg-warning">Pending</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-xl-4">
+        <div class="card db-panel-card h-100">
+            <div class="card-body">
+                <h6 class="mb-3">Recent Activity</h6>
+                <div class="db-timeline">
+                    <div class="db-timeline-item">
+                        <div class="db-timeline-icon"><i class="fa-solid fa-user-plus"></i></div>
+                        <div>
+                            <p class="mb-1">New customer registered</p>
+                            <small class="text-muted">Jun 03, 2026</small>
+                        </div>
+                    </div>
+                    <div class="db-timeline-item">
+                        <div class="db-timeline-icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                        <div>
+                            <p class="mb-1">Invoice generated</p>
+                            <small class="text-muted">Jun 02, 2026</small>
+                        </div>
+                    </div>
+                    <div class="db-timeline-item">
+                        <div class="db-timeline-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+                        <div>
+                            <p class="mb-1">Inventory updated</p>
+                            <small class="text-muted">Jun 02, 2026</small>
+                        </div>
+                    </div>
+                    <div class="db-timeline-item">
+                        <div class="db-timeline-icon"><i class="fa-solid fa-check"></i></div>
+                        <div>
+                            <p class="mb-1">Order completed</p>
+                            <small class="text-muted">Jun 01, 2026</small>
+                        </div>
+                    </div>
+                    <div class="db-timeline-item mb-0">
+                        <div class="db-timeline-icon"><i class="fa-solid fa-headset"></i></div>
+                        <div>
+                            <p class="mb-1">New support ticket</p>
+                            <small class="text-muted">May 31, 2026</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-xl-4">
+        <div class="card db-panel-card h-100">
+            <div class="card-body d-flex flex-column justify-content-center">
+                <h6 class="text-center mb-3">Traffic Sources</h6>
+                <div id="trafficSourcesChart" class="db-donut-height"></div>
+                <div class="db-traffic-list mt-3">
+                    <div class="d-flex justify-content-between"><span>Direct</span><strong>42%</strong></div>
+                    <div class="d-flex justify-content-between"><span>Organic Search</span><strong>28%</strong></div>
+                    <div class="d-flex justify-content-between"><span>Social Media</span><strong>18%</strong></div>
+                    <div class="d-flex justify-content-between"><span>Referrals</span><strong>12%</strong></div>
+                </div>
+                <p class="text-center mt-3 mb-0 text-muted">Total Visitors: <strong>24,500</strong></p>
+            </div>
+        </div>
+    </div>
+</div>

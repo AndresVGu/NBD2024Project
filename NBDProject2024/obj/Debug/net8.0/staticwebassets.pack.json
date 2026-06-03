@@ -9,6 +9,10 @@
       "PackagePath": "staticwebassets/assets/bg.jpg"
     },
     {
+      "Id": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/css/dashboard.css",
+      "PackagePath": "staticwebassets/css/dashboard.css"
+    },
+    {
       "Id": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/css/home.css",
       "PackagePath": "staticwebassets/css/home.css"
     },
@@ -23,6 +27,10 @@
     {
       "Id": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/js/alerts.js",
       "PackagePath": "staticwebassets/js/alerts.js"
+    },
+    {
+      "Id": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/js/dashboard.js",
+      "PackagePath": "staticwebassets/js/dashboard.js"
     },
     {
       "Id": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/js/multiselect.js",

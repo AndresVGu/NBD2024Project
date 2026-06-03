@@ -2,14 +2,49 @@ html {
   font-size: 14px;
 }
 
+:root {
+  --app-content-max-width: 1440px;
+  --app-bg: #f7f9fc;
+  --app-text: #1f2f49;
+  --app-muted: #6b7b93;
+  --app-surface: #ffffff;
+  --app-surface-soft: #f0f4fb;
+  --app-border: #dbe3ee;
+  --app-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --app-link: #2b62f5;
+  --app-toggle-bg: #ffffff;
+  --app-toggle-border: #cfd9e8;
+  --app-toggle-text: #304a73;
+}
+
+html[data-theme="dark"] {
+  --app-bg: #0f1726;
+  --app-text: #e6edf8;
+  --app-muted: #98a7c0;
+  --app-surface: #151f32;
+  --app-surface-soft: #1b2740;
+  --app-border: #293650;
+  --app-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.35);
+  --app-link: #8ab4ff;
+  --app-toggle-bg: #151f32;
+  --app-toggle-border: #3a4b6a;
+  --app-toggle-text: #d3def2;
+}
+
 @media (min-width: 768px) {
   html {
     font-size: 16px;
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+  box-shadow:
+    0 0 0 0.1rem white,
+    0 0 0 0.25rem #258cfb;
 }
 
 html {
@@ -18,9 +53,300 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+  min-height: 100vh;
+  background-color: var(--app-bg);
+  color: var(--app-text);
 }
 
 .form-group {
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.standard-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--app-bg);
+}
+
+.standard-layout > header,
+.standard-layout > footer {
+  flex-shrink: 0;
+}
+
+.app-content {
+  flex: 1 0 auto;
+  width: min(100%, var(--app-content-max-width));
+}
+
+.app-footer {
+  background-color: var(--app-surface) !important;
+  border-color: var(--app-border) !important;
+}
+
+a {
+  color: var(--app-link);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+label,
+dt,
+dd,
+p,
+span,
+li,
+small {
+  color: inherit;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+.card,
+.modal-content {
+  border-radius: 0.75rem;
+  background-color: var(--app-surface);
+  color: var(--app-text);
+  border-color: var(--app-border);
+  box-shadow: var(--app-shadow);
+}
+
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--app-text);
+  --bs-table-border-color: var(--app-border);
+  --bs-table-striped-bg: color-mix(
+    in srgb,
+    var(--app-surface-soft) 60%,
+    transparent
+  );
+  --bs-table-hover-bg: color-mix(
+    in srgb,
+    var(--app-surface-soft) 85%,
+    transparent
+  );
+  margin-bottom: 0;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 0.5rem;
+}
+
+.table td,
+.table th {
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.form-control,
+.form-select,
+.input-group-text,
+.btn {
+  min-height: 2.5rem;
+}
+
+.form-control,
+.form-select,
+.input-group-text,
+.dropdown-menu,
+.offcanvas,
+.modal-content,
+.list-group-item,
+.accordion-item,
+.accordion-button {
+  background-color: var(--app-surface);
+  color: var(--app-text);
+  border-color: var(--app-border);
+}
+
+.text-muted,
+.small,
+small {
+  color: var(--app-muted) !important;
+}
+
+.navbar,
+.app-footer {
+  background-color: var(--app-surface) !important;
+}
+
+.navbar,
+.border,
+.border-top,
+.border-bottom,
+.card,
+.table,
+hr {
+  border-color: var(--app-border) !important;
+}
+
+.shadow-sm,
+.card,
+.modal-content {
+  box-shadow: var(--app-shadow) !important;
+}
+
+.theme-toggle-btn {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 2000;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--app-toggle-border);
+  background: var(--app-toggle-bg);
+  color: var(--app-toggle-text);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--app-shadow);
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+  transform: translateY(-2px);
+}
+
+html[data-theme="dark"] .btn-outline-primary,
+html[data-theme="dark"] .btn-outline-secondary,
+html[data-theme="dark"] .btn-outline-success,
+html[data-theme="dark"] .btn-outline-danger {
+  color: var(--app-text);
+  border-color: var(--app-border);
+}
+
+html[data-theme="dark"] .navbar-light .navbar-nav .nav-link,
+html[data-theme="dark"] .navbar-light .navbar-brand,
+html[data-theme="dark"] .navbar-light .navbar-toggler {
+  color: var(--app-text);
+  border-color: var(--app-border);
+}
+
+html[data-theme="dark"] .table-primary,
+html[data-theme="dark"] .table-secondary,
+html[data-theme="dark"] .table-light,
+html[data-theme="dark"] .bg-light {
+  background-color: var(--app-surface-soft) !important;
+  color: var(--app-text) !important;
+}
+
+html[data-theme="dark"] .text-dark,
+html[data-theme="dark"] .text-black,
+html[data-theme="dark"] .text-body,
+html[data-theme="dark"] .navbar-light .nav-link.text-dark,
+html[data-theme="dark"] .btn-link.text-dark {
+  color: var(--app-text) !important;
+}
+
+html[data-theme="dark"] .table .btn-link {
+  color: var(--app-link);
+}
+
+.btn-group,
+.input-group {
+  flex-wrap: wrap;
+}
+
+.pagination {
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.select2-container {
+  max-width: 100%;
+}
+
+.select2-container .select2-selection--single,
+.select2-container .select2-selection--multiple {
+  min-height: 2.5rem;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 991.98px) {
+  .navbar-brand {
+    font-size: 1rem;
+  }
+
+  .navbar-nav .nav-link {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
+
+  .app-content {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+
+  .card-body,
+  .modal-body,
+  .offcanvas-body {
+    padding: 0.9rem;
+  }
+
+  .btn,
+  .form-control,
+  .form-select {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  html {
+    font-size: 15px;
+  }
+
+  h1 {
+    font-size: clamp(1.45rem, 5vw, 1.8rem);
+  }
+
+  h2 {
+    font-size: clamp(1.25rem, 4.7vw, 1.55rem);
+  }
+
+  h3 {
+    font-size: clamp(1.12rem, 4.3vw, 1.35rem);
+  }
+
+  .d-sm-inline,
+  .d-md-inline {
+    display: none !important;
+  }
+
+  .table td,
+  .table th {
+    font-size: 0.88rem;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .table .btn,
+  .table .btn-link {
+    white-space: nowrap;
+  }
+
+  .btn-group > .btn,
+  .input-group > .btn {
+    flex: 1 1 auto;
+  }
+
+  .app-footer .small {
+    width: 100%;
+  }
 }
