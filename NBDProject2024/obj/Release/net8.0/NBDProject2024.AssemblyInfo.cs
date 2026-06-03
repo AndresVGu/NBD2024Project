@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NBDProject2024")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+44d9dcff276fec2733b70bf87eaad6c8b0e58ed5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5e806793e1e8397a6ca30220b81c54377ee79c6f")]
 [assembly: System.Reflection.AssemblyProductAttribute("NBDProject2024")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NBDProject2024")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

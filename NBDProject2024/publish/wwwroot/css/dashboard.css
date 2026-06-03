@@ -594,3 +594,80 @@ html[data-topbar-theme="light"] .db-topbar .db-profile-btn {
   color: #20314d;
   border-color: #dbe3ee;
 }
+
+/* Green primary overrides */
+:root {
+  --db-primary: #4caf50;
+  --db-primary-dark: #2e7d32;
+  --db-primary-soft: #e8f5e9;
+  --db-primary-soft-2: #dff0e0;
+}
+
+.db-logo-icon,
+.db-avatar,
+.db-profile-avatar-sm,
+.db-progress-item .progress-bar {
+  background: var(--db-primary);
+}
+
+.db-promo-card {
+  background: linear-gradient(
+    135deg,
+    var(--db-primary-dark),
+    var(--db-primary)
+  );
+}
+
+.db-nav-item:hover,
+html[data-sidebar-theme="light"] .db-nav-item:hover {
+  background-color: var(--db-primary-soft);
+  color: var(--db-primary-dark);
+}
+
+.db-nav-item.active,
+html[data-sidebar-theme="light"] .db-nav-item.active {
+  background-color: var(--db-primary-soft-2);
+  color: var(--db-primary-dark);
+}
+
+.db-icon-circle {
+  background: var(--db-primary-soft);
+}
+
+.db-progress-item .progress {
+  background-color: #edf4e3;
+}
+
+.db-timeline::before {
+  background: #d9e9c5;
+}
+
+.db-timeline-icon {
+  background: #eaf5db;
+  color: var(--db-primary);
+}
+
+html[data-theme="dark"] .db-nav-item:hover,
+html[data-sidebar-theme="dark"] .db-nav-item:hover {
+  background-color: #2f4724;
+  color: #e5f5d0;
+}
+
+html[data-theme="dark"] .db-nav-item.active,
+html[data-sidebar-theme="dark"] .db-nav-item.active {
+  background-color: #3c5b2e;
+  color: #f0f9e3;
+}
+
+html[data-theme="dark"] .db-icon-circle,
+html[data-theme="dark"] .db-timeline-icon {
+  background: #2f4724;
+}
+
+html[data-theme="dark"] .db-timeline::before {
+  background: #47653b;
+}
+
+html[data-topbar-theme="dark"] .db-topbar .dropdown-item:hover {
+  background-color: #2f4724;
+}

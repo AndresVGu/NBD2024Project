@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.OutputCaching;
 using NBDProject2024.Models;
 using System.Diagnostics;
 
@@ -14,6 +15,7 @@ namespace NBDProject2024.Controllers
             _logger = logger;
         }
 
+        [OutputCache(Duration = 120)]
         public IActionResult Index()
         {
             return View();
@@ -25,6 +27,7 @@ namespace NBDProject2024.Controllers
             return RedirectToAction("Index", "Dashboard");
         }
 
+        [OutputCache(Duration = 120)]
         public IActionResult Privacy()
         {
             return View();

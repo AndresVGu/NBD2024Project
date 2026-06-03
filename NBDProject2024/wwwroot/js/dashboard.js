@@ -56,7 +56,7 @@
         width: [0, 3, 3],
         curve: "smooth",
       },
-      colors: ["#4f7cff", "#9aa3b2", "#ff9f43"],
+      colors: ["#0d6efd", "#9aa3b2", "#ff9f43"],
       plotOptions: {
         bar: {
           columnWidth: "45%",
@@ -122,7 +122,7 @@
       },
       labels: ["Direct", "Organic Search", "Social Media", "Referrals"],
       series: [42, 28, 18, 12],
-      colors: ["#4f7cff", "#5ad8a6", "#ff9f43", "#9aa3b2"],
+      colors: ["#0d6efd", "#6ea8fe", "#ff9f43", "#9aa3b2"],
       dataLabels: {
         enabled: false,
       },

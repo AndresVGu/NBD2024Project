@@ -24,7 +24,10 @@ namespace NBDProject2024.Controllers
         // GET: BidLabours
         public async Task<IActionResult> Index()
         {
-            var nBDContext = _context.BidLabours.Include(b => b.Bid).Include(b => b.Labours);
+            var nBDContext = _context.BidLabours
+                .AsNoTracking()
+                .Include(b => b.Bid)
+                .Include(b => b.Labours);
             return View(await nBDContext.ToListAsync());
         }
 
@@ -37,6 +40,7 @@ namespace NBDProject2024.Controllers
             }
 
             var bidLabour = await _context.BidLabours
+                .AsNoTracking()
                 .Include(b => b.Bid)
                 .Include(b => b.Labours)
                 .FirstOrDefaultAsync(m => m.ID == id);
@@ -138,6 +142,7 @@ namespace NBDProject2024.Controllers
             }
 
             var bidLabour = await _context.BidLabours
+                .AsNoTracking()
                 .Include(b => b.Bid)
                 .Include(b => b.Labours)
                 .FirstOrDefaultAsync(m => m.ID == id);

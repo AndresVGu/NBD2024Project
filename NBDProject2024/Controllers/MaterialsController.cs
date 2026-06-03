@@ -42,6 +42,7 @@ namespace NBDProject2024.Controllers
             }
 
             var inventory = await _context.Materials
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (inventory == null)
             {
@@ -169,6 +170,7 @@ namespace NBDProject2024.Controllers
             }
 
             var inventory = await _context.Materials
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (inventory == null)
             {

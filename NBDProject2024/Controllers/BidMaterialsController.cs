@@ -25,7 +25,10 @@ namespace NBDProject2024.Controllers
         // GET: BidMaterials
         public async Task<IActionResult> Index()
         {
-            var nBDContext = _context.BidMaterials.Include(b => b.Bid).Include(b => b.Materials);
+            var nBDContext = _context.BidMaterials
+                .AsNoTracking()
+                .Include(b => b.Bid)
+                .Include(b => b.Materials);
             return View(await nBDContext.ToListAsync());
         }
 
@@ -38,6 +41,7 @@ namespace NBDProject2024.Controllers
             }
 
             var bidMaterial = await _context.BidMaterials
+                .AsNoTracking()
                 .Include(b => b.Bid)
                 .Include(b => b.Materials)
                 .FirstOrDefaultAsync(m => m.ID == id);
@@ -204,6 +208,7 @@ namespace NBDProject2024.Controllers
             }
 
             var bidMaterial = await _context.BidMaterials
+                .AsNoTracking()
                 .Include(b => b.Bid)
                 .Include(b => b.Materials)
                 .FirstOrDefaultAsync(m => m.ID == id);

@@ -39,6 +39,7 @@ namespace NBDProject2024.Controllers
             }
 
             var labourType = await _context.Labours
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (labourType == null)
             {
@@ -151,6 +152,7 @@ namespace NBDProject2024.Controllers
             }
 
             var labourType = await _context.Labours
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (labourType == null)
             {

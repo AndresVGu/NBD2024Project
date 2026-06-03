@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Data.Sqlite;
 using Microsoft.AspNetCore.Identity;
@@ -118,6 +119,7 @@ builder.Services.Configure<GzipCompressionProviderOptions>(options =>
 });
 
 builder.Services.AddResponseCaching();
+builder.Services.AddOutputCache();
 
 
 builder.Services.AddControllersWithViews();
@@ -171,6 +173,7 @@ app.UseStaticFiles(new StaticFileOptions
 app.UseRouting();
 
 app.UseResponseCaching();
+app.UseOutputCache();
 app.UseAuthentication();
 app.UseAuthorization();
 
