@@ -33,6 +33,8 @@ namespace NBDProject2024.Controllers
         //Index
         public async Task<IActionResult> Index()
         {
+            bool canManageRoot = User.IsInRole("Root");
+
             var employees = await _context.Employees
                 .Include(e => e.Subscriptions)
                 .Select(e => new EmployeeAdminVM
@@ -60,8 +62,12 @@ namespace NBDProject2024.Controllers
                 }
             };
 
-
-
+            if (!canManageRoot)
+            {
+                employees = employees
+                    .Where(e => !e.UserRoles.Contains("Root"))
+                    .ToList();
+            }
             return View(employees);
         }
 
@@ -69,7 +75,7 @@ namespace NBDProject2024.Controllers
         public IActionResult Create()
         {
             EmployeeAdminVM employee = new EmployeeAdminVM();
-            PopulateAssignedRoleData(employee);
+            PopulateAssignedRoleData(employee, User.IsInRole("Root"));
 
             return View(employee);
         }
@@ -81,6 +87,13 @@ namespace NBDProject2024.Controllers
             "MiddleName, Phone, Position, Prescriber, Email")] Employee employee,
             string[] selectedRoles)
         {
+            bool canManageRoot = User.IsInRole("Root");
+            if (!canManageRoot && selectedRoles?.Contains("Root") == true)
+            {
+                ModelState.AddModelError(string.Empty, "Only Root can assign the Root role.");
+            }
+            selectedRoles = SanitizeSelectedRoles(selectedRoles, canManageRoot);
+
             try
             {
                 if (ModelState.IsValid)
@@ -88,7 +101,7 @@ namespace NBDProject2024.Controllers
                     _context.Add(employee);
                     await _context.SaveChangesAsync();
 
-                    InsertIdentityUser(employee.Email, selectedRoles);
+                    InsertIdentityUser(employee.Email, selectedRoles, canManageRoot);
                     TempData["AlertMessage"] = "Employee Created Successfully...!";
 
                     //Send Email to new Employee - commented out till email configured
@@ -121,17 +134,19 @@ namespace NBDProject2024.Controllers
                 LastName = employee.LastName,
                 Phone = employee.Phone,
             };
-            foreach (var role in selectedRoles)
+            foreach (var role in selectedRoles ?? Array.Empty<string>())
             {
                 employeeAdminVM.UserRoles.Add(role);
             }
-            PopulateAssignedRoleData(employeeAdminVM);
+            PopulateAssignedRoleData(employeeAdminVM, canManageRoot);
             return View(employeeAdminVM);
         }
 
         //GET Employee/Edit
         public async Task<IActionResult> Edit(int? id)
         {
+            bool canManageRoot = User.IsInRole("Root");
+
             if (id == null)
             {
                 return NotFound();
@@ -163,7 +178,13 @@ namespace NBDProject2024.Controllers
                 var r = await _userManager.GetRolesAsync(user);
                 employee.UserRoles = (List<string>)r;
             }
-            PopulateAssignedRoleData(employee);
+
+            if (!canManageRoot && employee.UserRoles.Contains("Root"))
+            {
+                return Forbid();
+            }
+
+            PopulateAssignedRoleData(employee, canManageRoot);
             return View(employee);
 
         }
@@ -175,12 +196,29 @@ namespace NBDProject2024.Controllers
         public async Task<IActionResult> Edit(int id, bool Active,
             string[] selectedRoles)
         {
+            bool canManageRoot = User.IsInRole("Root");
+            if (!canManageRoot && selectedRoles?.Contains("Root") == true)
+            {
+                ModelState.AddModelError(string.Empty, "Only Root can assign the Root role.");
+            }
+            selectedRoles = SanitizeSelectedRoles(selectedRoles, canManageRoot);
+
             var employeeToUpdate = await _context.Employees
                 .FirstOrDefaultAsync(e => e.ID == id);
 
             if(employeeToUpdate == null)
             {
                 return NotFound();
+            }
+
+            var targetUser = await _userManager.FindByEmailAsync(employeeToUpdate.Email);
+            if (!canManageRoot && targetUser != null)
+            {
+                var targetRoles = await _userManager.GetRolesAsync(targetUser);
+                if (targetRoles.Contains("Root"))
+                {
+                    return Forbid();
+                }
             }
 
             bool ActiveStatus = employeeToUpdate.Active;
@@ -200,18 +238,18 @@ namespace NBDProject2024.Controllers
                     }
                     else if(employeeToUpdate.Active == true && ActiveStatus == false)
                     {
-                        InsertIdentityUser(employeeToUpdate.Email, selectedRoles);
+                        InsertIdentityUser(employeeToUpdate.Email, selectedRoles, canManageRoot);
                     }
                     else if (employeeToUpdate.Active == true && ActiveStatus == true)
                     {
                        if(employeeToUpdate.Email != databaseEmail)
                         {
-                            InsertIdentityUser(employeeToUpdate.Email, selectedRoles);
-                            await DeleteIdentityUser(employeeToUpdate.Email);
+                            InsertIdentityUser(employeeToUpdate.Email, selectedRoles, canManageRoot);
+                            await DeleteIdentityUser(databaseEmail);
                         }
                         else
                         {
-                            await UpdateUserRoles(selectedRoles, employeeToUpdate.Email);
+                            await UpdateUserRoles(selectedRoles, employeeToUpdate.Email, canManageRoot);
                         }
                     }
                     TempData["AlertMessage"] = "Employee Updated Successfully...!";
@@ -251,18 +289,23 @@ namespace NBDProject2024.Controllers
                 LastName = employeeToUpdate.LastName,
                 Phone = employeeToUpdate.Phone,
             };
-            foreach (var role in selectedRoles)
+            foreach (var role in selectedRoles ?? Array.Empty<string>())
             {
                 employeeAdminVM.UserRoles.Add(role);
             }
-            PopulateAssignedRoleData(employeeAdminVM);
+            PopulateAssignedRoleData(employeeAdminVM, canManageRoot);
             return View(employeeAdminVM);
         }
 
         //METHODS
-        private void PopulateAssignedRoleData(EmployeeAdminVM employee)
+        private void PopulateAssignedRoleData(EmployeeAdminVM employee, bool canManageRoot)
         {
-            var allRoles = _identityContext.Roles;
+            var allRoles = _identityContext.Roles.AsEnumerable();
+            if (!canManageRoot)
+            {
+                allRoles = allRoles.Where(r => !string.Equals(r.Name, "Root", StringComparison.OrdinalIgnoreCase));
+            }
+
             var currentRoles = employee.UserRoles;
             var viewModel = new List<RoleVM>();
             foreach(var r  in allRoles)
@@ -277,8 +320,10 @@ namespace NBDProject2024.Controllers
             ViewBag.Roles = viewModel;
         }
 
-        private void InsertIdentityUser(string email, string[] selectedRoles)
+        private void InsertIdentityUser(string email, string[] selectedRoles, bool canManageRoot)
         {
+            selectedRoles = SanitizeSelectedRoles(selectedRoles, canManageRoot);
+
             if(_userManager.FindByEmailAsync(email).Result == null)
             {
                 IdentityUser user = new IdentityUser
@@ -301,8 +346,9 @@ namespace NBDProject2024.Controllers
             }
             else
             {
-                TempData["message"] = "The Login Account for" + email
-                    + "was already in the system.";
+                UpdateUserRoles(selectedRoles, email, canManageRoot)
+                    .GetAwaiter()
+                    .GetResult();
             }
         }
 
@@ -326,8 +372,10 @@ namespace NBDProject2024.Controllers
 
         }
 
-        private async Task UpdateUserRoles(string[] selectedRoles, string Email)
+        private async Task UpdateUserRoles(string[] selectedRoles, string Email, bool canManageRoot)
         {
+            selectedRoles = SanitizeSelectedRoles(selectedRoles, canManageRoot);
+
             var _user = await _userManager.FindByEmailAsync(Email);//IdentityUser
             if (_user != null)
             {
@@ -351,6 +399,12 @@ namespace NBDProject2024.Controllers
                     //first means we can safely loop over the colleciton making async calls and avoid
                     //the error 'New transaction is not allowed because there are other threads running in the session'
                     IList<IdentityRole> allRoles = _identityContext.Roles.ToList<IdentityRole>();
+                    if (!canManageRoot)
+                    {
+                        allRoles = allRoles
+                            .Where(r => !string.Equals(r.Name, "Root", StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+                    }
 
                     foreach (var r in allRoles)
                     {
@@ -371,6 +425,23 @@ namespace NBDProject2024.Controllers
                     }
                 }
             }
+        }
+
+        private static string[] SanitizeSelectedRoles(string[] selectedRoles, bool canManageRoot)
+        {
+            if (selectedRoles == null)
+            {
+                return Array.Empty<string>();
+            }
+
+            if (canManageRoot)
+            {
+                return selectedRoles;
+            }
+
+            return selectedRoles
+                .Where(r => !string.Equals(r, "Root", StringComparison.OrdinalIgnoreCase))
+                .ToArray();
         }
 
         private async Task DeleteIdentityUser(string Email)

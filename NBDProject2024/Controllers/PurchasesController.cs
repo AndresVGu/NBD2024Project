@@ -7,7 +7,7 @@ using NBDProject2024.Models;
 
 namespace NBDProject2024.Controllers
 {
-    [Authorize(Roles = "Admin,Supervisor")]
+    [Authorize(Roles = "Admin,Supervisor,Root")]
     public class PurchasesController : Controller
     {
         private readonly NBDContext _context;

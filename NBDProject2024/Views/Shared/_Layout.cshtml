@@ -1,3 +1,4 @@
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @{
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? string.Empty;
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? string.Empty;
@@ -11,6 +12,7 @@
     var profileName = Context.Request.Cookies["userName"] ?? User.Identity?.Name ?? "User";
     var profileEmail = User.Identity?.Name ?? string.Empty;
     var profileInitials = "US";
+    var appBuildVersion = Configuration["AppBuildVersion"] ?? "local";
 
     if (!string.IsNullOrWhiteSpace(profileName))
     {
@@ -25,10 +27,13 @@
         }
     }
 
-    Func<string, string> navClass = (controller) =>
-        string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase)
-            ? "db-nav-item active"
-            : "db-nav-item";
+    Func<string, string?, string> navClass = (controller, action) =>
+    {
+        var controllerMatches = string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase);
+        var actionMatches = string.IsNullOrWhiteSpace(action)
+            || string.Equals(currentAction, action, StringComparison.OrdinalIgnoreCase);
+        return controllerMatches && actionMatches ? "db-nav-item active" : "db-nav-item";
+    };
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -58,11 +63,17 @@
             var topTheme = savedTopbarTheme === "light" || savedTopbarTheme === "dark"
                 ? savedTopbarTheme
                 : theme;
+            var fullscreenUi = localStorage.getItem("nbd-fullscreen-ui") === "1";
 
             document.documentElement.setAttribute("data-theme", theme);
             document.documentElement.setAttribute("data-theme-mode", mode);
             document.documentElement.setAttribute("data-sidebar-theme", sideTheme);
             document.documentElement.setAttribute("data-topbar-theme", topTheme);
+            if (fullscreenUi) {
+                document.documentElement.setAttribute("data-fullscreen-ui", "1");
+            } else {
+                document.documentElement.removeAttribute("data-fullscreen-ui");
+            }
         })();
     </script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -78,6 +89,9 @@
 <body class="@(useDashboardShell ? "dashboard-layout" : "standard-layout")">
     @if (!useDashboardShell && !useLandingLayout)
     {
+        <button type="button" id="fullscreenToggleBtn" class="fullscreen-toggle-btn" aria-label="Toggle fullscreen mode" title="Enter fullscreen mode">
+            <i class="fa-solid fa-expand"></i>
+        </button>
         <button type="button" id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle color theme" title="Switch theme">
             <i class="fa-regular fa-moon"></i>
         </button>
@@ -98,26 +112,26 @@
 
                     <nav class="db-nav">
                         <div class="db-nav-section">Main</div>
-                        <a class="@navClass("Dashboard")" asp-area="" asp-controller="Dashboard" asp-action="Index"><i class="fa-solid fa-gauge"></i><span>Dashboard</span></a>
-                        <a class="@navClass("Clients")" asp-area="" asp-controller="Clients" asp-action="Index"><i class="fa-solid fa-address-book"></i><span>Clients</span></a>
+                        <a class="@navClass("Dashboard", "Index")" asp-area="" asp-controller="Dashboard" asp-action="Index"><i class="fa-solid fa-gauge"></i><span>Dashboard</span></a>
+                        <a class="@navClass("Clients", null)" asp-area="" asp-controller="Clients" asp-action="Index"><i class="fa-solid fa-address-book"></i><span>Clients</span></a>
 
                         <div class="db-nav-section">Operations</div>
-                        <a class="@navClass("Dashboard")" asp-area="" asp-controller="Dashboard" asp-action="Schedule"><i class="fa-regular fa-calendar-days"></i><span>Schedule</span></a>
-                        <a class="@navClass("Projects")" asp-area="" asp-controller="Projects" asp-action="Index"><i class="fa-solid fa-diagram-project"></i><span>Projects</span></a>
-                        <a class="@navClass("WorkOrders")" asp-area="" asp-controller="WorkOrders" asp-action="Index"><i class="fa-solid fa-clipboard-check"></i><span>Work Orders</span></a>
-                        <a class="@navClass("Inventory")" asp-area="" asp-controller="Inventory" asp-action="Index"><i class="fa-solid fa-boxes-stacked"></i><span>Inventory</span></a>
-                        <a class="@navClass("Purchases")" asp-area="" asp-controller="Purchases" asp-action="Index"><i class="fa-solid fa-cart-flatbed"></i><span>Purchases</span></a>
-                        <a class="@navClass("Bids")" asp-area="" asp-controller="Bids" asp-action="Index"><i class="fa-solid fa-file-signature"></i><span>Bids</span></a>
-                        <a class="@navClass("Lookup")" asp-area="" asp-controller="Lookup" asp-action="Index"><i class="fa-solid fa-layer-group"></i><span>Materials & Labours</span></a>
+                        <a class="@navClass("Dashboard", "Schedule")" asp-area="" asp-controller="Dashboard" asp-action="Schedule"><i class="fa-regular fa-calendar-days"></i><span>Schedule</span></a>
+                        <a class="@navClass("Projects", null)" asp-area="" asp-controller="Projects" asp-action="Index"><i class="fa-solid fa-diagram-project"></i><span>Projects</span></a>
+                        <a class="@navClass("WorkOrders", null)" asp-area="" asp-controller="WorkOrders" asp-action="Index"><i class="fa-solid fa-clipboard-check"></i><span>Work Orders</span></a>
+                        <a class="@navClass("Inventory", null)" asp-area="" asp-controller="Inventory" asp-action="Index"><i class="fa-solid fa-boxes-stacked"></i><span>Inventory</span></a>
+                        <a class="@navClass("Purchases", null)" asp-area="" asp-controller="Purchases" asp-action="Index"><i class="fa-solid fa-cart-flatbed"></i><span>Purchases</span></a>
+                        <a class="@navClass("Bids", null)" asp-area="" asp-controller="Bids" asp-action="Index"><i class="fa-solid fa-file-signature"></i><span>Bids</span></a>
+                        <a class="@navClass("Lookup", null)" asp-area="" asp-controller="Lookup" asp-action="Index"><i class="fa-solid fa-layer-group"></i><span>Materials & Labours</span></a>
 
                         <div class="db-nav-section">Management</div>
                         @if (!isGuestMode)
                         {
-                            <a class="@navClass("Employee")" asp-area="" asp-controller="Employee" asp-action="Index"><i class="fa-solid fa-user-tie"></i><span>Employees</span></a>
-                            <a class="@navClass("EmployeeSkills")" asp-area="" asp-controller="EmployeeSkills" asp-action="Index"><i class="fa-solid fa-screwdriver-wrench"></i><span>Employee Skills</span></a>
+                            <a class="@navClass("Employee", null)" asp-area="" asp-controller="Employee" asp-action="Index"><i class="fa-solid fa-user-tie"></i><span>Employees</span></a>
+                            <a class="@navClass("EmployeeSkills", null)" asp-area="" asp-controller="EmployeeSkills" asp-action="Index"><i class="fa-solid fa-screwdriver-wrench"></i><span>Employee Skills</span></a>
                             @if (User.IsInRole("Root"))
                             {
-                                <a class="@navClass("UserRole")" asp-area="" asp-controller="UserRole" asp-action="Index"><i class="fa-solid fa-user-shield"></i><span>Role Management</span></a>
+                                <a class="@navClass("UserRole", null)" asp-area="" asp-controller="UserRole" asp-action="Index"><i class="fa-solid fa-user-shield"></i><span>Role Management</span></a>
                             }
                         }
                     </nav>
@@ -132,26 +146,26 @@
                 <div class="offcanvas-body">
                     <nav class="db-nav">
                         <div class="db-nav-section">Main</div>
-                        <a class="@navClass("Dashboard")" asp-area="" asp-controller="Dashboard" asp-action="Index"><i class="fa-solid fa-gauge"></i><span>Dashboard</span></a>
-                        <a class="@navClass("Clients")" asp-area="" asp-controller="Clients" asp-action="Index"><i class="fa-solid fa-address-book"></i><span>Clients</span></a>
+                        <a class="@navClass("Dashboard", "Index")" asp-area="" asp-controller="Dashboard" asp-action="Index"><i class="fa-solid fa-gauge"></i><span>Dashboard</span></a>
+                        <a class="@navClass("Clients", null)" asp-area="" asp-controller="Clients" asp-action="Index"><i class="fa-solid fa-address-book"></i><span>Clients</span></a>
 
                         <div class="db-nav-section">Operations</div>
-                        <a class="@navClass("Dashboard")" asp-area="" asp-controller="Dashboard" asp-action="Schedule"><i class="fa-regular fa-calendar-days"></i><span>Schedule</span></a>
-                        <a class="@navClass("Projects")" asp-area="" asp-controller="Projects" asp-action="Index"><i class="fa-solid fa-diagram-project"></i><span>Projects</span></a>
-                        <a class="@navClass("WorkOrders")" asp-area="" asp-controller="WorkOrders" asp-action="Index"><i class="fa-solid fa-clipboard-check"></i><span>Work Orders</span></a>
-                        <a class="@navClass("Inventory")" asp-area="" asp-controller="Inventory" asp-action="Index"><i class="fa-solid fa-boxes-stacked"></i><span>Inventory</span></a>
-                        <a class="@navClass("Purchases")" asp-area="" asp-controller="Purchases" asp-action="Index"><i class="fa-solid fa-cart-flatbed"></i><span>Purchases</span></a>
-                        <a class="@navClass("Bids")" asp-area="" asp-controller="Bids" asp-action="Index"><i class="fa-solid fa-file-signature"></i><span>Bids</span></a>
-                        <a class="@navClass("Lookup")" asp-area="" asp-controller="Lookup" asp-action="Index"><i class="fa-solid fa-layer-group"></i><span>Materials & Labours</span></a>
+                        <a class="@navClass("Dashboard", "Schedule")" asp-area="" asp-controller="Dashboard" asp-action="Schedule"><i class="fa-regular fa-calendar-days"></i><span>Schedule</span></a>
+                        <a class="@navClass("Projects", null)" asp-area="" asp-controller="Projects" asp-action="Index"><i class="fa-solid fa-diagram-project"></i><span>Projects</span></a>
+                        <a class="@navClass("WorkOrders", null)" asp-area="" asp-controller="WorkOrders" asp-action="Index"><i class="fa-solid fa-clipboard-check"></i><span>Work Orders</span></a>
+                        <a class="@navClass("Inventory", null)" asp-area="" asp-controller="Inventory" asp-action="Index"><i class="fa-solid fa-boxes-stacked"></i><span>Inventory</span></a>
+                        <a class="@navClass("Purchases", null)" asp-area="" asp-controller="Purchases" asp-action="Index"><i class="fa-solid fa-cart-flatbed"></i><span>Purchases</span></a>
+                        <a class="@navClass("Bids", null)" asp-area="" asp-controller="Bids" asp-action="Index"><i class="fa-solid fa-file-signature"></i><span>Bids</span></a>
+                        <a class="@navClass("Lookup", null)" asp-area="" asp-controller="Lookup" asp-action="Index"><i class="fa-solid fa-layer-group"></i><span>Materials & Labours</span></a>
 
                         <div class="db-nav-section">Management</div>
                         @if (!isGuestMode)
                         {
-                            <a class="@navClass("Employee")" asp-area="" asp-controller="Employee" asp-action="Index"><i class="fa-solid fa-user-tie"></i><span>Employees</span></a>
-                            <a class="@navClass("EmployeeSkills")" asp-area="" asp-controller="EmployeeSkills" asp-action="Index"><i class="fa-solid fa-screwdriver-wrench"></i><span>Employee Skills</span></a>
+                            <a class="@navClass("Employee", null)" asp-area="" asp-controller="Employee" asp-action="Index"><i class="fa-solid fa-user-tie"></i><span>Employees</span></a>
+                            <a class="@navClass("EmployeeSkills", null)" asp-area="" asp-controller="EmployeeSkills" asp-action="Index"><i class="fa-solid fa-screwdriver-wrench"></i><span>Employee Skills</span></a>
                             @if (User.IsInRole("Root"))
                             {
-                                <a class="@navClass("UserRole")" asp-area="" asp-controller="UserRole" asp-action="Index"><i class="fa-solid fa-user-shield"></i><span>Role Management</span></a>
+                                <a class="@navClass("UserRole", null)" asp-area="" asp-controller="UserRole" asp-action="Index"><i class="fa-solid fa-user-shield"></i><span>Role Management</span></a>
                             }
                         }
                     </nav>
@@ -213,6 +227,18 @@
                                             <i class="fa-solid fa-sliders me-2"></i>Settings
                                         </a>
                                     </li>
+                                    @if (User.IsInRole("Root"))
+                                    {
+                                        <li>
+                                            <form asp-area="" asp-controller="SystemMaintenance" asp-action="ResetDomainData" method="post"
+                                                  onsubmit="return confirm('This will erase current domain data and reload seeded data. Continue?');">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="dropdown-item text-danger">
+                                                    <i class="fa-solid fa-rotate me-2"></i>Reset Domain Data
+                                                </button>
+                                            </form>
+                                        </li>
+                                    }
                                 }
                                 else
                                 {
@@ -250,6 +276,8 @@
                 <footer class="db-footer">
                     <span>2026 &copy; NBD Landscaping</span>
                     <span class="d-flex align-items-center gap-2 flex-wrap justify-content-end">
+                        <span class="text-muted">Version @appBuildVersion</span>
+                        <span class="text-muted">|</span>
                         <span>Created By Andres Villarreal</span>
                         <span class="text-muted">|</span>
                         <a class="text-decoration-none" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a>

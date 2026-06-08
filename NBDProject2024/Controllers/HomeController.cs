@@ -15,9 +15,14 @@ namespace NBDProject2024.Controllers
             _logger = logger;
         }
 
-        [OutputCache(Duration = 120)]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Index()
         {
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+
             return View();
         }
 

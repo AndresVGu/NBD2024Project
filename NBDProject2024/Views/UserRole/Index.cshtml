@@ -10,6 +10,11 @@
 <div class="mb-3">
     <a asp-action="CreateRole" class="btn btn-outline-primary">Create Role</a>
     <a asp-action="Audit" class="btn btn-outline-secondary">Role Audit</a>
+    <form asp-controller="SystemMaintenance" asp-action="ResetDomainData" method="post" class="d-inline"
+          onsubmit="return confirm('This will erase current domain data (clients/projects/bids/inventory/purchases) and reseed defaults. Continue?');">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-outline-danger">Reset Domain Data</button>
+    </form>
 </div>
 
 <div class="table-responsive">

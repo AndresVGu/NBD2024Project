@@ -107,6 +107,27 @@ body:has(.dashboard-page) {
   margin-left: 0;
 }
 
+html[data-fullscreen-ui="1"] .dashboard-page .db-sidebar {
+  transform: translateX(-100%);
+}
+
+html[data-fullscreen-ui="1"] .dashboard-page .db-main-content {
+  margin-left: 0;
+}
+
+html[data-fullscreen-ui="1"] .dashboard-page .db-content {
+  padding: 12px;
+}
+
+html[data-fullscreen-ui="1"] .dashboard-page .db-topbar,
+html[data-fullscreen-ui="1"] .dashboard-page .db-footer {
+  display: none;
+}
+
+html[data-fullscreen-ui="1"] .dashboard-page .db-main-content {
+  min-height: 100vh;
+}
+
 .db-topbar {
   height: 70px;
   display: flex;

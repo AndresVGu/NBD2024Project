@@ -40,8 +40,15 @@ namespace NBDProject2024.Controllers
             }
             else if (EndDate == DateTime.MinValue)
             {
-                StartDate = _context.Projects.Min(p => p.StartTime).Date;
-                EndDate = _context.Projects.Max(p => p.StartTime).Date;
+                var startDateCandidate = await _context.Projects
+                    .Select(p => (DateTime?)p.StartTime)
+                    .MinAsync();
+                var endDateCandidate = await _context.Projects
+                    .Select(p => (DateTime?)p.StartTime)
+                    .MaxAsync();
+
+                StartDate = startDateCandidate?.Date ?? DateTime.Today;
+                EndDate = endDateCandidate?.Date ?? DateTime.Today;
                 ViewData["StartDate"] = StartDate.ToString("yyyy/MM/dd");
                 ViewData["EndDate"] = EndDate.ToString("yyyy/MM/dd");
 

@@ -53,6 +53,24 @@ else
     identityConnectionString = identityBuilder.ToString();
 }
 
+var resetAndSeedOnceEnabled = builder.Configuration.GetValue<bool>("Bootstrap:ResetAndSeedOnce");
+var resetIdentityToo = builder.Configuration.GetValue<bool>("Bootstrap:ResetIdentityToo");
+var resetAndSeedOverride = builder.Configuration.GetValue<bool>("Bootstrap:ResetAndSeedOverride");
+var forceDomainResetOnStartup = builder.Configuration.GetValue<bool>("Bootstrap:ForceDomainResetOnStartup");
+var recreateDomainDatabase = builder.Configuration.GetValue<bool>("Bootstrap:RecreateDomainDatabase");
+var recreateDomainDatabaseOverride = builder.Configuration.GetValue<bool>("Bootstrap:RecreateDomainDatabaseOverride");
+const string domainSeedVersion = "2026-06-08.2";
+var resetMarkerPath = builder.Environment.IsDevelopment()
+    ? Path.Combine(builder.Environment.ContentRootPath, "App_Data", ".nbd-reset-seed.once")
+    : "/home/data/.nbd-reset-seed.once";
+var resetAlreadyExecuted = File.Exists(resetMarkerPath);
+var shouldRunResetAndSeed = (resetAndSeedOnceEnabled && !resetAlreadyExecuted) || resetAndSeedOverride;
+var legacyResetRequested = forceDomainResetOnStartup || shouldRunResetAndSeed;
+var recreateMarkerPath = builder.Environment.IsDevelopment()
+    ? Path.Combine(builder.Environment.ContentRootPath, "App_Data", ".nbd-recreate-domain.once")
+    : "/home/data/.nbd-recreate-domain.once";
+var recreateAlreadyExecuted = File.Exists(recreateMarkerPath);
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(identityConnectionString));
 
@@ -183,51 +201,114 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-// Keep schema up to date and baseline legacy databases that predate EF migration history.
+var shouldWriteRecreateMarker = false;
+
+// Keep schema up to date and ensure deterministic domain data state for each seed version.
 await using (var scope = app.Services.CreateAsyncScope())
 {
     var nbdContext = scope.ServiceProvider.GetRequiredService<NBDContext>();
-    await nbdContext.Database.OpenConnectionAsync();
+    var currentDomainSeedVersion = await TryGetSeedControlValueAsync(nbdContext, "DomainSeedVersion");
+    var recreateBySeedVersion = !string.Equals(currentDomainSeedVersion, domainSeedVersion, StringComparison.Ordinal);
+    var shouldRecreateDomainDatabase = legacyResetRequested
+        || (recreateDomainDatabase && !recreateAlreadyExecuted)
+        || recreateDomainDatabaseOverride
+        || recreateBySeedVersion;
 
-    const string initialMigrationId = "20240403023052_Initial";
-    const string productVersion = "8.0.17";
-
-    bool hasEmployeesTable;
-    await using (var checkCommand = nbdContext.Database.GetDbConnection().CreateCommand())
+    if (shouldRecreateDomainDatabase)
     {
-        checkCommand.CommandText = "SELECT EXISTS (SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'Employees');";
-        var result = await checkCommand.ExecuteScalarAsync();
-        hasEmployeesTable = Convert.ToInt32(result) == 1;
+        await nbdContext.Database.EnsureDeletedAsync();
+        shouldWriteRecreateMarker = true;
     }
 
-    if (hasEmployeesTable)
-    {
-        await nbdContext.Database.ExecuteSqlRawAsync(
-            "CREATE TABLE IF NOT EXISTS \"__EFMigrationsHistory\" (\"MigrationId\" TEXT NOT NULL CONSTRAINT \"PK___EFMigrationsHistory\" PRIMARY KEY, \"ProductVersion\" TEXT NOT NULL);");
-
-        await nbdContext.Database.ExecuteSqlInterpolatedAsync(
-            $"INSERT OR IGNORE INTO \"__EFMigrationsHistory\" (\"MigrationId\", \"ProductVersion\") VALUES ({initialMigrationId}, {productVersion});");
-    }
-
-    await nbdContext.Database.CloseConnectionAsync();
-
-    var nbdPendingMigrations = await nbdContext.Database.GetPendingMigrationsAsync();
-    if (nbdPendingMigrations.Any())
-    {
-        await nbdContext.Database.MigrateAsync();
-    }
-}
-
-// Heavy domain seed only in local development to avoid slow production cold starts.
-if (app.Environment.IsDevelopment())
-{
-    NBDInitializer.Seed(app);
+    await nbdContext.Database.MigrateAsync();
 }
 
 // Always ensure essential location lookups exist for client/project forms.
 await LookupDataInitializer.SeedAsync(app);
 
+// Compact domain seed is idempotent, safe to run in all environments.
+NBDInitializer.Seed(app);
+
+await using (var seedScope = app.Services.CreateAsyncScope())
+{
+    var nbdContext = seedScope.ServiceProvider.GetRequiredService<NBDContext>();
+    await EnsureSeedControlTableAsync(nbdContext);
+    await SetSeedControlValueAsync(nbdContext, "DomainSeedVersion", domainSeedVersion);
+}
+
 // Lightweight identity seed in all environments (roles/users) so login always works.
 await ApplicationDbInitializer.SeedAsync(app);
 
+if (shouldRunResetAndSeed)
+{
+    var markerDir = Path.GetDirectoryName(resetMarkerPath);
+    if (!string.IsNullOrWhiteSpace(markerDir))
+    {
+        Directory.CreateDirectory(markerDir);
+    }
+
+    await File.WriteAllTextAsync(
+        resetMarkerPath,
+        $"One-time reset completed at {DateTime.UtcNow:O}");
+}
+
+if (shouldWriteRecreateMarker)
+{
+    var markerDir = Path.GetDirectoryName(recreateMarkerPath);
+    if (!string.IsNullOrWhiteSpace(markerDir))
+    {
+        Directory.CreateDirectory(markerDir);
+    }
+
+    await File.WriteAllTextAsync(
+        recreateMarkerPath,
+        $"One-time domain recreate completed at {DateTime.UtcNow:O}");
+}
+
 app.Run();
+
+static async Task<string> TryGetSeedControlValueAsync(NBDContext context, string key)
+{
+    try
+    {
+        await context.Database.OpenConnectionAsync();
+
+        await using var existsCommand = context.Database.GetDbConnection().CreateCommand();
+        existsCommand.CommandText = "SELECT EXISTS (SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = '__SeedControl');";
+        var existsResult = await existsCommand.ExecuteScalarAsync();
+        var hasSeedControlTable = Convert.ToInt32(existsResult) == 1;
+        if (!hasSeedControlTable)
+        {
+            return null;
+        }
+
+        await using var valueCommand = context.Database.GetDbConnection().CreateCommand();
+        valueCommand.CommandText = "SELECT \"Value\" FROM \"__SeedControl\" WHERE \"Key\" = $key LIMIT 1;";
+        var keyParameter = valueCommand.CreateParameter();
+        keyParameter.ParameterName = "$key";
+        keyParameter.Value = key;
+        valueCommand.Parameters.Add(keyParameter);
+        var result = await valueCommand.ExecuteScalarAsync();
+        return result?.ToString();
+    }
+    catch
+    {
+        return null;
+    }
+    finally
+    {
+        await context.Database.CloseConnectionAsync();
+    }
+}
+
+static async Task EnsureSeedControlTableAsync(NBDContext context)
+{
+    await context.Database.ExecuteSqlRawAsync(
+        "CREATE TABLE IF NOT EXISTS \"__SeedControl\" (\"Key\" TEXT NOT NULL PRIMARY KEY, \"Value\" TEXT NULL);");
+}
+
+static async Task SetSeedControlValueAsync(NBDContext context, string key, string value)
+{
+    await context.Database.ExecuteSqlInterpolatedAsync(
+        $"INSERT INTO \"__SeedControl\" (\"Key\", \"Value\") VALUES ({key}, {value}) ON CONFLICT(\"Key\") DO UPDATE SET \"Value\" = excluded.\"Value\";");
+}

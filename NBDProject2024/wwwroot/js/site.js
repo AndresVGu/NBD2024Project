@@ -12,10 +12,10 @@
   var topbarThemeText = document.querySelector("#topbarThemeText");
   var copyEmailBtn = document.querySelector("#copyEmailBtn");
   var fullscreenToggleBtn = document.querySelector("#fullscreenToggleBtn");
-  var fullscreenIntentStorageKey = "nbd-fullscreen-intent";
+  var fullscreenUiStorageKey = "nbd-fullscreen-ui";
   var prefersDarkQuery = window.matchMedia("(prefers-color-scheme: dark)");
   var themeModes = ["light", "dark", "system"];
-  var isNavigatingAway = false;
+  var dashboardPage = document.querySelector(".dashboard-page");
 
   function isFullscreenActive() {
     return !!(
@@ -25,30 +25,26 @@
     );
   }
 
-  function hasFullscreenIntent() {
-    return sessionStorage.getItem(fullscreenIntentStorageKey) === "1";
+  function hasPersistentFullscreenUi() {
+    return localStorage.getItem(fullscreenUiStorageKey) === "1";
   }
 
-  function setFullscreenIntent(enabled) {
+  function setPersistentFullscreenUi(enabled) {
     if (enabled) {
-      sessionStorage.setItem(fullscreenIntentStorageKey, "1");
+      localStorage.setItem(fullscreenUiStorageKey, "1");
+      document.documentElement.setAttribute("data-fullscreen-ui", "1");
     } else {
-      sessionStorage.removeItem(fullscreenIntentStorageKey);
+      localStorage.removeItem(fullscreenUiStorageKey);
+      document.documentElement.removeAttribute("data-fullscreen-ui");
     }
   }
 
-  async function requestFullscreenMode() {
-    if (!document.documentElement) {
+  function setPersistentFullscreenUiClass(enabled) {
+    if (!dashboardPage) {
       return;
     }
 
-    if (document.documentElement.requestFullscreen) {
-      await document.documentElement.requestFullscreen();
-    } else if (document.documentElement.webkitRequestFullscreen) {
-      document.documentElement.webkitRequestFullscreen();
-    } else if (document.documentElement.msRequestFullscreen) {
-      document.documentElement.msRequestFullscreen();
-    }
+    dashboardPage.classList.toggle("fullscreen-persistent", enabled);
   }
 
   function updateFullscreenButtonState() {
@@ -56,51 +52,22 @@
       return;
     }
 
-    var active = isFullscreenActive();
+    var active = hasPersistentFullscreenUi();
     fullscreenToggleBtn.innerHTML = active
       ? '<i class="fa-solid fa-compress"></i>'
       : '<i class="fa-solid fa-expand"></i>';
     fullscreenToggleBtn.setAttribute(
       "title",
-      active ? "Exit fullscreen" : "Enter fullscreen",
+      active ? "Exit fullscreen mode" : "Enter fullscreen mode",
     );
     fullscreenToggleBtn.setAttribute("aria-label", fullscreenToggleBtn.title);
   }
 
-  async function toggleFullscreen() {
-    if (!document.documentElement) {
-      return;
-    }
-
-    try {
-      if (!isFullscreenActive()) {
-        setFullscreenIntent(true);
-        await requestFullscreenMode();
-      } else if (document.exitFullscreen) {
-        setFullscreenIntent(false);
-        await document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {
-        setFullscreenIntent(false);
-        document.webkitExitFullscreen();
-      } else if (document.msExitFullscreen) {
-        setFullscreenIntent(false);
-        document.msExitFullscreen();
-      }
-    } catch (error) {
-      // Ignore fullscreen errors caused by browser policy restrictions.
-    }
-  }
-
-  async function restoreFullscreenIfNeeded() {
-    if (!hasFullscreenIntent() || isFullscreenActive()) {
-      return;
-    }
-
-    try {
-      await requestFullscreenMode();
-    } catch (error) {
-      // Ignore restore failures due to browser activation policies.
-    }
+  function toggleFullscreen() {
+    var enablePersistent = !hasPersistentFullscreenUi();
+    setPersistentFullscreenUi(enablePersistent);
+    setPersistentFullscreenUiClass(enablePersistent);
+    updateFullscreenButtonState();
   }
 
   function getSavedThemeMode() {
@@ -242,36 +209,13 @@
     getSavedBarTheme(topbarThemeStorageKey) || activeTheme;
   applyBarThemes(activeSidebarTheme, activeTopbarTheme);
 
+  setPersistentFullscreenUiClass(hasPersistentFullscreenUi());
+
   if (fullscreenToggleBtn) {
     updateFullscreenButtonState();
     fullscreenToggleBtn.addEventListener("click", function () {
       toggleFullscreen();
     });
-    document.addEventListener("fullscreenchange", function () {
-      updateFullscreenButtonState();
-
-      // If fullscreen was closed manually (Esc/browser UI), clear sticky intent.
-      if (!isFullscreenActive() && !isNavigatingAway) {
-        setFullscreenIntent(false);
-      }
-    });
-    document.addEventListener(
-      "webkitfullscreenchange",
-      updateFullscreenButtonState,
-    );
-    document.addEventListener(
-      "MSFullscreenChange",
-      updateFullscreenButtonState,
-    );
-
-    window.addEventListener("beforeunload", function () {
-      if (hasFullscreenIntent()) {
-        isNavigatingAway = true;
-      }
-    });
-
-    // Attempt to restore fullscreen after internal navigation when sticky mode is enabled.
-    restoreFullscreenIfNeeded();
   }
 
   if (themeToggleBtn) {

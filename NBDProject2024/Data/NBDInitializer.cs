@@ -1,8 +1,4 @@
-﻿using Humanizer;
-using Microsoft.EntityFrameworkCore;
-using NBDProject2024.Data;
 using NBDProject2024.Models;
-using System.Diagnostics;
 
 namespace NBD2024.Data
 {
@@ -10,685 +6,721 @@ namespace NBD2024.Data
     {
         public static void Seed(IApplicationBuilder applicationBuilder)
         {
-            NBDContext context = applicationBuilder.ApplicationServices.CreateScope()
-                .ServiceProvider.GetRequiredService<NBDContext>();
+            using var scope = applicationBuilder.ApplicationServices.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<NBDProject2024.Data.NBDContext>();
+            Seed(context);
+        }
 
-            try
+        public static void Seed(NBDProject2024.Data.NBDContext context)
+        {
+            SeedProvincesAndCities(context);
+            SeedEmployees(context);
+            SeedCoreCatalogs(context);
+            SeedClientsAndProjects(context);
+            SeedEmployeeSkills(context);
+            SeedBids(context);
+            SeedWorkOrders(context);
+            SeedInventoryAndPurchases(context);
+            SeedWorkOrderConsumptions(context);
+        }
+
+        private static void SeedProvincesAndCities(NBDProject2024.Data.NBDContext context)
+        {
+            if (!context.Provinces.Any())
             {
-                //Delete and recreate the Database with every restart
-                //context.Database.EnsureDeleted();
-                //context.Database.EnsureCreated();
-                //context.Database.Migrate();
+                context.Provinces.AddRange(
+                    new Province { ID = "AB", Name = "Alberta" },
+                    new Province { ID = "BC", Name = "British Columbia" },
+                    new Province { ID = "MB", Name = "Manitoba" },
+                    new Province { ID = "NB", Name = "New Brunswick" },
+                    new Province { ID = "NS", Name = "Nova Scotia" },
+                    new Province { ID = "ON", Name = "Ontario" },
+                    new Province { ID = "PE", Name = "Prince Edward Island" },
+                    new Province { ID = "QC", Name = "Quebec" },
+                    new Province { ID = "SK", Name = "Saskatchewan" },
+                    new Province { ID = "YT", Name = "Yukon" }
+                );
+                context.SaveChanges();
+            }
 
-                //To randomly generate data
-                Random random = new Random();
+            var citySeeds = new[]
+            {
+                ("Toronto", "ON"),
+                ("St. Catharines", "ON"),
+                ("Halifax", "NS"),
+                ("Calgary", "AB"),
+                ("Vancouver", "BC"),
+                ("Winnipeg", "MB"),
+                ("Quebec City", "QC"),
+                ("Saskatoon", "SK"),
+                ("Charlottetown", "PE"),
+                ("Fredericton", "NB")
+            };
 
-                #region Generate random Records
-
-                static string GeneratePhoneNumber(Random random)
+            foreach (var (name, provinceId) in citySeeds)
+            {
+                if (!context.Cities.Any(c => c.Name == name && c.ProvinceID == provinceId))
                 {
-                    //random area code
-                    int areaCode = random.Next(100, 1000);
-                    //random exchange code 
-                    int exchangeCode = random.Next(100, 1000);
-                    //random susbscriber number
-                    int subscriberNumber = random.Next(100, 1000);
-                    string phonerd = string.Format("{0:000}{1:000}{2:0000}", areaCode, exchangeCode, subscriberNumber);
-                    return phonerd;
+                    context.Cities.Add(new City { Name = name, ProvinceID = provinceId });
                 }
+            }
 
+            context.SaveChanges();
+        }
 
+        private static void SeedEmployees(NBDProject2024.Data.NBDContext context)
+        {
+            var employeeSeeds = new[]
+            {
+                ("admin@outlook.com", "Admin", "User", "9051110001", Positionemp.Management),
+                ("super@outlook.com", "Supervisor", "User", "9051110002", Positionemp.Management),
+                ("sales@outlook.com", "Sales", "User", "9051110003", Positionemp.Sales),
+                ("designer@outlook.com", "Designer", "User", "9051110004", Positionemp.Design),
+                ("root@test.com", "Root", "User", "9051110005", Positionemp.Management),
+                ("worker1@nbd.local", "Ethan", "Cole", "9051110006", Positionemp.Worker),
+                ("worker2@nbd.local", "Ava", "Grant", "9051110007", Positionemp.Worker),
+                ("worker3@nbd.local", "Liam", "Knight", "9051110008", Positionemp.Worker),
+                ("worker4@nbd.local", "Sofia", "Banks", "9051110009", Positionemp.Worker),
+                ("worker5@nbd.local", "Mason", "Reed", "9051110010", Positionemp.Worker)
+            };
 
-                //Random Address:
-                static string GenerateAddress(Random random)
+            foreach (var (email, firstName, lastName, phone, position) in employeeSeeds)
+            {
+                var employee = context.Employees.FirstOrDefault(e => e.Email == email);
+                if (employee == null)
                 {
-                    // Números de calle aleatorios (1-9999)
-                    int streetNumber = random.Next(1, 10000);
-
-                    // Nombres de calle aleatorios
-                    string[] streetNames = { "Main St", "First Ave", "Elm St", "Maple Ave", "Oak St" };
-                    string streetName = streetNames[random.Next(streetNames.Length)];
-
-                    // Formatear la dirección
-                    string address = $"{streetNumber} {streetName}";
-
-                    return address;
-                }
-                //Random Postal Code:
-                static string GeneratePostalCode(Random random)
-                {
-                    // Generar tres letras aleatorias
-                    char[] letters = new char[3];
-                    for (int i = 0; i < 3; i++)
+                    context.Employees.Add(new Employee
                     {
-                        letters[i] = (char)random.Next('A', 'Z' + 1);
-                    }
-
-                    // Generar tres dígitos aleatorios
-                    int[] digits = new int[3];
-                    for (int i = 0; i < 3; i++)
-                    {
-                        digits[i] = random.Next(0, 10);
-                    }
-
-                    // Formatear el código postal
-                    string postalCode = string.Format("{0}{1}{2} {3}{4}{5}",
-                                                      letters[0], digits[0],
-                                                      letters[1], digits[1],
-                                                      letters[2], digits[2]);
-
-                    return postalCode;
+                        FirstName = firstName,
+                        LastName = lastName,
+                        Email = email,
+                        Phone = phone,
+                        Position = position,
+                        Active = true,
+                        Prescriber = false
+                    });
                 }
-
-                #endregion
-                if (!context.Employees.Any())
+                else
                 {
-                    context.Employees.AddRange(
-                        new Employee
-                        {
-                            FirstName = "Andres",
-                            LastName = "Villarreal",
-                            Email = "admin@outlook.com"
-                        },
-                        new Employee
-                        {
-                            FirstName = "John",
-                            LastName = "Doe",
-                            Email = "super@outlook.com",
-                            Phone = "1234567899"
-                        },
-                         new Employee
-                         {
-                             FirstName = "Jane",
-                             LastName = "Doe",
-                             Email = "designer@outlook.com",
-                             Phone = "1234567898"
-                         },
-                         new Employee
-                         {
-                             FirstName = "Fred",
-                             LastName = "Flintstone",
-                             Email = "sales@outlook.com",
-                             Phone = "1234567897"
-                         },
-                         new Employee
-                         {
-                             FirstName = "Betty",
-                             LastName = "Rubble",
-                             Email = "user@outlook.com",
-                             Phone = "1234567896"
-                         });
-                    context.SaveChanges();
+                    employee.FirstName = firstName;
+                    employee.LastName = lastName;
+                    employee.Phone = phone;
+                    employee.Position = position;
+                    employee.Active = true;
                 }
-                //Provinces, Cities
-                if (!context.Provinces.Any())
+            }
+
+            context.SaveChanges();
+        }
+
+        private static void SeedCoreCatalogs(NBDProject2024.Data.NBDContext context)
+        {
+            var materialSeeds = new[]
+            {
+                ("Mulch", "Brown hardwood mulch", 6.50),
+                ("Topsoil", "Screened topsoil", 4.20),
+                ("Pavers", "Concrete pavers", 3.75),
+                ("River Stone", "Decorative river stone", 5.80),
+                ("Sod", "Kentucky bluegrass sod", 2.95),
+                ("Compost", "Organic compost blend", 3.10),
+                ("Cedar Edging", "Cedar wood edging", 8.25),
+                ("Garden Fabric", "Weed control fabric", 1.45),
+                ("Drain Gravel", "3/4 inch drainage gravel", 4.85),
+                ("Limestone Screenings", "Compaction screenings", 3.35)
+            };
+
+            foreach (var (name, description, price) in materialSeeds)
+            {
+                var material = context.Materials.FirstOrDefault(m => m.Name == name);
+                if (material == null)
                 {
-                    var provinces = new List<Province>
+                    context.Materials.Add(new Material { Name = name, Description = description, Price = price });
+                }
+                else
+                {
+                    material.Description = description;
+                    material.Price = price;
+                }
+            }
+
+            var labourSeeds = new[]
+            {
+                ("Site Prep", "Ground preparation", 38.00),
+                ("Installation", "Landscape installation", 45.00),
+                ("Finishing", "Final detailing", 32.00),
+                ("Irrigation Setup", "Irrigation lines and testing", 44.00),
+                ("Planting", "Plant and shrub placement", 36.00),
+                ("Hardscape Build", "Hardscape assembly", 48.00),
+                ("Cleanup", "Final cleanup and waste disposal", 29.00),
+                ("Soil Grading", "Site grading and leveling", 34.50),
+                ("Lighting Install", "Landscape lighting setup", 41.00),
+                ("Inspection", "Site quality inspection", 33.50)
+            };
+
+            foreach (var (name, description, price) in labourSeeds)
+            {
+                var labour = context.Labours.FirstOrDefault(l => l.Name == name);
+                if (labour == null)
+                {
+                    context.Labours.Add(new Labour { Name = name, Description = description, Price = price });
+                }
+                else
+                {
+                    labour.Description = description;
+                    labour.Price = price;
+                }
+            }
+
+            var locationSeeds = new[]
+            {
+                ("Main Warehouse", StockLocationType.Warehouse, "Primary warehouse"),
+                ("North Warehouse", StockLocationType.Warehouse, "North zone warehouse"),
+                ("South Warehouse", StockLocationType.Warehouse, "South zone warehouse"),
+                ("Truck A", StockLocationType.Truck, "Crew truck A"),
+                ("Truck B", StockLocationType.Truck, "Crew truck B")
+            };
+
+            foreach (var (name, type, notes) in locationSeeds)
+            {
+                var location = context.StockLocations.FirstOrDefault(l => l.Name == name && l.LocationType == type);
+                if (location == null)
+                {
+                    context.StockLocations.Add(new StockLocation
                     {
-                        new Province { ID = "ON", Name = "Ontario"},
-                        new Province { ID = "PE", Name = "Prince Edward Island"},
-                        new Province { ID = "NB", Name = "New Brunswick"},
-                        new Province { ID = "BC", Name = "British Columbia"},
-                        new Province { ID = "NL", Name = "Newfoundland and Labrador"},
-                        new Province { ID = "SK", Name = "Saskatchewan"},
-                        new Province { ID = "NS", Name = "Nova Scotia"},
-                        new Province { ID = "MB", Name = "Manitoba"},
-                        new Province { ID = "QC", Name = "Quebec"},
-                        new Province { ID = "YT", Name = "Yukon"},
-                        new Province { ID = "NU", Name = "Nunavut"},
-                        new Province { ID = "NT", Name = "Northwest Territories"},
-                        new Province { ID = "AB", Name = "Alberta"}
+                        Name = name,
+                        LocationType = type,
+                        IsActive = true,
+                        Notes = notes
+                    });
+                }
+                else
+                {
+                    location.IsActive = true;
+                    location.Notes = notes;
+                }
+            }
+
+            context.SaveChanges();
+        }
+
+        private static void SeedClientsAndProjects(NBDProject2024.Data.NBDContext context)
+        {
+            var cityIds = context.Cities.OrderBy(c => c.ID).Select(c => c.ID).ToList();
+            if (!cityIds.Any())
+            {
+                return;
+            }
+
+            var clientSeeds = new[]
+            {
+                ("Mia", "Turner", "Northgate Offices", "9052221001", "northgate@nbd.local", "100 King St", "L3C4N7"),
+                ("Noah", "Lee", "Harbor Retail Center", "9052221002", "harbor@nbd.local", "25 Lake Ave", "L3C5P8"),
+                ("Emma", "Frost", "Maple Medical", "9052221003", "maple@nbd.local", "12 Pine Rd", "L3C6A1"),
+                ("Oliver", "Stone", "Crescent Condos", "9052221004", "crescent@nbd.local", "88 Oak Dr", "L3C6A2"),
+                ("Sophia", "West", "Bayside Logistics", "9052221005", "bayside@nbd.local", "77 Harbor Blvd", "L3C6A3"),
+                ("Lucas", "Young", "Grandview School", "9052221006", "grandview@nbd.local", "5 School Ln", "L3C6A4"),
+                ("Isla", "Ward", "Elmwood Plaza", "9052221007", "elmwood@nbd.local", "43 Elm St", "L3C6A5"),
+                ("Henry", "Price", "Silverline Towers", "9052221008", "silverline@nbd.local", "9 Tower Way", "L3C6A6"),
+                ("Amelia", "Scott", "Parklane Residences", "9052221009", "parklane@nbd.local", "61 Park Rd", "L3C6A7"),
+                ("James", "Miller", "Riverview Campus", "9052221010", "riverview@nbd.local", "200 River St", "L3C6A8")
+            };
+
+            var clientIds = new List<int>();
+            for (int i = 0; i < clientSeeds.Length; i++)
+            {
+                var seed = clientSeeds[i];
+                var cityId = cityIds[i % cityIds.Count];
+
+                var client = context.Clients.FirstOrDefault(c => c.Email == seed.Item5);
+                if (client == null)
+                {
+                    client = new Client
+                    {
+                        FirstName = seed.Item1,
+                        LastName = seed.Item2,
+                        CompanyName = seed.Item3,
+                        Phone = seed.Item4,
+                        Email = seed.Item5,
+                        AddressCountry = "Canada",
+                        AddressStreet = seed.Item6,
+                        PostalCode = seed.Item7,
+                        CityID = cityId
                     };
-                    context.Provinces.AddRange(provinces);
+                    context.Clients.Add(client);
                     context.SaveChanges();
                 }
-                if (!context.Cities.Any())
+                else
                 {
-                    var cities = new List<City>
+                    client.FirstName = seed.Item1;
+                    client.LastName = seed.Item2;
+                    client.CompanyName = seed.Item3;
+                    client.Phone = seed.Item4;
+                    client.AddressCountry = "Canada";
+                    client.AddressStreet = seed.Item6;
+                    client.PostalCode = seed.Item7;
+                    client.CityID = cityId;
+                    context.SaveChanges();
+                }
+
+                clientIds.Add(client.ID);
+            }
+
+            var projectSeeds = new[]
+            {
+                "Northgate Entrance Refresh",
+                "Harbor Patio Revamp",
+                "Maple Parking Border",
+                "Crescent Courtyard Upgrade",
+                "Bayside Loading Zone",
+                "Grandview Field Access",
+                "Elmwood Walkway Renewal",
+                "Silverline Terrace Build",
+                "Parklane Courtyard Modernization",
+                "Riverview Main Quad"
+            };
+
+            for (int i = 0; i < projectSeeds.Length; i++)
+            {
+                var projectName = projectSeeds[i];
+                var project = context.Projects.FirstOrDefault(p => p.ProjectName == projectName);
+                var startDate = DateTime.Today.AddDays(-(20 - i));
+                var endDate = startDate.AddDays(20 + (i % 4));
+                var cityId = cityIds[i % cityIds.Count];
+
+                if (project == null)
+                {
+                    context.Projects.Add(new Project
                     {
-                        new City { Name = "Toronto", ProvinceID="ON"},
-                        new City { Name = "Halifax", ProvinceID="NS" },
-                        new City { Name = "Calgary", ProvinceID="AB" },
-                        new City { Name = "Winnipeg", ProvinceID="MB" },
-                        new City { Name = "Stratford", ProvinceID="ON" },
-                        new City { Name = "St. Catharines", ProvinceID="ON" },
-                        new City { Name = "Welland", ProvinceID="ON" },
-                        new City { Name = "Stratford", ProvinceID="PE" },
-                        new City { Name = "Ancaster", ProvinceID="ON" },
-                        new City { Name = "Vancouver", ProvinceID="BC" },
+                        ProjectName = projectName,
+                        StartTime = startDate,
+                        EndTime = endDate,
+                        ProjectSite = $"Site {(i + 1):00}",
+                        SetupNotes = "Extended deterministic seed project",
+                        ClientID = clientIds[i],
+                        CityID = cityId
+                    });
+                }
+                else
+                {
+                    project.StartTime = startDate;
+                    project.EndTime = endDate;
+                    project.ProjectSite = $"Site {(i + 1):00}";
+                    project.SetupNotes = "Extended deterministic seed project";
+                    project.ClientID = clientIds[i];
+                    project.CityID = cityId;
+                }
+            }
+
+            context.SaveChanges();
+        }
+
+        private static void SeedEmployeeSkills(NBDProject2024.Data.NBDContext context)
+        {
+            var employees = context.Employees.OrderBy(e => e.ID).Take(10).ToList();
+            if (!employees.Any())
+            {
+                return;
+            }
+
+            var skills = Enum.GetValues<EmployeeSkillType>();
+            for (int i = 0; i < employees.Count; i++)
+            {
+                var employee = employees[i];
+                var skill = skills[i % skills.Length];
+
+                if (!context.EmployeeSkills.Any(es => es.EmployeeID == employee.ID && es.Skill == skill))
+                {
+                    context.EmployeeSkills.Add(new EmployeeSkill
+                    {
+                        EmployeeID = employee.ID,
+                        Skill = skill,
+                        Level = 3 + (i % 3)
+                    });
+                }
+            }
+
+            context.SaveChanges();
+        }
+
+        private static void SeedBids(NBDProject2024.Data.NBDContext context)
+        {
+            var projects = context.Projects.OrderBy(p => p.ID).Take(10).ToList();
+            var materials = context.Materials.OrderBy(m => m.ID).Take(10).ToList();
+            var labours = context.Labours.OrderBy(l => l.ID).Take(10).ToList();
+
+            if (projects.Count < 10 || materials.Count < 10 || labours.Count < 10)
+            {
+                return;
+            }
+
+            for (int i = 0; i < projects.Count; i++)
+            {
+                var project = projects[i];
+                var bidDate = DateTime.Today.AddDays(-(i + 1));
+
+                var bid = context.Bids.FirstOrDefault(b => b.ProjectID == project.ID);
+                if (bid == null)
+                {
+                    bid = new Bid { ProjectID = project.ID, BidDate = bidDate };
+                    context.Bids.Add(bid);
+                    context.SaveChanges();
+                }
+                else
+                {
+                    bid.BidDate = bidDate;
+                    context.SaveChanges();
+                }
+
+                EnsureBidMaterial(context, bid.ID, materials[i % materials.Count].ID, 20 + i);
+                EnsureBidMaterial(context, bid.ID, materials[(i + 3) % materials.Count].ID, 10 + (i * 2));
+                EnsureBidLabour(context, bid.ID, labours[i % labours.Count].ID, 6 + (i % 5));
+                EnsureBidLabour(context, bid.ID, labours[(i + 4) % labours.Count].ID, 4 + (i % 4));
+            }
+
+            context.SaveChanges();
+        }
+
+        private static void EnsureBidMaterial(NBDProject2024.Data.NBDContext context, int bidId, int materialId, int qty)
+        {
+            var row = context.BidMaterials.FirstOrDefault(x => x.BidID == bidId && x.MaterialID == materialId);
+            if (row == null)
+            {
+                context.BidMaterials.Add(new BidMaterial { BidID = bidId, MaterialID = materialId, MaterialQuantity = qty });
+            }
+            else
+            {
+                row.MaterialQuantity = qty;
+            }
+        }
+
+        private static void EnsureBidLabour(NBDProject2024.Data.NBDContext context, int bidId, int labourId, double hours)
+        {
+            var row = context.BidLabours.FirstOrDefault(x => x.BidID == bidId && x.LabourID == labourId);
+            if (row == null)
+            {
+                context.BidLabours.Add(new BidLabour { BidID = bidId, LabourID = labourId, HoursQuantity = hours });
+            }
+            else
+            {
+                row.HoursQuantity = hours;
+            }
+        }
+
+        private static void SeedWorkOrders(NBDProject2024.Data.NBDContext context)
+        {
+            var projects = context.Projects.OrderBy(p => p.ID).Take(10).ToList();
+            var employees = context.Employees.OrderBy(e => e.ID).Take(10).ToList();
+            var statuses = new[]
+            {
+                WorkOrderStatus.Pending,
+                WorkOrderStatus.Scheduled,
+                WorkOrderStatus.InProgress,
+                WorkOrderStatus.Completed,
+                WorkOrderStatus.Cancelled,
+                WorkOrderStatus.Pending,
+                WorkOrderStatus.Scheduled,
+                WorkOrderStatus.InProgress,
+                WorkOrderStatus.Completed,
+                WorkOrderStatus.Cancelled
+            };
+            var skills = Enum.GetValues<EmployeeSkillType>();
+
+            if (projects.Count < 10 || employees.Count < 10)
+            {
+                return;
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                var project = projects[i];
+                var status = statuses[i];
+                var scheduledDate = DateTime.Today.AddDays(i - 4);
+                var completedOn = status == WorkOrderStatus.Completed ? scheduledDate.AddDays(1) : (DateTime?)null;
+                var title = $"WO-{project.ID:000}-{i + 1:00}";
+
+                var workOrder = context.WorkOrders.FirstOrDefault(w => w.Title == title);
+                if (workOrder == null)
+                {
+                    workOrder = new WorkOrder
+                    {
+                        Title = title,
+                        ProjectID = project.ID,
+                        ScheduledDate = scheduledDate,
+                        Status = status,
+                        AssignedCrew = $"Crew {(i % 3) + 1}",
+                        CompletedOn = completedOn,
+                        Notes = "Extended deterministic seeded work order"
                     };
-                    context.Cities.AddRange(cities);
+                    context.WorkOrders.Add(workOrder);
+                    context.SaveChanges();
+                }
+                else
+                {
+                    workOrder.ProjectID = project.ID;
+                    workOrder.ScheduledDate = scheduledDate;
+                    workOrder.Status = status;
+                    workOrder.AssignedCrew = $"Crew {(i % 3) + 1}";
+                    workOrder.CompletedOn = completedOn;
+                    workOrder.Notes = "Extended deterministic seeded work order";
                     context.SaveChanges();
                 }
 
-                //Look for any client. Since we can't have Projects without Clients.
-                if (!context.Clients.Any())
+                var employee = employees[i];
+                var assignment = context.WorkOrderCrewAssignments.FirstOrDefault(a => a.WorkOrderID == workOrder.ID && a.EmployeeID == employee.ID);
+                var estimatedHours = 4 + (i % 5);
+                var actualHours = status == WorkOrderStatus.Completed ? estimatedHours : (status == WorkOrderStatus.InProgress ? Math.Max(1, estimatedHours - 2) : 0);
+
+                if (assignment == null)
                 {
-                    context.Clients.AddRange(
-                        new Client
-                        {
-                            FirstName = "Amy",
-                            LastName = "Benson",
-                            CompanyName = "London Sq. Mall",
-                            Phone = "4088945603",
-                            Email = "BensonAmy1@outlook.com",
-                            AddressCountry = "Canada",
-                            AddressStreet = "Scott Valley",
-                            PostalCode = "LC34N7"
-                        },
-                         new Client
-                         {
-                             FirstName = "Bob",
-                             MiddleName = "Jones",
-                             LastName = "Kellet",
-                             CompanyName = "Quantum Innovations Co.",
-                             Phone = GeneratePhoneNumber(random),
-                             Email = "BobJKellet@outlook.com",
-                             AddressCountry = "Canada",
-                             AddressStreet = "21 example Rd.",
-                             PostalCode = "LC34N7"
-                         },
-                         new Client
-                         {
-                             FirstName = "Jim",
+                    context.WorkOrderCrewAssignments.Add(new WorkOrderCrewAssignment
+                    {
+                        WorkOrderID = workOrder.ID,
+                        EmployeeID = employee.ID,
+                        AssignedSkill = skills[i % skills.Length],
+                        EstimatedHours = estimatedHours,
+                        ActualHours = actualHours
+                    });
+                }
+                else
+                {
+                    assignment.AssignedSkill = skills[i % skills.Length];
+                    assignment.EstimatedHours = estimatedHours;
+                    assignment.ActualHours = actualHours;
+                }
+            }
 
-                             LastName = "Cruz",
-                             CompanyName = "Fusion Enterprices International",
-                             Phone = GeneratePhoneNumber(random),
-                             AddressCountry = "Canada",
-                             Email = "JimCruz1@outlook.com",
-                             AddressStreet = "21 example Rd.",
+            context.SaveChanges();
+        }
 
-                             PostalCode = "LC34N7"
-                         },
-                         new Client
-                         {
-                             FirstName = "Joe",
+        private static void SeedInventoryAndPurchases(NBDProject2024.Data.NBDContext context)
+        {
+            var materials = context.Materials.OrderBy(m => m.ID).Take(10).ToList();
+            var warehouse = context.StockLocations.FirstOrDefault(l => l.Name == "Main Warehouse" && l.LocationType == StockLocationType.Warehouse);
+            if (materials.Count < 10 || warehouse == null)
+            {
+                return;
+            }
 
-                             LastName = "Smith",
-                             CompanyName = "Stellar Solutions Co.",
-                             Phone = GeneratePhoneNumber(random),
-                             AddressCountry = "Canada",
-                             Email = "SmithJoe1@outlook.com",
-                             AddressStreet = "21 example Rd.",
-                             PostalCode = "LC34N7"
-                         },
-                         new Client
-                         {
-                             FirstName = "Jack",
-
-                             LastName = "Jones",
-                             CompanyName = "Nexus Dynamics Inc.",
-                             Phone = GeneratePhoneNumber(random),
-                             AddressCountry = "Canada",
-                             Email = "JackJHjones@outlook.com",
-                             AddressStreet = GenerateAddress(random),
-                             PostalCode = GeneratePostalCode(random)
-                         }
-                        );
+            foreach (var material in materials)
+            {
+                var stock = context.MaterialStocks.FirstOrDefault(s => s.MaterialID == material.ID && s.StockLocationID == warehouse.ID);
+                if (stock == null)
+                {
+                    stock = new MaterialStock
+                    {
+                        MaterialID = material.ID,
+                        StockLocationID = warehouse.ID,
+                        QuantityOnHand = 60,
+                        MinQuantity = 15,
+                        LastUnitCost = material.Price
+                    };
+                    context.MaterialStocks.Add(stock);
                     context.SaveChanges();
                 }
 
-
-                // Seed Projects if there aren't any.
-                if (!context.Projects.Any())
+                var openingRef = $"OPEN-{material.ID}-{warehouse.ID}";
+                if (!context.InventoryMovements.Any(m => m.ReferenceCode == openingRef))
                 {
-                    context.Projects.AddRange(
-                    new Project
+                    context.InventoryMovements.Add(new InventoryMovement
                     {
-                        ProjectName = "Project 1",
+                        MovementDate = DateTime.Today.AddDays(-30),
+                        MovementType = InventoryMovementType.OpeningBalance,
+                        MaterialID = material.ID,
+                        StockLocationID = warehouse.ID,
+                        QuantityDelta = stock.QuantityOnHand,
+                        QuantityBefore = 0,
+                        QuantityAfter = stock.QuantityOnHand,
+                        UnitCost = material.Price,
+                        ReferenceCode = openingRef,
+                        Notes = "Seeded opening balance"
+                    });
+                }
+            }
 
-                        StartTime = DateTime.Parse("2023-06-15"),
-                        EndTime = DateTime.Parse("2023-07-08"),
-                        ProjectSite = "Back deck 1",
-                        SetupNotes = "Notes here",
+            context.SaveChanges();
 
+            var statuses = new[]
+            {
+                PurchaseRequestStatus.Draft,
+                PurchaseRequestStatus.Submitted,
+                PurchaseRequestStatus.PartiallyReceived,
+                PurchaseRequestStatus.Received,
+                PurchaseRequestStatus.Cancelled,
+                PurchaseRequestStatus.Draft,
+                PurchaseRequestStatus.Submitted,
+                PurchaseRequestStatus.PartiallyReceived,
+                PurchaseRequestStatus.Received,
+                PurchaseRequestStatus.Cancelled
+            };
 
-                        ClientID = context.Clients.FirstOrDefault(c => c.FirstName == "Amy" && c.LastName == "Benson").ID
+            for (int i = 0; i < 10; i++)
+            {
+                var supplier = $"Seeder Supplier {(i + 1):00}";
+                var material = materials[i % materials.Count];
+                var request = context.PurchaseRequests.FirstOrDefault(p => p.SupplierName == supplier);
 
-                    },
-                     new Project
-                     {
-                         ProjectName = "Project 2",
-
-                         StartTime = DateTime.Parse("2023-06-15"),
-                         EndTime = DateTime.Parse("2023-07-08"),
-                         ProjectSite = "Back deck 1",
-
-                         SetupNotes = "Notes here",
-
-                         ClientID = context.Clients.FirstOrDefault(c => c.ID == 2).ID
-
-                     },
-                      new Project
-                      {
-                          ProjectName = "Project 3",
-
-                          StartTime = DateTime.Parse("2023-06-15"),
-                          EndTime = DateTime.Parse("2023-07-08"),
-                          ProjectSite = "Back deck 1",
-
-                          SetupNotes = "Notes here",
-
-                          ClientID = context.Clients.FirstOrDefault(c => c.ID == 1).ID
-
-                      },
-                       new Project
-                       {
-                           ProjectName = "Project 4",
-
-                           StartTime = DateTime.Parse("2023-06-15"),
-                           EndTime = DateTime.Parse("2023-07-08"),
-                           ProjectSite = "Back deck 4",
-
-                           SetupNotes = "Notes here",
-
-                           ClientID = context.Clients.FirstOrDefault(c => c.ID == 2).ID
-
-                       },
-                        new Project
-                        {
-                            ProjectName = "Project 5",
-
-                            StartTime = DateTime.Parse("2023-06-15"),
-                            EndTime = DateTime.Parse("2023-07-08"),
-                            ProjectSite = "Back deck 5",
-
-                            SetupNotes = "Notes here",
-
-                            ClientID = context.Clients.FirstOrDefault(c => c.ID == 3).ID
-
-                        }
-                  );
+                if (request == null)
+                {
+                    request = new PurchaseRequest
+                    {
+                        SupplierName = supplier,
+                        RequestDate = DateTime.Today.AddDays(-(10 - i)),
+                        Status = statuses[i],
+                        ApprovedBy = statuses[i] == PurchaseRequestStatus.Draft ? null : "admin@outlook.com",
+                        ApprovedOn = statuses[i] == PurchaseRequestStatus.Draft ? null : DateTime.UtcNow.AddDays(-(8 - i)),
+                        Notes = "Extended deterministic seeded purchase request"
+                    };
+                    context.PurchaseRequests.Add(request);
+                    context.SaveChanges();
+                }
+                else
+                {
+                    request.RequestDate = DateTime.Today.AddDays(-(10 - i));
+                    request.Status = statuses[i];
+                    request.ApprovedBy = statuses[i] == PurchaseRequestStatus.Draft ? null : "admin@outlook.com";
+                    request.ApprovedOn = statuses[i] == PurchaseRequestStatus.Draft ? null : DateTime.UtcNow.AddDays(-(8 - i));
+                    request.Notes = "Extended deterministic seeded purchase request";
                     context.SaveChanges();
                 }
 
-                #region random Clients
-
-                //Because we can, lets add a bunch more Customers and Functions
-
-
-                //Add more clients
-                if (context.Clients.Count() < 6)
+                var requestedQty = 15 + i;
+                var line = context.PurchaseRequestLines.FirstOrDefault(l => l.PurchaseRequestID == request.ID && l.MaterialID == material.ID);
+                if (line == null)
                 {
-                    string[] companyNames = new string[] { "Consolidated Credit Union", "PEI  Womens Institute", "Atlantic Psychiatric Conference", "TLC Laser Eye Centers", "Cooperators Insurance", "Department of Education", "PEI Teacher's Federation", "Credit Union Managers", "International Union of Operating Engineers", "Department of Transportation & Public Works", "Department of Fisheries & Oceans", "Summerside Tax Center", "Summerside Community Church", "Health & Social Services", "Department of Education", "Bridge Tournament Tour", "Malpeque bay Credit Union", "Atlantic provinces Chamber of  Commerce", "Child & Family Services", "Canadian mental Health assoc.", "PEI Institute if Agrologists", "Acadian Fishermans Coop", "Toronto Dominion Bank", "Highfield Construction", "Dept of Fisheries & Oceans", "Canadian Motor Veichle Arbitration Plan", "PEI Real Estate Assoc.", "Heart & Stroke Foundation", "East Prince Youth Development Centre", "PEI Assoc of Exhibitions", "PEI Potato Processing Council", "Union of Public sector Employees", "Cavendish Agri services", "PEI Pharmaceutical Assoc", "Zellers District Office", "UPEI  Faculty of Education", "College of Family Physicians-PEI chapter", "Dept of Education and Early Childhood Development", "Aerospace Industries Assoc of Canada", "Dept of Transportation", "Mark's Work Warehouse", "Cavendish Agri-Services", "Baie Acadienne Dev. Corp", "Primerica Financial Services", "Holland College-Adult Education", "Downtown  Summerside Inc.", "PEI Hairdressers Assoc", "Occupational Health & Safety Division-WCB", "BTC-Building Tennis Communities", "PEI Institute of Agrologists", "Agriculture Insurance Corp", "Island Health Training Center", "PEI Federation of Agriculture", "Cavendish Agri Services", "Public  Service Alliance", "Loyalist Lakeview Resort", "Consolidated Credit Union", "Cusource-Credit Un.Cen.of N.S.", "Callbecks  Home Hardware", "Summerside Tax Center", "Summerside Tax center", "Genworth Financial Canada", "East Prince Health board", "Agricultural Insurance Corp", "Family Resource Center", "The National Chapter of Canada IODE", "Summerside Tax Center", "Pro Trans Personal Services", "Girls & Women in Sports", "Dept of Agriculture, Fisheries &Aquaculture", "PEI Automobile Dealers Assoc", "Spreadsheet Solutions", "PC Association of PEI-22ND DISTRICT", "Can Society of Safety Engineering", "Canadian Assoc of Property & Home Inspectors", "Egg Producers Board of PEI", "Key, McKnight & Maynard", "Agriculture & Agri Food Canada", "Atlantic Canada Oppurtunities", "Premier World Tours Canadian Maritimes Pioneer" };
-                    string[] firstNames = new string[] { "Woodstock", "Violet", "Charlie", "Lucy", "Linus", "Franklin", "Marcie", "Schroeder" };
-                    string[] lastNames = new string[] { "Hightower", "Broomspun", "Jones", "Bloggs", "Brown", "Smith", "Daniel" };
-                    int companyNameCount = companyNames.Length;
-                    string[] postalLetters = new string[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", };
-
-                    foreach (string l in lastNames)
+                    context.PurchaseRequestLines.Add(new PurchaseRequestLine
                     {
-                        foreach (string f in firstNames)
-                        {
-
-                            Client c = new Client()
-                            {
-                                FirstName = f,
-                                MiddleName = l[1].ToString().ToUpper(),
-                                LastName = l,
-                                CompanyName = companyNames[random.Next(0, companyNameCount)],
-                                Phone = random.Next(2, 10).ToString() + random.Next(213214131, 989898989).ToString(),
-                                Email = $"{l}"+$"{f}"+ $"{random.Next(1,99)}" + "@outlook.com",
-                                AddressCountry = "Canada",
-                                AddressStreet = GenerateAddress(random),
-                                PostalCode = GeneratePostalCode(random)
-                            };
-                            context.Clients.Add(c);
-                        }
-                    }
+                        PurchaseRequestID = request.ID,
+                        MaterialID = material.ID,
+                        RequestedQty = requestedQty,
+                        EstimatedUnitCost = material.Price
+                    });
                     context.SaveChanges();
-
                 }
-                //create a collection of primary keys
-                int[] clientIDs = context.Clients.Select(c => c.ID).ToArray();
-
-                int clientIDCount = clientIDs.Length;
-
-                //Create 5 notes from Bacon ipsum
-                string[] baconNotes = new string[] { "Bacon ipsum dolor amet meatball corned beef kevin, alcatra kielbasa biltong drumstick strip steak spare ribs swine. Pastrami shank swine leberkas bresaola, prosciutto frankfurter porchetta ham hock short ribs short loin andouille alcatra. Andouille shank meatball pig venison shankle ground round sausage kielbasa. Chicken pig meatloaf fatback leberkas venison tri-tip burgdoggen tail chuck sausage kevin shank biltong brisket.", "Sirloin shank t-bone capicola strip steak salami, hamburger kielbasa burgdoggen jerky swine andouille rump picanha. Sirloin porchetta ribeye fatback, meatball leberkas swine pancetta beef shoulder pastrami capicola salami chicken. Bacon cow corned beef pastrami venison biltong frankfurter short ribs chicken beef. Burgdoggen shank pig, ground round brisket tail beef ribs turkey spare ribs tenderloin shankle ham rump. Doner alcatra pork chop leberkas spare ribs hamburger t-bone. Boudin filet mignon bacon andouille, shankle pork t-bone landjaeger. Rump pork loin bresaola prosciutto pancetta venison, cow flank sirloin sausage.", "Porchetta pork belly swine filet mignon jowl turducken salami boudin pastrami jerky spare ribs short ribs sausage andouille. Turducken flank ribeye boudin corned beef burgdoggen. Prosciutto pancetta sirloin rump shankle ball tip filet mignon corned beef frankfurter biltong drumstick chicken swine bacon shank. Buffalo kevin andouille porchetta short ribs cow, ham hock pork belly drumstick pastrami capicola picanha venison.", "Picanha andouille salami, porchetta beef ribs t-bone drumstick. Frankfurter tail landjaeger, shank kevin pig drumstick beef bresaola cow. Corned beef pork belly tri-tip, ham drumstick hamburger swine spare ribs short loin cupim flank tongue beef filet mignon cow. Ham hock chicken turducken doner brisket. Strip steak cow beef, kielbasa leberkas swine tongue bacon burgdoggen beef ribs pork chop tenderloin.", "Kielbasa porchetta shoulder boudin, pork strip steak brisket prosciutto t-bone tail. Doner pork loin pork ribeye, drumstick brisket biltong boudin burgdoggen t-bone frankfurter. Flank burgdoggen doner, boudin porchetta andouille landjaeger ham hock capicola pork chop bacon. Landjaeger turducken ribeye leberkas pork loin corned beef. Corned beef turducken landjaeger pig bresaola t-bone bacon andouille meatball beef ribs doner. T-bone fatback cupim chuck beef ribs shank tail strip steak bacon." };
-
-                #endregion
-
-                #region Add Random Projects
-                if (context.Projects.Count() < 6)
+                else
                 {
-                    string[] projectsNames = new string[] { "Garden Renovation", "Backyard Oasis Design", "Front Yard Transformation", "Water Feature Installation", "Xeriscaping Project", "Outdoor Living Space Enhancement", "Pathway and Walkway Redesign", "Tree Planting and Maintenance", "Native Plant Restoration", "Terrace Garden Installation", "Patio Extension and Design", "Drought-Tolerant Landscape Overhaul", "Zen Garden Creation", "Perennial Flowerbed Installation", "Rock Garden Construction", "Fence and Gate Enhancement", "Arbor and Pergola Installation", "Sustainable Lawn Care Implementation", "Vegetable and Herb Garden Setup", "Outdoor Lighting Upgrade" };
-
-                    string[] projectSites = new string[] { "Residential Property", "Commercial Office Park", "Public Park", "Shopping Mall", "School Campus", "Hospital Grounds", "Hotel Courtyard", "Restaurant Outdoor Dining Area", "Golf Course", "Apartment Complex", "Industrial Complex", "Government Building", "Sports Stadium", "Botanical Garden", "Historical Site", "Community Center", "Campground", "Theme Park", "Highway Rest Stop", "Airport Terminal" };
-                    DateTime startd = DateTime.Today;
-                    DateTime firstdate = DateTime.Parse("2000-01-01");
-                    int projectsCount = projectsNames.Length;
-                    int counter = 1;
-
-                    foreach (string ln in projectSites)
-                    {
-                        HashSet<string> selectedNames = new HashSet<string>();
-
-                        while (selectedNames.Count() < 5)
-                        {
-                            selectedNames.Add(projectsNames[random.Next(projectsCount)]);
-                        }
-
-                        foreach (string fn in projectsNames)
-                        {
-                            Project project = new Project()
-                            {
-                                ProjectName = fn,
-                                StartTime = DateTime.Today.AddDays(-random.Next(1, 365)),
-                                EndTime = DateTime.Today.AddDays(random.Next(1, 365)),
-                                ProjectSite = ln,
-
-                                SetupNotes = baconNotes[random.Next(5)],
-                                ClientID = clientIDs[random.Next(clientIDCount)]
-
-
-                            };
-                            counter++;
-                            context.Projects.Add(project);
-
-
-                        }
-
-                    }
-                    context.SaveChanges();
-
-
-                    string cmd = "DELETE FROM Clients WHERE NOT EXISTS(SELECT 1 FROM Projects WHERE Clients.Id = Projects.ClientID)";
-                    context.Database.ExecuteSqlRaw(cmd);
-                }
-
-
-                #endregion
-
-                //Seed data for Materials
-                //Start with Inventory
-                string[] iventoryItems = new string[] {
-                 "Mulch",
-    "Gravel",
-    "Pavers",
-    "Topsoil",
-    "Plants",
-    "Rocks",
-    "Edging",
-    "Decorative Stones",
-    "Sand",
-    "Bark",
-    "Sod",
-    "Timber",
-    "Fertilizer",
-    "Seeds",
-    "Compost",
-    "Mulch Mats",
-    "Landscape Fabric",
-    "Water Features",
-    "Garden Tools",
-    "Irrigation Systems"
-                };
-                if (!context.Materials.Any())
-                {
-                    double min = 5.0;
-
-                    double maxx = 100.0;
-                    foreach (string i in iventoryItems)
-                    {
-                        Material inventory = new Material()
-                        {
-                            Name = i,
-                            Description = baconNotes[random.Next(5)],
-                            Price = random.NextDouble() * (maxx - min) + min
-
-                        };
-                        context.Materials.Add(inventory);
-                    }
+                    line.RequestedQty = requestedQty;
+                    line.EstimatedUnitCost = material.Price;
                     context.SaveChanges();
                 }
 
-                int[] InventoryIDs = context.Materials.Select(i => i.ID).ToArray();
-                int InventoryIDCount = InventoryIDs.Length;
-
-                int[] projectIDs = context.Projects.Select(p => p.ID).ToArray();
-                int projectIDCount = projectIDs.Length;
-
-                clientIDs = context.Clients.Select(c => c.ID).ToArray();
-                clientIDCount = clientIDs.Length;
-                /*Materials
-                if (!context.Materials.Any())
+                if (statuses[i] == PurchaseRequestStatus.PartiallyReceived || statuses[i] == PurchaseRequestStatus.Received)
                 {
-                    foreach(int i in projectIDs)
+                    var receipt = context.PurchaseReceiptLines.FirstOrDefault(r => r.PurchaseRequestID == request.ID && r.MaterialID == material.ID);
+                    if (receipt == null)
                     {
+                        var receivedQty = statuses[i] == PurchaseRequestStatus.Received ? requestedQty : Math.Round(requestedQty * 0.5, 2);
+                        var stock = context.MaterialStocks.First(s => s.MaterialID == material.ID && s.StockLocationID == warehouse.ID);
+                        var before = stock.QuantityOnHand;
+                        var after = before + receivedQty;
+                        stock.QuantityOnHand = after;
+                        stock.LastUnitCost = material.Price;
 
-                    int k = 0;
-                        double min = 1.0;
-                        double max = 15.0;
-                        int howMany = random.Next(1, InventoryIDCount);
-                    for(int j =1; j <= howMany; j++)
-                    {
-                        k = (k >= InventoryIDCount) ? 0 : k;
-                        Material m = new Material()
+                        context.PurchaseReceiptLines.Add(new PurchaseReceiptLine
                         {
-                            
-                            InventoryID = InventoryIDs[k],
-                            Quantity = random.Next(1,100),
-                            Description = baconNotes[random.Next(5)],
-                            PerYardCharge = random.NextDouble() * (max - min) + min
+                            PurchaseRequestID = request.ID,
+                            MaterialID = material.ID,
+                            StockLocationID = warehouse.ID,
+                            ReceivedDate = DateTime.Today.AddDays(-(5 - i)),
+                            ReceivedQty = receivedQty,
+                            ActualUnitCost = material.Price,
+                            SupplierInvoice = $"SEED-{request.ID:0000}"
+                        });
 
-
-                        };
-                        context.Materials.Add(m);
-                    }
-                    context.SaveChanges();
-                    }
-                }
-                */
-
-                //Seed Labour Types
-                string[] laboursTypes = new string[]
-                {
-                    "Lawn Mowing",
-    "Weeding",
-    "Hedge Trimming",
-    "Mulching",
-    "Planting",
-    "Pruning",
-    "Sodding",
-    "Aerating",
-    "Fertilizing",
-    "Watering",
-    "Leaf Removal",
-    "Edging",
-    "Seeding",
-    "Irrigation Installation",
-    "Tree Care",
-    "Landscape Design",
-    "Pest Control",
-    "Outdoor Lighting Installation"
-                };
-                //Labour
-                int[] projectIDss = context.Projects.Select(p => p.ID).ToArray();
-                int projectIDCountt = projectIDss.Length;
-                int[] typesIDs = context.Labours.Select(t => t.ID).ToArray();
-                int typesIDCount = typesIDs.Length;
-                int[] materialIDs = context.Materials.Select(m => m.ID).ToArray();
-                string[] lDescriptions = new string[]
-                {
-                    "Cutting grass to maintain an even height.",
-    "Removing unwanted plants from gardens and other areas.",
-    "Pruning and shaping hedges to desired form.",
-    "Applying a layer of material to the soil surface to conserve moisture and suppress weeds.",
-    "Installing new plants, flowers, shrubs, or trees.",
-    "Trimming back overgrown branches to improve plant health and appearance.",
-    "Laying down pre-grown grass patches to establish a new lawn.",
-    "Loosening compacted soil to improve air and water circulation.",
-    "Applying nutrients to soil to promote plant growth and health.",
-    "Providing adequate moisture to plants, especially during dry periods.",
-    "Clearing fallen leaves from lawns, walkways, and other areas.",
-    "Creating clean borders between different landscape elements.",
-    "Planting grass seed to establish a new lawn or fill in patches.",
-    "Installing systems to efficiently water landscapes.",
-    "Pruning, trimming, and maintaining trees for health and appearance.",
-    "Planning and designing outdoor spaces for aesthetic appeal and functionality.",
-    "Managing pests that can damage plants and landscapes.",
-    "Installing lights to enhance visibility and safety in outdoor spaces."
-
-                };
-
-                if (!context.Labours.Any())
-                {
-                    foreach (string t in laboursTypes)
-                    {
-                        Labour type = new Labour
+                        context.InventoryMovements.Add(new InventoryMovement
                         {
-                            Name = t,
-                            Description = lDescriptions[random.Next(18)],
-                            Price = random.NextDouble() * (70.0 - 16.0) + 16.0
-                        };
-                        context.Labours.Add(type);
-                    }
-                    context.SaveChanges();
-                }
+                            MovementDate = DateTime.Today.AddDays(-(5 - i)),
+                            MovementType = InventoryMovementType.PurchaseReceipt,
+                            MaterialID = material.ID,
+                            StockLocationID = warehouse.ID,
+                            QuantityDelta = receivedQty,
+                            QuantityBefore = before,
+                            QuantityAfter = after,
+                            UnitCost = material.Price,
+                            ReferenceCode = $"PR-{request.ID}",
+                            Notes = "Seeded purchase receipt"
+                        });
 
-                /* if (!context.Labours.Any())
-                 {
-                     int k = 0;
-                     double min = 35.0;
-                     double max = 40.0;
-
-                     foreach (int i in projectIDss)
-                     {
-                         int howMany = random.Next(1, typesIDCount);
-                         for(int j =1; j <= howMany; j++)
-                         {
-                             k = (k >= typesIDCount) ? 0 : k;
-                             Labour l = new Labour()
-                             {
-                                 Name = 
-                                 LabourTypeID = typesIDs[random.Next(typesIDCount)],
-                                 LabourHours = random.NextDouble() * (max - min) + min,
-                                 LabourDescription = lDescriptions[random.Next(18)],
-                                 LabourUnitPrice = random.NextDouble() * (20.0 - 16.0) + 16.0
-                             };
-                             k++;
-                             context.Labours.Add(l);
-                         }
-                         context.SaveChanges();
-                     }
-                 }*/
-
-                if (!context.Bids.Any())
-                {
-                    int k = 0;
-                    foreach (int i in projectIDss)
-                    {
-                        Bid b = new Bid()
-                        {
-                            BidDate = DateTime.Today.AddDays(-random.Next(1, 365)),
-
-
-                            ProjectID = projectIDss[random.Next(projectIDCountt)]
-
-                        };
-                        k++;
-                        context.Bids.Add(b);
-                    }
-                    context.SaveChanges();
-                }
-
-                //ExtraTABLE
-                int[] materialsIDs = context.Materials.Select(s => s.ID).ToArray();
-                int[] laboursIDs = context.Labours.Select(s => s.ID).ToArray();
-                int[] bidIDs = context.Bids.Select(s => s.ID).ToArray();
-                int materialCountID = materialsIDs.Length;
-                int labourCountID = laboursIDs.Length;
-
-                if (!context.BidLabours.Any())
-                {
-                    int k = 0;
-                    foreach (int i in bidIDs)
-                    {
-                        int howMany = random.Next(1, 10);
-                        for (int j = 0; j <= howMany; j++)
-                        {
-                            k = (k >= labourCountID) ? 0 : k;
-                            BidLabour bl = new BidLabour()
-                            {
-                                BidID = i,
-                                HoursQuantity = random.NextDouble() * (40.0 - 20.0) + 20.0,
-                                LabourID = laboursIDs[j]
-                            };
-                            k++;
-                            context.BidLabours.Add(bl);
-                        }
                         context.SaveChanges();
                     }
                 }
+            }
+        }
 
-                if (!context.BidMaterials.Any())
+        private static void SeedWorkOrderConsumptions(NBDProject2024.Data.NBDContext context)
+        {
+            var warehouse = context.StockLocations.FirstOrDefault(l => l.Name == "Main Warehouse" && l.LocationType == StockLocationType.Warehouse);
+            if (warehouse == null)
+            {
+                return;
+            }
+
+            var workOrders = context.WorkOrders
+                .Where(w => w.Status == WorkOrderStatus.InProgress || w.Status == WorkOrderStatus.Completed)
+                .OrderBy(w => w.ID)
+                .Take(10)
+                .ToList();
+            var materials = context.Materials.OrderBy(m => m.ID).Take(10).ToList();
+
+            if (!workOrders.Any() || !materials.Any())
+            {
+                return;
+            }
+
+            for (int i = 0; i < workOrders.Count; i++)
+            {
+                var workOrder = workOrders[i];
+                var material = materials[i % materials.Count];
+                var consumedOn = workOrder.ScheduledDate.AddDays(workOrder.Status == WorkOrderStatus.Completed ? 1 : 0);
+                var quantityUsed = 2 + (i % 4);
+
+                var existing = context.WorkOrderMaterialConsumptions.FirstOrDefault(c =>
+                    c.WorkOrderID == workOrder.ID &&
+                    c.MaterialID == material.ID &&
+                    c.StockLocationID == warehouse.ID &&
+                    c.ConsumedOn.Date == consumedOn.Date);
+
+                if (existing != null)
                 {
-                    int k = 0;
-                    foreach (int i in bidIDs)
-                    {
-                        int howMany = random.Next(1, 10);
-                        for (int j = 0; j <= howMany; j++)
-                        {
-                            k = (k >= materialCountID) ? 0 : k;
-                            BidMaterial bm = new BidMaterial()
-                            {
-                                BidID = i,
-                                MaterialQuantity = random.Next(1, 50),
-                                MaterialID = materialsIDs[j]
-                            };
-                            k++;
-                            context.BidMaterials.Add(bm);
-                        }
-                        context.SaveChanges();
-                    }
+                    continue;
                 }
 
-             /*   if(!context.Employees.Any())
+                var stock = context.MaterialStocks.FirstOrDefault(s => s.MaterialID == material.ID && s.StockLocationID == warehouse.ID);
+                if (stock == null)
                 {
-                    context.Employees.AddRange(
-                         new Employee
-                         {
-                             FirstName = "John",
-                             LastName = "Doe",
-                             Email = "admin@outlook.com"
-                             
-                         },
-                          new Employee
-                          {
-                              FirstName = "Gregory",
-                              LastName = "House",
-                              Email = "designer@outlook.com"
-                          },
-                           new Employee
-                           {
-                               FirstName = "Jane",
-                               LastName = "Doe",
-                               Email = "super@outlook.com"
-                           },
-                           new Employee
-                           {
-                               FirstName = "Fred",
-                               LastName = "Flintstone",
-                               Email = "sales@outlook.com"
-                           },
-                      new Employee
-                      {
-                          FirstName = "Betty",
-                          LastName = "Rubble",
-                          Email = "user@outlook.com"
-                      });
-                    context.SaveChanges(); 
-                }*/
+                    continue;
+                }
 
+                var before = stock.QuantityOnHand;
+                var after = Math.Max(0, before - quantityUsed);
+                stock.QuantityOnHand = after;
 
+                context.WorkOrderMaterialConsumptions.Add(new WorkOrderMaterialConsumption
+                {
+                    WorkOrderID = workOrder.ID,
+                    MaterialID = material.ID,
+                    StockLocationID = warehouse.ID,
+                    ConsumedOn = consumedOn,
+                    QuantityUsed = quantityUsed,
+                    UnitCostAtUse = material.Price,
+                    Notes = "Seeded work order material consumption"
+                });
+
+                context.InventoryMovements.Add(new InventoryMovement
+                {
+                    MovementDate = consumedOn,
+                    MovementType = InventoryMovementType.Consumption,
+                    MaterialID = material.ID,
+                    StockLocationID = warehouse.ID,
+                    QuantityDelta = -quantityUsed,
+                    QuantityBefore = before,
+                    QuantityAfter = after,
+                    UnitCost = material.Price,
+                    ReferenceCode = $"WO-{workOrder.ID}",
+                    Notes = "Seeded consumption from work order"
+                });
             }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.GetBaseException().Message);
-            }
-            Debug.WriteLine("Seed process completed.");
+
+            context.SaveChanges();
         }
     }
 }

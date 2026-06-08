@@ -125,6 +125,24 @@ namespace NBDProject2024.Data
                     //Not in any role
                 }
 
+                // Ensure default seeded accounts keep expected roles even if they already existed.
+                var defaultRoleMap = new[]
+                {
+                    new { Email = "admin@outlook.com", Role = "Admin" },
+                    new { Email = "super@outlook.com", Role = "Supervisor" },
+                    new { Email = "sales@outlook.com", Role = "Sales" },
+                    new { Email = "designer@outlook.com", Role = "Designer" }
+                };
+
+                foreach (var map in defaultRoleMap)
+                {
+                    var mappedUser = await userManager.FindByEmailAsync(map.Email);
+                    if (mappedUser != null && !await userManager.IsInRoleAsync(mappedUser, map.Role))
+                    {
+                        await userManager.AddToRoleAsync(mappedUser, map.Role);
+                    }
+                }
+
                 //ROOT (super admin default account)
                 const string rootUserName = "root";
                 const string rootEmail = "root@test.com";
