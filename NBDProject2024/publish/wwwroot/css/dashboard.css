@@ -597,10 +597,10 @@ html[data-topbar-theme="light"] .db-topbar .db-profile-btn {
 
 /* Green primary overrides */
 :root {
-  --db-primary: #4caf50;
-  --db-primary-dark: #2e7d32;
-  --db-primary-soft: #e8f5e9;
-  --db-primary-soft-2: #dff0e0;
+  --db-primary: #0d6efd;
+  --db-primary-dark: #0a58ca;
+  --db-primary-soft: #e7f1ff;
+  --db-primary-soft-2: #dbe9ff;
 }
 
 .db-logo-icon,
@@ -635,39 +635,39 @@ html[data-sidebar-theme="light"] .db-nav-item.active {
 }
 
 .db-progress-item .progress {
-  background-color: #edf4e3;
+  background-color: #edf2ff;
 }
 
 .db-timeline::before {
-  background: #d9e9c5;
+  background: #e3ebfb;
 }
 
 .db-timeline-icon {
-  background: #eaf5db;
+  background: #edf3ff;
   color: var(--db-primary);
 }
 
 html[data-theme="dark"] .db-nav-item:hover,
 html[data-sidebar-theme="dark"] .db-nav-item:hover {
-  background-color: #2f4724;
-  color: #e5f5d0;
+  background-color: #223252;
+  color: #dce7ff;
 }
 
 html[data-theme="dark"] .db-nav-item.active,
 html[data-sidebar-theme="dark"] .db-nav-item.active {
-  background-color: #3c5b2e;
-  color: #f0f9e3;
+  background-color: #29406a;
+  color: #e8efff;
 }
 
 html[data-theme="dark"] .db-icon-circle,
 html[data-theme="dark"] .db-timeline-icon {
-  background: #2f4724;
+  background: #223252;
 }
 
 html[data-theme="dark"] .db-timeline::before {
-  background: #47653b;
+  background: #344c75;
 }
 
 html[data-topbar-theme="dark"] .db-topbar .dropdown-item:hover {
-  background-color: #2f4724;
+  background-color: #223252;
 }

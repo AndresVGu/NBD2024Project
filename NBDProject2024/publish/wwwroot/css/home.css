@@ -1,7 +1,7 @@
 :root {
-  --brand-green: #4caf50;
-  --brand-dark-green: #2e7d32;
-  --brand-light-green: #81c784;
+  --brand-green: #0d6efd;
+  --brand-dark-green: #0a58ca;
+  --brand-light-green: #6ea8fe;
   --bg-primary: #ffffff;
   --bg-secondary: #f5f5f5;
   --text-primary: #212121;
@@ -59,9 +59,9 @@ body[data-bs-theme="dark"] {
 
 .landing-chip {
   display: inline-block;
-  background: rgba(76, 175, 80, 0.12);
+  background: rgba(13, 110, 253, 0.12);
   color: var(--brand-dark-green);
-  border: 1px solid rgba(76, 175, 80, 0.25);
+  border: 1px solid rgba(13, 110, 253, 0.25);
   border-radius: 999px;
   padding: 0.4rem 0.85rem;
   font-size: 0.85rem;
@@ -141,7 +141,7 @@ body[data-bs-theme="dark"] {
 .veridia-accordion .accordion-button:not(.collapsed) {
   color: var(--brand-dark-green);
   box-shadow: none;
-  background: rgba(76, 175, 80, 0.12);
+  background: rgba(13, 110, 253, 0.12);
 }
 
 .veridia-accordion .accordion-button:focus {
@@ -150,7 +150,7 @@ body[data-bs-theme="dark"] {
 }
 
 .cta-green {
-  background: linear-gradient(135deg, #2e7d32, #4caf50);
+  background: linear-gradient(135deg, #0a58ca, #0d6efd);
 }
 
 .enterprise-ready-box {
@@ -163,7 +163,7 @@ body[data-bs-theme="dark"] {
 }
 
 .enterprise-cta-btn {
-  color: #2e7d32;
+  color: #0a58ca;
   font-weight: 600;
 }
 
@@ -213,8 +213,8 @@ body[data-bs-theme="dark"] {
 
 .btn-success:hover,
 .btn-success:focus {
-  background-color: #27692b;
-  border-color: #27692b;
+  background-color: #0848a5;
+  border-color: #0848a5;
 }
 
 .btn-outline-success {
