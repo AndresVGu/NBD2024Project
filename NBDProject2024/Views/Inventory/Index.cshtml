@@ -1,0 +1,74 @@
+@model IEnumerable<NBDProject2024.Models.MaterialStock>
+
+@{
+    ViewData["Title"] = "Inventory";
+    var alerts = (int)(ViewData["AlertCount"] ?? 0);
+}
+
+<partial name="_ViewHeading" />
+
+@if (TempData["AlertMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["AlertMessage"]</div>
+}
+
+<div class="d-flex gap-2 mb-3">
+    <a asp-action="CreateStock" class="btn btn-outline-primary">Add Stock Record</a>
+    <a asp-action="Locations" class="btn btn-outline-secondary">Manage Locations</a>
+    <a asp-action="Movements" class="btn btn-outline-secondary">Kardex</a>
+    <a asp-controller="Purchases" asp-action="Index" class="btn btn-outline-info">Go to Purchases</a>
+</div>
+
+@if (alerts > 0)
+{
+    <div class="alert alert-warning">Reorder alerts: <strong>@alerts</strong> stock records are below minimum.</div>
+}
+
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead class="table-primary">
+            <tr>
+                <th>Material</th>
+                <th>Location</th>
+                <th>Type</th>
+                <th>On Hand</th>
+                <th>Minimum</th>
+                <th>Last Cost</th>
+                <th>Alert</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="@(item.NeedsReorder ? "table-warning" : string.Empty)">
+                    <td>@item.Material?.Name</td>
+                    <td>@item.StockLocation?.Name</td>
+                    <td>@item.StockLocation?.LocationType</td>
+                    <td>@item.QuantityOnHand.ToString("0.##")</td>
+                    <td>@item.MinQuantity.ToString("0.##")</td>
+                    <td>@item.LastUnitCost.ToString("C2")</td>
+                    <td>
+                        @if (item.NeedsReorder)
+                        {
+                            <span class="badge text-bg-danger">Reorder</span>
+                        }
+                        else
+                        {
+                            <span class="badge text-bg-success">OK</span>
+                        }
+                    </td>
+                    <td class="text-center d-flex gap-1 justify-content-center">
+                        <a asp-action="EditStock" asp-route-id="@item.ID" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <form asp-action="AdjustStock" method="post" class="d-flex gap-1">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@item.ID" />
+                            <input name="deltaQty" type="number" step="0.01" class="form-control form-control-sm" style="width: 90px;" placeholder="+/-" />
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">Adjust</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

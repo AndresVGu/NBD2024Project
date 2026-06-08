@@ -82,7 +82,7 @@
                     <input type="submit" name="actionButton" value="Phone" class="btn btn-link" data-bs-toggle="tooltip" title="Sort by Phone Number" />
 
                 </th>
-                @if (User.IsInRole("Designer"))
+                @if (User.IsInRole("Designer") && !User.IsInRole("Guest"))
                 {
                     <th class="text-center">
                         <label>Details</label>
@@ -121,7 +121,7 @@
 
 
                     <td class="text-center">
-                        @if (User.IsInRole("Designer"))
+                        @if (User.IsInRole("Designer") && !User.IsInRole("Guest"))
                         {
                             <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-sm btn-outline-primary" fdprocessedid="rpbgq"
                                data-bs-toggle="tooltip" title="Client Details"> &#x1F50E;</a>

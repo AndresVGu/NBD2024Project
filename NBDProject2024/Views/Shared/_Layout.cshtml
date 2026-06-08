@@ -102,7 +102,11 @@
                         <a class="@navClass("Clients")" asp-area="" asp-controller="Clients" asp-action="Index"><i class="fa-solid fa-address-book"></i><span>Clients</span></a>
 
                         <div class="db-nav-section">Operations</div>
+                        <a class="@navClass("Dashboard")" asp-area="" asp-controller="Dashboard" asp-action="Schedule"><i class="fa-regular fa-calendar-days"></i><span>Schedule</span></a>
                         <a class="@navClass("Projects")" asp-area="" asp-controller="Projects" asp-action="Index"><i class="fa-solid fa-diagram-project"></i><span>Projects</span></a>
+                        <a class="@navClass("WorkOrders")" asp-area="" asp-controller="WorkOrders" asp-action="Index"><i class="fa-solid fa-clipboard-check"></i><span>Work Orders</span></a>
+                        <a class="@navClass("Inventory")" asp-area="" asp-controller="Inventory" asp-action="Index"><i class="fa-solid fa-boxes-stacked"></i><span>Inventory</span></a>
+                        <a class="@navClass("Purchases")" asp-area="" asp-controller="Purchases" asp-action="Index"><i class="fa-solid fa-cart-flatbed"></i><span>Purchases</span></a>
                         <a class="@navClass("Bids")" asp-area="" asp-controller="Bids" asp-action="Index"><i class="fa-solid fa-file-signature"></i><span>Bids</span></a>
                         <a class="@navClass("Lookup")" asp-area="" asp-controller="Lookup" asp-action="Index"><i class="fa-solid fa-layer-group"></i><span>Materials & Labours</span></a>
 
@@ -110,6 +114,11 @@
                         @if (!isGuestMode)
                         {
                             <a class="@navClass("Employee")" asp-area="" asp-controller="Employee" asp-action="Index"><i class="fa-solid fa-user-tie"></i><span>Employees</span></a>
+                            <a class="@navClass("EmployeeSkills")" asp-area="" asp-controller="EmployeeSkills" asp-action="Index"><i class="fa-solid fa-screwdriver-wrench"></i><span>Employee Skills</span></a>
+                            @if (User.IsInRole("Root"))
+                            {
+                                <a class="@navClass("UserRole")" asp-area="" asp-controller="UserRole" asp-action="Index"><i class="fa-solid fa-user-shield"></i><span>Role Management</span></a>
+                            }
                         }
                     </nav>
                 </div>
@@ -127,7 +136,11 @@
                         <a class="@navClass("Clients")" asp-area="" asp-controller="Clients" asp-action="Index"><i class="fa-solid fa-address-book"></i><span>Clients</span></a>
 
                         <div class="db-nav-section">Operations</div>
+                        <a class="@navClass("Dashboard")" asp-area="" asp-controller="Dashboard" asp-action="Schedule"><i class="fa-regular fa-calendar-days"></i><span>Schedule</span></a>
                         <a class="@navClass("Projects")" asp-area="" asp-controller="Projects" asp-action="Index"><i class="fa-solid fa-diagram-project"></i><span>Projects</span></a>
+                        <a class="@navClass("WorkOrders")" asp-area="" asp-controller="WorkOrders" asp-action="Index"><i class="fa-solid fa-clipboard-check"></i><span>Work Orders</span></a>
+                        <a class="@navClass("Inventory")" asp-area="" asp-controller="Inventory" asp-action="Index"><i class="fa-solid fa-boxes-stacked"></i><span>Inventory</span></a>
+                        <a class="@navClass("Purchases")" asp-area="" asp-controller="Purchases" asp-action="Index"><i class="fa-solid fa-cart-flatbed"></i><span>Purchases</span></a>
                         <a class="@navClass("Bids")" asp-area="" asp-controller="Bids" asp-action="Index"><i class="fa-solid fa-file-signature"></i><span>Bids</span></a>
                         <a class="@navClass("Lookup")" asp-area="" asp-controller="Lookup" asp-action="Index"><i class="fa-solid fa-layer-group"></i><span>Materials & Labours</span></a>
 
@@ -135,6 +148,11 @@
                         @if (!isGuestMode)
                         {
                             <a class="@navClass("Employee")" asp-area="" asp-controller="Employee" asp-action="Index"><i class="fa-solid fa-user-tie"></i><span>Employees</span></a>
+                            <a class="@navClass("EmployeeSkills")" asp-area="" asp-controller="EmployeeSkills" asp-action="Index"><i class="fa-solid fa-screwdriver-wrench"></i><span>Employee Skills</span></a>
+                            @if (User.IsInRole("Root"))
+                            {
+                                <a class="@navClass("UserRole")" asp-area="" asp-controller="UserRole" asp-action="Index"><i class="fa-solid fa-user-shield"></i><span>Role Management</span></a>
+                            }
                         }
                     </nav>
                 </div>

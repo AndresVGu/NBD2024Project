@@ -65,7 +65,6 @@ namespace NBDProject2024.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AllowAnonymous]
         public async Task<IActionResult> Create([Bind("ID,Name,Description, Price")] Material inventory)
         {
             try

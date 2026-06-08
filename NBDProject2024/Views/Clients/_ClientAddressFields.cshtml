@@ -1,0 +1,54 @@
+@model NBDProject2024.Models.Client
+
+@{
+    bool useNewCity = ViewData["UseNewCity"] is bool selected && selected;
+    string newCityName = ViewData["NewCityName"]?.ToString() ?? string.Empty;
+}
+
+<h4 class="mb-3">Address Information</h4>
+
+<div class="form-group">
+    <label asp-for="AddressStreet" class="control-label">Street Number*:</label>
+    <input asp-for="AddressStreet" class="form-control" placeholder="E.g. 100 Niagara College Boulevard" />
+    <span asp-validation-for="AddressStreet" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <label class="control-label">Province*:</label>
+    <select class="form-control dropdown-toggle" id="ProvinceID" name="ProvinceID" asp-items="ViewBag.ProvinceID">
+        <option value="0">Select Province  &#8883;</option>
+    </select>
+    @Html.ValidationMessage("ProvinceID", new { @class = "text-danger" })
+</div>
+
+<div class="form-group">
+    <label asp-for="CityID" class="control-label">City*:</label>
+    <select asp-for="CityID" class="form-control" asp-items="ViewBag.CityID" id="CityID">
+        <option value="0">Select a Province First &#8883;</option>
+    </select>
+    <span asp-validation-for="CityID" class="text-danger"></span>
+</div>
+
+<div class="form-check mb-2 mt-2">
+    <input class="form-check-input" type="checkbox" id="UseNewCity" name="UseNewCity" value="true" @(useNewCity ? "checked" : "") />
+    <label class="form-check-label" for="UseNewCity">City not listed? Enter a new city</label>
+</div>
+
+<div class="form-group">
+    <label class="control-label">Or Enter New City:</label>
+    <input type="text" name="NewCityName" id="NewCityName" class="form-control" placeholder="E.g. Niagara Falls" value="@newCityName" />
+    @Html.ValidationMessage("NewCityName", new { @class = "text-danger" })
+    <small class="form-text text-muted">If the city is not listed, type it here after selecting a province.</small>
+</div>
+
+<div class="form-group">
+    <label asp-for="PostalCode" class="control-label">Postal Code*:</label>
+    <input asp-for="PostalCode" class="form-control" placeholder="E.g. LC37L3" />
+    <span asp-validation-for="PostalCode" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="AddressCountry" class="control-label">Country*:</label>
+    <input asp-for="AddressCountry" class="form-control" placeholder="E.g. Canada" />
+    <span asp-validation-for="AddressCountry" class="text-danger"></span>
+</div>

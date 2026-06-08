@@ -20,6 +20,22 @@ namespace NBDProject2024.CustomControllers
         {
             return ControllerContext.RouteData.Values["action"].ToString();
         }
+
+        protected bool IsGuestMode()
+        {
+            return User?.Identity?.IsAuthenticated == true
+                && User.HasClaim("GuestMode", "true");
+        }
+
+        protected string CurrentOwnerName()
+        {
+            return User?.Identity?.Name ?? string.Empty;
+        }
+
+        protected bool IsOwnedByCurrentUser(string createdBy)
+        {
+            return string.Equals(createdBy, CurrentOwnerName(), StringComparison.OrdinalIgnoreCase);
+        }
         /// <summary>
         /// This method uses a regular expression to split the input string at each 
         /// capital letter and then adds a space before each capital letter. 

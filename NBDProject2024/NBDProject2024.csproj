@@ -5,6 +5,7 @@
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-NBDProject2024-763ea753-2706-46b7-9e74-8c80dfbfb14a</UserSecretsId>
+    <DefaultItemExcludes>$(DefaultItemExcludes);publish/**;publish.zip</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>

@@ -4,7 +4,7 @@
 
     <div class="panel-heading">
         <h4 class="panel-title">List of Projects</h4>
-        @if (User.IsInRole("Admin") || User.IsInRole("Supervisor") || User.IsInRole("Designer"))
+        @if (User.IsInRole("Admin") || User.IsInRole("Supervisor") || User.IsInRole("Designer") || User.IsInRole("Guest"))
         {
             
         <a asp-controller="Projects" asp-action="Create" asp-route-id="@Model" class="btn btn-outline-success" fdprocessedid="k03am" data-bs-toggle="tooltip" title="Create a new project">Add Project</a>

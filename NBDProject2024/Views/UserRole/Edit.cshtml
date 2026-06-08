@@ -5,6 +5,10 @@
 <form asp-action="Edit">
     <hr />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    @if (ViewBag.LockRootRole == true)
+    {
+        <div class="alert alert-warning">@ViewBag.RootLockReason</div>
+    }
     <input type="hidden" asp-for="ID" />
     <div class="row">
         <div class="col-12 col-md-8 col-lg-6">
@@ -28,11 +32,18 @@
                                 {
                                 @:</tr><tr>
                                 }
+                                var lockRoot = (bool?)(ViewBag.LockRootRole) == true;
+                                var disableRole = lockRoot && role.RoleName == "Root";
                                 @:<td>
                                     <input type="checkbox"
                                            name="selectedRoles"
                                            value="@role.RoleName"
-                                           @(Html.Raw(role.Assigned ? "checked=\"checked\"" : "")) />
+                                           @(Html.Raw(role.Assigned ? "checked=\"checked\"" : ""))
+                                           @(disableRole ? "disabled=\"disabled\"" : "") />
+                                    @if (disableRole && role.Assigned)
+                                    {
+                                        <input type="hidden" name="selectedRoles" value="Root" />
+                                    }
                                     @role.RoleName @:&nbsp;&nbsp;
                                 @:</td>
                             }

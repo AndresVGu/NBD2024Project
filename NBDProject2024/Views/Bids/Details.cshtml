@@ -94,7 +94,7 @@
 
 <!--Buttons-->
 <div>
-    @if (User.IsInRole("Sales"))
+    @if (User.IsInRole("Sales") && !User.IsInRole("Guest"))
     {
         <a asp-action="Index">Back to List</a>
     }

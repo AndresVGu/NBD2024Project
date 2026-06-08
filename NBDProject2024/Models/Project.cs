@@ -148,6 +148,7 @@ namespace NBDProject2024.Models
 
 
         public ICollection<Bid> Bids { get; set; } = new HashSet<Bid>();
+        public ICollection<WorkOrder> WorkOrders { get; set; } = new HashSet<WorkOrder>();
 
 
 

@@ -1,0 +1,46 @@
+@model IEnumerable<NBDProject2024.Models.RoleAuditLog>
+
+@{
+    ViewData["Title"] = "Role Audit";
+}
+
+<partial name="_ViewHeading" />
+
+<div class="mb-3 d-flex gap-2">
+    <a asp-action="Index" class="btn btn-outline-secondary">Back to Role Management</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead class="table-primary">
+            <tr>
+                <th>When (UTC)</th>
+                <th>Actor</th>
+                <th>Action</th>
+                <th>Role</th>
+                <th>Target User</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.CreatedOnUtc.ToString("yyyy-MMM-dd HH:mm:ss")</td>
+                        <td>@item.ActorUserName</td>
+                        <td>@item.ActionType</td>
+                        <td>@item.RoleName</td>
+                        <td>@item.TargetUserName</td>
+                        <td>@item.Notes</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr><td colspan="6" class="text-center text-muted">No audit events yet.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>

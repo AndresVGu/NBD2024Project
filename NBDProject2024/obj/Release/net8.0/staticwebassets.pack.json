@@ -49,6 +49,10 @@
       "PackagePath": "staticwebassets/js/alerts.js"
     },
     {
+      "Id": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/js/clients-address.js",
+      "PackagePath": "staticwebassets/js/clients-address.js"
+    },
+    {
       "Id": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/js/dashboard.js",
       "PackagePath": "staticwebassets/js/dashboard.js"
     },

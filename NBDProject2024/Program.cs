@@ -182,6 +182,42 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
+
+// Keep schema up to date and baseline legacy databases that predate EF migration history.
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var nbdContext = scope.ServiceProvider.GetRequiredService<NBDContext>();
+    await nbdContext.Database.OpenConnectionAsync();
+
+    const string initialMigrationId = "20240403023052_Initial";
+    const string productVersion = "8.0.17";
+
+    bool hasEmployeesTable;
+    await using (var checkCommand = nbdContext.Database.GetDbConnection().CreateCommand())
+    {
+        checkCommand.CommandText = "SELECT EXISTS (SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'Employees');";
+        var result = await checkCommand.ExecuteScalarAsync();
+        hasEmployeesTable = Convert.ToInt32(result) == 1;
+    }
+
+    if (hasEmployeesTable)
+    {
+        await nbdContext.Database.ExecuteSqlRawAsync(
+            "CREATE TABLE IF NOT EXISTS \"__EFMigrationsHistory\" (\"MigrationId\" TEXT NOT NULL CONSTRAINT \"PK___EFMigrationsHistory\" PRIMARY KEY, \"ProductVersion\" TEXT NOT NULL);");
+
+        await nbdContext.Database.ExecuteSqlInterpolatedAsync(
+            $"INSERT OR IGNORE INTO \"__EFMigrationsHistory\" (\"MigrationId\", \"ProductVersion\") VALUES ({initialMigrationId}, {productVersion});");
+    }
+
+    await nbdContext.Database.CloseConnectionAsync();
+
+    var nbdPendingMigrations = await nbdContext.Database.GetPendingMigrationsAsync();
+    if (nbdPendingMigrations.Any())
+    {
+        await nbdContext.Database.MigrateAsync();
+    }
+}
+
 // Heavy domain seed only in local development to avoid slow production cold starts.
 if (app.Environment.IsDevelopment())
 {
@@ -190,17 +226,6 @@ if (app.Environment.IsDevelopment())
 
 // Always ensure essential location lookups exist for client/project forms.
 await LookupDataInitializer.SeedAsync(app);
-
-// Keep schema up to date with a lightweight migration check.
-await using (var scope = app.Services.CreateAsyncScope())
-{
-    var nbdContext = scope.ServiceProvider.GetRequiredService<NBDContext>();
-    var nbdPendingMigrations = await nbdContext.Database.GetPendingMigrationsAsync();
-    if (nbdPendingMigrations.Any())
-    {
-        await nbdContext.Database.MigrateAsync();
-    }
-}
 
 // Lightweight identity seed in all environments (roles/users) so login always works.
 await ApplicationDbInitializer.SeedAsync(app);

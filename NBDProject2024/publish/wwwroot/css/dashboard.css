@@ -259,6 +259,24 @@ body:has(.dashboard-page) {
   color: #1f2f49;
 }
 
+.db-calendar-card {
+  border-radius: 14px;
+}
+
+.db-operations-calendar {
+  min-height: 680px;
+}
+
+.db-calendar-legend {
+  font-size: 0.86rem;
+  color: #5a6a81;
+}
+
+.db-calendar-legend i {
+  font-size: 0.62rem;
+  margin-right: 6px;
+}
+
 .db-sales-card .card-body {
   padding: 24px;
 }

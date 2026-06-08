@@ -1,0 +1,51 @@
+@model IEnumerable<NBDProject2024.Models.PurchaseRequest>
+
+@{
+    ViewData["Title"] = "Purchases";
+}
+
+<partial name="_ViewHeading" />
+
+@if (TempData["AlertMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["AlertMessage"]</div>
+}
+
+<div class="d-flex gap-2 mb-3">
+    <a asp-action="Create" class="btn btn-outline-primary">New Purchase Request</a>
+    <a asp-controller="Inventory" asp-action="Index" class="btn btn-outline-secondary">Back to Inventory</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead class="table-primary">
+            <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Supplier</th>
+                <th>Status</th>
+                <th>Approved By</th>
+                <th>Lines</th>
+                <th>Receipts</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ID</td>
+                    <td>@item.RequestDate.ToString("yyyy-MMM-dd")</td>
+                    <td>@item.SupplierName</td>
+                    <td>@item.Status</td>
+                    <td>@(string.IsNullOrWhiteSpace(item.ApprovedBy) ? "-" : item.ApprovedBy)</td>
+                    <td>@item.Lines.Count</td>
+                    <td>@item.Receipts.Count</td>
+                    <td class="text-center">
+                        <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-sm btn-outline-primary">Open</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -25,7 +25,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Clients
-        [Authorize(Roles = "Admin,Supervisor,Designer,Sales")]
+        [Authorize(Roles = "Admin,Supervisor,Designer,Sales,Guest")]
 
         public async Task<IActionResult> Index(string SearchString, int? CityID,
            int? page, int? pageSizeID, string actionButton, string sortDirection = "asc", string sortField = "Client")
@@ -43,6 +43,12 @@ namespace NBDProject2024.Controllers
                 .Include(c => c.Projects)
                 .Include(c => c.City)
                 .AsNoTracking();
+
+            if (IsGuestMode())
+            {
+                var owner = CurrentOwnerName();
+                clients = clients.Where(c => c.CreatedBy == owner);
+            }
 
 
 
@@ -175,7 +181,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Clients/Details/5
-        [Authorize(Roles = "Admin,Supervisor,Designer , Sales")]
+        [Authorize(Roles = "Admin,Supervisor,Designer , Sales,Guest")]
 
         public async Task<IActionResult> Details(int? id)
         {
@@ -194,15 +200,22 @@ namespace NBDProject2024.Controllers
                 return NotFound();
             }
 
+            if (IsGuestMode() && !IsOwnedByCurrentUser(client.CreatedBy))
+            {
+                return Forbid();
+            }
+
             return View(client);
         }
 
         // GET: Clients/Create
-        [Authorize(Roles = "Admin,Supervisor,Sales")]
+        [Authorize(Roles = "Admin,Supervisor,Sales,Guest")]
 
         public IActionResult Create()
         {
             PopulateDropDownLists();
+            ViewData["UseNewCity"] = false;
+            ViewData["NewCityName"] = "";
             return View();
         }
 
@@ -211,20 +224,23 @@ namespace NBDProject2024.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Supervisor,Sales")]
+        [Authorize(Roles = "Admin,Supervisor,Sales,Guest")]
 
         public async Task<IActionResult> Create([Bind("ID,FirstName, MiddleName,LastName, CompanyName," +
             "Phone,Email,AddressCountry,AddressStreet,CityID,PostalCode,")] Client client, string[] selectedOptions,
-            string ProvinceID, string NewCityName)
+            string ProvinceID, string NewCityName, bool UseNewCity)
         {
             try
             {
-                if ((client.CityID ?? 0) <= 0 &&
-                    !string.IsNullOrWhiteSpace(ProvinceID) &&
-                    !string.IsNullOrWhiteSpace(NewCityName))
+                if (UseNewCity)
                 {
-                    client.CityID = await GetOrCreateCityIdAsync(ProvinceID, NewCityName);
-                    ModelState.Remove("CityID");
+                    if (!await TryResolveCitySelectionAsync(client, ProvinceID, NewCityName, UseNewCity))
+                    {
+                        PopulateDropDownLists(client);
+                        ViewData["UseNewCity"] = UseNewCity;
+                        ViewData["NewCityName"] = NewCityName;
+                        return View(client);
+                    }
                 }
 
                 if (ModelState.IsValid)
@@ -250,11 +266,13 @@ namespace NBDProject2024.Controllers
             }
             //ViewData["ContactID"] = new SelectList(_context.Contacts, "ID", "ContactFirstName", client.ContactID);
             PopulateDropDownLists(client);
+            ViewData["UseNewCity"] = UseNewCity;
+            ViewData["NewCityName"] = NewCityName;
             return View(client);
         }
 
         // GET: Clients/Edit/5
-        [Authorize(Roles = "Admin,Supervisor,Sales")]
+        [Authorize(Roles = "Admin,Supervisor,Sales,Guest")]
 
         public async Task<IActionResult> Edit(int? id)
         {
@@ -273,8 +291,15 @@ namespace NBDProject2024.Controllers
                 return NotFound();
             }
 
+            if (IsGuestMode() && !IsOwnedByCurrentUser(client.CreatedBy))
+            {
+                return Forbid();
+            }
+
 
             PopulateDropDownLists(client);
+            ViewData["UseNewCity"] = false;
+            ViewData["NewCityName"] = "";
             return View(client);
         }
 
@@ -283,9 +308,9 @@ namespace NBDProject2024.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Supervisor,Sales")]
+        [Authorize(Roles = "Admin,Supervisor,Sales,Guest")]
 
-        public async Task<IActionResult> Edit(int id, Byte[] RowVersion)
+        public async Task<IActionResult> Edit(int id, Byte[] RowVersion, string ProvinceID, string NewCityName, bool UseNewCity)
         {
             var clientToUpdate = await _context.Clients
                 .Include(c => c.City)
@@ -294,6 +319,11 @@ namespace NBDProject2024.Controllers
             if (clientToUpdate == null)
             {
                 return NotFound();
+            }
+
+            if (IsGuestMode() && !IsOwnedByCurrentUser(clientToUpdate.CreatedBy))
+            {
+                return Forbid();
             }
             _context.Entry(clientToUpdate).Property("RowVersion").OriginalValue = RowVersion;
 
@@ -304,6 +334,17 @@ namespace NBDProject2024.Controllers
                 c => c.AddressCountry, c => c.AddressStreet,
                 c => c.CityID, c => c.PostalCode))
             {
+                if (UseNewCity)
+                {
+                    if (!await TryResolveCitySelectionAsync(clientToUpdate, ProvinceID, NewCityName, UseNewCity))
+                    {
+                        PopulateDropDownLists(clientToUpdate);
+                        ViewData["UseNewCity"] = UseNewCity;
+                        ViewData["NewCityName"] = NewCityName;
+                        return View(clientToUpdate);
+                    }
+                }
+
                 try
                 {
                     await _context.SaveChangesAsync();
@@ -334,12 +375,14 @@ namespace NBDProject2024.Controllers
             }
 
             PopulateDropDownLists(clientToUpdate);
+            ViewData["UseNewCity"] = UseNewCity;
+            ViewData["NewCityName"] = NewCityName;
 
             return View(clientToUpdate);
         }
 
         // GET: Clients/Delete/5
-        [Authorize(Roles = "Admin,Supervisor,Sales")]
+        [Authorize(Roles = "Admin,Supervisor,Sales,Guest")]
 
         public async Task<IActionResult> Delete(int? id)
         {
@@ -355,6 +398,10 @@ namespace NBDProject2024.Controllers
             if (client == null)
             {
                 return NotFound();
+            }
+            if (IsGuestMode() && !IsOwnedByCurrentUser(client.CreatedBy))
+            {
+                return Forbid();
             }
             if (User.IsInRole("Sales"))
             {
@@ -373,7 +420,7 @@ namespace NBDProject2024.Controllers
         // POST: Clients/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Supervisor, Sales")]
+        [Authorize(Roles = "Admin,Supervisor, Sales,Guest")]
 
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -385,6 +432,16 @@ namespace NBDProject2024.Controllers
                 .Include(c => c.City)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
+
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            if (IsGuestMode() && !IsOwnedByCurrentUser(client.CreatedBy))
+            {
+                return Forbid();
+            }
 
             if (User.IsInRole("Sales"))
             {
@@ -428,6 +485,15 @@ namespace NBDProject2024.Controllers
         //PartialViews:
         public PartialViewResult ListOfProjectsDetails(int id)
         {
+            if (IsGuestMode())
+            {
+                bool ownsClient = _context.Clients.Any(c => c.ID == id && c.CreatedBy == CurrentOwnerName());
+                if (!ownsClient)
+                {
+                    return PartialView("_ListOfProjects", new List<Project>());
+                }
+            }
+
             var query = from p in _context.Projects
                         where p.ClientID == id
                         orderby p.StartTime descending
@@ -498,6 +564,17 @@ namespace NBDProject2024.Controllers
                          orderby c.FirstName, c.LastName
                          select new { value = c.FirstName + " " + c.LastName };
 
+            if (IsGuestMode())
+            {
+                string owner = CurrentOwnerName();
+                result = from c in _context.Clients
+                         where c.CreatedBy == owner &&
+                         (c.LastName.ToUpper().Contains(term.ToUpper())
+                          || c.FirstName.ToUpper().Contains(term.ToUpper()))
+                         orderby c.FirstName, c.LastName
+                         select new { value = c.FirstName + " " + c.LastName };
+            }
+
             return Json(result);
         }
 
@@ -522,6 +599,30 @@ namespace NBDProject2024.Controllers
             await _context.SaveChangesAsync();
 
             return city.ID;
+        }
+
+        private async Task<bool> TryResolveCitySelectionAsync(Client client, string provinceID, string newCityName, bool useNewCity)
+        {
+            if (!useNewCity)
+            {
+                return true;
+            }
+
+            if (string.IsNullOrWhiteSpace(provinceID) || provinceID == "0")
+            {
+                ModelState.AddModelError("ProvinceID", "Province is required to add a new city.");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(newCityName))
+            {
+                ModelState.AddModelError("NewCityName", "Enter the new city name.");
+                return false;
+            }
+
+            client.CityID = await GetOrCreateCityIdAsync(provinceID, newCityName);
+            ModelState.Remove("CityID");
+            return true;
         }
 
         #endregion

@@ -4,22 +4,73 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NBDProject2024.CustomControllers;
 using NBDProject2024.Data;
+using NBDProject2024.Models;
 using NBDProject2024.ViewModels;
 
 namespace NBDProject2024.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Root")]
     public class UserRoleController : CognizantController
 
     {
 
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UserRoleController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public UserRoleController(ApplicationDbContext context, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
             _userManager = userManager;
+            _roleManager = roleManager;
+        }
+
+        [HttpGet]
+        public IActionResult CreateRole()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateRole(string roleName)
+        {
+            if (string.IsNullOrWhiteSpace(roleName))
+            {
+                ModelState.AddModelError("roleName", "Role name is required.");
+                return View();
+            }
+
+            roleName = roleName.Trim();
+            if (await _roleManager.RoleExistsAsync(roleName))
+            {
+                ModelState.AddModelError("roleName", "Role already exists.");
+                return View();
+            }
+
+            var result = await _roleManager.CreateAsync(new IdentityRole(roleName));
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("roleName", "Unable to create role.");
+                return View();
+            }
+
+            await WriteAuditAsync(null, null, "RoleCreated", roleName, "Role created by Root module.");
+
+            TempData["AlertMessage"] = "Role created successfully.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Audit()
+        {
+            var logs = await _context.RoleAuditLogs
+                .AsNoTracking()
+                .OrderByDescending(x => x.CreatedOnUtc)
+                .Take(300)
+                .ToListAsync();
+
+            return View(logs);
         }
         // GET: User
         public async Task<IActionResult> Index()
@@ -59,6 +110,7 @@ namespace NBDProject2024.Controllers
                 UserRoles = (List<string>)await _userManager.GetRolesAsync(_user)
             };
             PopulateAssignedRoleData(user);
+            await PopulateRoleProtectionDataAsync(user);
             return View(user);
         }
 
@@ -68,12 +120,41 @@ namespace NBDProject2024.Controllers
         public async Task<IActionResult> Edit(string Id, string[] selectedRoles)
         {
             var _user = await _userManager.FindByIdAsync(Id);//IdentityRole
+            if (_user == null)
+            {
+                return NotFound();
+            }
+
             UserVM user = new UserVM
             {
                 ID = _user.Id,
                 UserName = _user.UserName,
                 UserRoles = (List<string>)await _userManager.GetRolesAsync(_user)
             };
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            bool editingSelf = currentUser != null && currentUser.Id == Id;
+            bool targetIsRoot = user.UserRoles.Contains("Root");
+            bool removingRoot = targetIsRoot && (selectedRoles == null || !selectedRoles.Contains("Root"));
+            int rootCount = (await _userManager.GetUsersInRoleAsync("Root")).Count;
+
+            if (removingRoot && editingSelf)
+            {
+                ModelState.AddModelError(string.Empty, "Root cannot remove the Root role from itself.");
+            }
+
+            if (removingRoot && rootCount <= 1)
+            {
+                ModelState.AddModelError(string.Empty, "You cannot remove the last Root user from the system.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                PopulateAssignedRoleData(user);
+                await PopulateRoleProtectionDataAsync(user);
+                return View(user);
+            }
+
             try
             {
                 await UpdateUserRoles(selectedRoles, user);
@@ -85,6 +166,7 @@ namespace NBDProject2024.Controllers
                                 "Unable to save changes.");
             }
             PopulateAssignedRoleData(user);
+            await PopulateRoleProtectionDataAsync(user);
             return View(user);
         }
 
@@ -105,6 +187,19 @@ namespace NBDProject2024.Controllers
             ViewBag.Roles = viewModel;
         }
 
+        private async Task PopulateRoleProtectionDataAsync(UserVM user)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            bool editingSelf = currentUser != null && currentUser.Id == user.ID;
+            bool targetIsRoot = user.UserRoles.Contains("Root");
+            int rootCount = (await _userManager.GetUsersInRoleAsync("Root")).Count;
+
+            ViewBag.LockRootRole = targetIsRoot && (editingSelf || rootCount <= 1);
+            ViewBag.RootLockReason = editingSelf
+                ? "Root role cannot be removed from your own account."
+                : (rootCount <= 1 ? "At least one Root account must remain in the system." : string.Empty);
+        }
+
         private async Task UpdateUserRoles(string[] selectedRoles, UserVM userToUpdate)
         {
             var UserRoles = userToUpdate.UserRoles;//Current roles use is in
@@ -116,6 +211,7 @@ namespace NBDProject2024.Controllers
                 foreach (var r in UserRoles)
                 {
                     await _userManager.RemoveFromRoleAsync(_user, r);
+                    await WriteAuditAsync(userToUpdate.ID, userToUpdate.UserName, "RoleRemoved", r, "All roles were cleared from user.");
                 }
             }
             else
@@ -136,6 +232,7 @@ namespace NBDProject2024.Controllers
                         if (!UserRoles.Contains(r.Name))
                         {
                             await _userManager.AddToRoleAsync(_user, r.Name);
+                            await WriteAuditAsync(userToUpdate.ID, userToUpdate.UserName, "RoleAssigned", r.Name, "Role assigned in user role editor.");
                         }
                     }
                     else
@@ -143,10 +240,28 @@ namespace NBDProject2024.Controllers
                         if (UserRoles.Contains(r.Name))
                         {
                             await _userManager.RemoveFromRoleAsync(_user, r.Name);
+                            await WriteAuditAsync(userToUpdate.ID, userToUpdate.UserName, "RoleRemoved", r.Name, "Role removed in user role editor.");
                         }
                     }
                 }
             }
+        }
+
+        private async Task WriteAuditAsync(string targetUserId, string targetUserName, string actionType, string roleName, string notes)
+        {
+            var actor = await _userManager.GetUserAsync(User);
+            _context.RoleAuditLogs.Add(new RoleAuditLog
+            {
+                ActorUserId = actor?.Id,
+                ActorUserName = actor?.UserName ?? User.Identity?.Name ?? "Unknown",
+                TargetUserId = targetUserId,
+                TargetUserName = targetUserName,
+                ActionType = actionType,
+                RoleName = roleName,
+                Notes = notes,
+                CreatedOnUtc = DateTime.UtcNow
+            });
+            await _context.SaveChangesAsync();
         }
 
         protected override void Dispose(bool disposing)

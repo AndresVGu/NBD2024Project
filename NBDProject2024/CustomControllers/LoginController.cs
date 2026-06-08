@@ -18,18 +18,20 @@ namespace NBDProject2024.CustomControllers
         [HttpGet]
         public async Task<IActionResult> Guest(string returnUrl = null)
         {
+            var guestOwnerId = Request.Cookies["GuestOwnerId"];
+            if (string.IsNullOrWhiteSpace(guestOwnerId))
+            {
+                guestOwnerId = $"guest-{Guid.NewGuid():N}";
+            }
+
             await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
 
             var guestClaims = new List<Claim>
             {
-                new(ClaimTypes.NameIdentifier, "guest-user"),
-                new(ClaimTypes.Name, "Guest User"),
-                new(ClaimTypes.Email, "guest@nbd.local"),
+                new(ClaimTypes.NameIdentifier, guestOwnerId),
+                new(ClaimTypes.Name, guestOwnerId),
+                new(ClaimTypes.Email, $"{guestOwnerId}@nbd.local"),
                 new(ClaimTypes.Role, "Guest"),
-                new(ClaimTypes.Role, "Admin"),
-                new(ClaimTypes.Role, "Supervisor"),
-                new(ClaimTypes.Role, "Designer"),
-                new(ClaimTypes.Role, "Sales"),
                 new("GuestMode", "true")
             };
 
@@ -48,6 +50,15 @@ namespace NBDProject2024.CustomControllers
                     AllowRefresh = true,
                     ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8)
                 });
+
+            HttpContext.Response.Cookies.Append("GuestOwnerId", guestOwnerId, new CookieOptions
+            {
+                HttpOnly = true,
+                IsEssential = true,
+                Secure = Request.IsHttps,
+                SameSite = SameSiteMode.Lax,
+                Expires = DateTimeOffset.UtcNow.AddHours(8)
+            });
 
             CookieHelper.CookieSet(HttpContext, "userName", "Guest User", 480);
 

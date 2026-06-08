@@ -54,6 +54,8 @@ namespace NBDProject2024.Models
         public bool Active { get; set; } = true;
 
         public ICollection<Subscription> Subscriptions { get; set; }
+        public ICollection<EmployeeSkill> EmployeeSkills { get; set; } = new HashSet<EmployeeSkill>();
+        public ICollection<WorkOrderCrewAssignment> WorkOrderAssignments { get; set; } = new HashSet<WorkOrderCrewAssignment>();
 
 
     }

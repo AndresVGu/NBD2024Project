@@ -25,7 +25,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Bids
-        [Authorize(Roles = "Admin,Supervisor,Designer,Sales")]
+        [Authorize(Roles = "Admin,Supervisor,Designer,Sales,Guest")]
         
         public async Task<IActionResult> Index(int? page, int? pageSizeID, string SearchString, string actionButton, int? MaterialID,
             int? LabourID, string sortDirection = "desc", string sortField = "Bid Date")
@@ -56,6 +56,12 @@ namespace NBDProject2024.Controllers
                  .Include(b => b.Project)
                 .AsSplitQuery()
                 .AsNoTracking();
+
+            if (IsGuestMode())
+            {
+                var owner = CurrentOwnerName();
+                bids = bids.Where(b => b.CreatedBy == owner);
+            }
 
             //Filters:
 
@@ -141,7 +147,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Bids/Details/5
-        [Authorize(Roles = "Admin,Supervisor,Designer,Sales")]
+        [Authorize(Roles = "Admin,Supervisor,Designer,Sales,Guest")]
         
         public async Task<IActionResult> Details(int? id)
         {
@@ -160,15 +166,27 @@ namespace NBDProject2024.Controllers
                 return NotFound();
             }
 
+            if (IsGuestMode() && !IsOwnedByCurrentUser(bid.CreatedBy))
+            {
+                return Forbid();
+            }
+
             return View(bid);
         }
 
         // GET: Bids/Create
-        [Authorize(Roles = "Admin,Supervisor,Designer")]
+        [Authorize(Roles = "Admin,Supervisor,Designer,Guest")]
        
         public IActionResult Create()
         {
-            ViewData["ProjectID"] = new SelectList(_context.Projects, "ID", "ProjectName");
+            var projectQuery = _context.Projects.AsQueryable();
+            if (IsGuestMode())
+            {
+                string owner = CurrentOwnerName();
+                projectQuery = projectQuery.Where(p => p.CreatedBy == owner);
+            }
+
+            ViewData["ProjectID"] = new SelectList(projectQuery, "ID", "ProjectName");
             ViewData["MaterialID"] = new SelectList(_context.Materials, "ID", "Name");
             ViewData["LabourID"] = new SelectList(_context.Labours, "ID", "Name");
             return View();
@@ -179,7 +197,7 @@ namespace NBDProject2024.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Supervisor,Designer")]
+        [Authorize(Roles = "Admin,Supervisor,Designer,Guest")]
        
         public async Task<IActionResult> Create([Bind("ID,BidDate,ProjectID")] Bid bid,
             int[] materialIds, int[] materialQuantities, int[] labourIds, double[] labourHours)
@@ -188,6 +206,21 @@ namespace NBDProject2024.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    if (IsGuestMode())
+                    {
+                        bool ownsProject = await _context.Projects
+                            .AnyAsync(p => p.ID == bid.ProjectID && p.CreatedBy == CurrentOwnerName());
+                        if (!ownsProject)
+                        {
+                            ModelState.AddModelError("ProjectID", "Guest Mode can only assign your own projects.");
+                            var guestProjects = _context.Projects.Where(p => p.CreatedBy == CurrentOwnerName());
+                            ViewData["ProjectID"] = new SelectList(guestProjects, "ID", "ProjectName", bid.ProjectID);
+                            ViewData["MaterialID"] = new SelectList(_context.Materials, "ID", "Name");
+                            ViewData["LabourID"] = new SelectList(_context.Labours, "ID", "Name");
+                            return View(bid);
+                        }
+                    }
+
                     _context.Add(bid);
                     await _context.SaveChangesAsync();
 
@@ -265,14 +298,20 @@ namespace NBDProject2024.Controllers
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
 
-            ViewData["ProjectID"] = new SelectList(_context.Projects, "ID", "ProjectName", bid.ProjectID);
+            var projects = _context.Projects.AsQueryable();
+            if (IsGuestMode())
+            {
+                projects = projects.Where(p => p.CreatedBy == CurrentOwnerName());
+            }
+
+            ViewData["ProjectID"] = new SelectList(projects, "ID", "ProjectName", bid.ProjectID);
             ViewData["MaterialID"] = new SelectList(_context.Materials, "ID", "Name");
             ViewData["LabourID"] = new SelectList(_context.Labours, "ID", "Name");
             return View(bid);
         }
 
         // GET: Bids/Edit/5
-        [Authorize(Roles = "Admin,Supervisor,Designer")]
+        [Authorize(Roles = "Admin,Supervisor,Designer,Guest")]
         
         public async Task<IActionResult> Edit(int? id)
         {
@@ -292,7 +331,19 @@ namespace NBDProject2024.Controllers
             {
                 return NotFound();
             }
-            ViewData["ProjectID"] = new SelectList(_context.Projects, "ID", "ProjectName", bid.ProjectID);
+
+            if (IsGuestMode() && !IsOwnedByCurrentUser(bid.CreatedBy))
+            {
+                return Forbid();
+            }
+
+            var projectQuery = _context.Projects.AsQueryable();
+            if (IsGuestMode())
+            {
+                projectQuery = projectQuery.Where(p => p.CreatedBy == CurrentOwnerName());
+            }
+
+            ViewData["ProjectID"] = new SelectList(projectQuery, "ID", "ProjectName", bid.ProjectID);
             ViewData["MaterialID"] = new SelectList(_context.Materials, "ID", "Name");
             ViewData["LabourID"] = new SelectList(_context.Labours, "ID", "Name");
             return View(bid);
@@ -303,7 +354,7 @@ namespace NBDProject2024.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-         [Authorize(Roles = "Admin,Supervisor,Designer")]
+         [Authorize(Roles = "Admin,Supervisor,Designer,Guest")]
        
         public async Task<IActionResult> Edit(int id, Byte[] RowVersion,
             int[] materialIds, int[] materialQuantities, int[] labourIds, double[] labourHours)
@@ -318,11 +369,31 @@ namespace NBDProject2024.Controllers
             {
                 return NotFound();
             }
+
+            if (IsGuestMode() && !IsOwnedByCurrentUser(bidToUpdate.CreatedBy))
+            {
+                return Forbid();
+            }
             _context.Entry(bidToUpdate).Property("RowVersion").OriginalValue = RowVersion;
 
             if (await TryUpdateModelAsync<Bid>(bidToUpdate, "",
                 b => b.BidDate, b => b.ProjectID))
             {
+                if (IsGuestMode())
+                {
+                    bool ownsProject = await _context.Projects
+                        .AnyAsync(p => p.ID == bidToUpdate.ProjectID && p.CreatedBy == CurrentOwnerName());
+                    if (!ownsProject)
+                    {
+                        ModelState.AddModelError("ProjectID", "Guest Mode can only assign your own projects.");
+                        var guestProjects = _context.Projects.Where(p => p.CreatedBy == CurrentOwnerName());
+                        ViewData["ProjectID"] = new SelectList(guestProjects, "ID", "ProjectName", bidToUpdate.ProjectID);
+                        ViewData["MaterialID"] = new SelectList(_context.Materials, "ID", "Name");
+                        ViewData["LabourID"] = new SelectList(_context.Labours, "ID", "Name");
+                        return View(bidToUpdate);
+                    }
+                }
+
                 try
                 {
                     _context.BidMaterials.RemoveRange(bidToUpdate.BidMaterials);
@@ -409,7 +480,13 @@ namespace NBDProject2024.Controllers
 
             }
 
-            ViewData["ProjectID"] = new SelectList(_context.Projects, "ID", "ProjectName", bidToUpdate.ProjectID);
+            var projects = _context.Projects.AsQueryable();
+            if (IsGuestMode())
+            {
+                projects = projects.Where(p => p.CreatedBy == CurrentOwnerName());
+            }
+
+            ViewData["ProjectID"] = new SelectList(projects, "ID", "ProjectName", bidToUpdate.ProjectID);
             ViewData["MaterialID"] = new SelectList(_context.Materials, "ID", "Name");
             ViewData["LabourID"] = new SelectList(_context.Labours, "ID", "Name");
 
@@ -417,7 +494,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Bids/Delete/5
-         [Authorize(Roles = "Admin,Supervisor,Designer")]
+         [Authorize(Roles = "Admin,Supervisor,Designer,Guest")]
       
         public async Task<IActionResult> Delete(int? id)
         {
@@ -437,6 +514,11 @@ namespace NBDProject2024.Controllers
                 return NotFound();
             }
 
+            if (IsGuestMode() && !IsOwnedByCurrentUser(bid.CreatedBy))
+            {
+                return Forbid();
+            }
+
             if (User.IsInRole("Designer"))
             {
                 if (bid.CreatedBy != User.Identity.Name)
@@ -454,7 +536,7 @@ namespace NBDProject2024.Controllers
         // POST: Bids/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-       [Authorize(Roles = "Admin,Supervisor,Designer")]
+    [Authorize(Roles = "Admin,Supervisor,Designer,Guest")]
        
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -468,6 +550,17 @@ namespace NBDProject2024.Controllers
                 .Include(b => b.Project)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
+
+            if (bid == null)
+            {
+                return NotFound();
+            }
+
+            if (IsGuestMode() && !IsOwnedByCurrentUser(bid.CreatedBy))
+            {
+                return Forbid();
+            }
+
             if (User.IsInRole("Designer"))
             {
                 if (bid.CreatedBy != User.Identity.Name)
@@ -508,6 +601,15 @@ namespace NBDProject2024.Controllers
 
         public PartialViewResult ListOfMaterialsDetails(int id)
         {
+            if (IsGuestMode())
+            {
+                bool ownsBid = _context.Bids.Any(b => b.ID == id && b.CreatedBy == CurrentOwnerName());
+                if (!ownsBid)
+                {
+                    return PartialView("_ListOfMaterials", new List<BidMaterial>());
+                }
+            }
+
             var query = from m in _context.BidMaterials
                         .Include(m => m.Materials)
                         where m.BidID == id
@@ -519,6 +621,15 @@ namespace NBDProject2024.Controllers
 
         public PartialViewResult ListOfLaboursDetails(int id)
         {
+            if (IsGuestMode())
+            {
+                bool ownsBid = _context.Bids.Any(b => b.ID == id && b.CreatedBy == CurrentOwnerName());
+                if (!ownsBid)
+                {
+                    return PartialView("_ListOfLabours", new List<BidLabour>());
+                }
+            }
+
             var query = from b in _context.BidLabours
                        .Include(b => b.Labours)
                         where b.BidID == id

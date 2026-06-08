@@ -25,7 +25,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Projects
-        [Authorize(Roles ="Admin,Supervisor, Sales, Designer")]
+        [Authorize(Roles ="Admin,Supervisor, Sales, Designer,Guest")]
         public async Task<IActionResult> Index(string SearchString, int? ClientID, string SearchClient, DateTime StartDate, DateTime EndDate,
            int? page, int? pageSizeID, string actionButton, string sortDirection = "asc", string sortField = "ClientID")
         {
@@ -70,6 +70,12 @@ namespace NBDProject2024.Controllers
                 >= StartDate && p.StartTime <= EndDate.AddDays(1))
                 .OrderByDescending(p => p.StartTime)
                 .AsNoTracking();
+
+            if (IsGuestMode())
+            {
+                var owner = CurrentOwnerName();
+                projects = projects.Where(p => p.CreatedBy == owner);
+            }
 
             #region Filters
             //filters:
@@ -221,7 +227,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Projects/Details/5
-         [Authorize(Roles ="Admin,Supervisor,Designer,Sales")]
+         [Authorize(Roles ="Admin,Supervisor,Designer,Sales,Guest")]
         
         public async Task<IActionResult> Details(int? id)
         {
@@ -242,11 +248,16 @@ namespace NBDProject2024.Controllers
                 return NotFound();
             }
 
+                if (IsGuestMode() && !IsOwnedByCurrentUser(project.CreatedBy))
+                {
+                    return Forbid();
+                }
+
             return View(project);
         }
 
         // GET: Projects/Create
-        [Authorize(Roles = "Admin,Supervisor,Designer")]
+        [Authorize(Roles = "Admin,Supervisor,Designer,Guest")]
         
         public IActionResult Create()
         {
@@ -262,7 +273,7 @@ namespace NBDProject2024.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Supervisor,Designer")]
+        [Authorize(Roles = "Admin,Supervisor,Designer,Guest")]
         
         public async Task<IActionResult> Create([Bind("ID,ProjectName,BidDate,StartTime,EndTime,ProjectSite,SetupNotes,CityID,ClientID")] Project project,
             string[] selectedOptions, string ProvinceID, string NewCityName)
@@ -279,6 +290,19 @@ namespace NBDProject2024.Controllers
 
                 if (ModelState.IsValid)
                 {
+                    if (IsGuestMode())
+                    {
+                        bool ownsClient = await _context.Clients
+                            .AnyAsync(c => c.ID == project.ClientID && c.CreatedBy == CurrentOwnerName());
+                        if (!ownsClient)
+                        {
+                            ModelState.AddModelError("ClientID", "Guest Mode can only assign your own clients.");
+                            PopulateDropDownLists(project);
+                            PopulateCityDropDownLists(project);
+                            return View(project);
+                        }
+                    }
+
                     _context.Add(project);
                     await _context.SaveChangesAsync();
                     TempData["AlertMessage"] = "Project Created Sucessfully...!";
@@ -302,7 +326,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Projects/Edit/5
-        [Authorize(Roles = "Admin,Supervisor,Designer")]
+        [Authorize(Roles = "Admin,Supervisor,Designer,Guest")]
        
         public async Task<IActionResult> Edit(int? id)
         {
@@ -318,6 +342,10 @@ namespace NBDProject2024.Controllers
             {
                 return NotFound();
             }
+            if (IsGuestMode() && !IsOwnedByCurrentUser(project.CreatedBy))
+            {
+                return Forbid();
+            }
             PopulateDropDownLists(project);
             PopulateCityDropDownLists(project);
             return View(project);
@@ -329,7 +357,7 @@ namespace NBDProject2024.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-         [Authorize(Roles = "Admin,Supervisor,Designer")]
+         [Authorize(Roles = "Admin,Supervisor,Designer,Guest")]
        
         public async Task<IActionResult> Edit(int id, string[] selectedOptions,
             Byte[] RowVersion)
@@ -343,12 +371,30 @@ namespace NBDProject2024.Controllers
                 return NotFound();
             }
 
+            if (IsGuestMode() && !IsOwnedByCurrentUser(projectToUpdate.CreatedBy))
+            {
+                return Forbid();
+            }
+
             _context.Entry(projectToUpdate).Property("RowVersion").OriginalValue = RowVersion;
 
             if (await TryUpdateModelAsync<Project>(projectToUpdate, "",
                 p => p.ProjectName, p => p.StartTime, p => p.EndTime, p => p.CityID,
                 p => p.ProjectSite, p => p.SetupNotes, p => p.ClientID))
             {
+                if (IsGuestMode())
+                {
+                    bool ownsClient = await _context.Clients
+                        .AnyAsync(c => c.ID == projectToUpdate.ClientID && c.CreatedBy == CurrentOwnerName());
+                    if (!ownsClient)
+                    {
+                        ModelState.AddModelError("ClientID", "Guest Mode can only assign your own clients.");
+                        PopulateDropDownLists(projectToUpdate);
+                        PopulateCityDropDownLists(projectToUpdate);
+                        return View(projectToUpdate);
+                    }
+                }
+
                 try
                 {
                     await _context.SaveChangesAsync();
@@ -385,7 +431,7 @@ namespace NBDProject2024.Controllers
         }
 
         // GET: Projects/Delete/5
-         [Authorize(Roles = "Admin,Supervisor,Designer")]
+         [Authorize(Roles = "Admin,Supervisor,Designer,Guest")]
         
         public async Task<IActionResult> Delete(int? id)
         {
@@ -402,6 +448,10 @@ namespace NBDProject2024.Controllers
             if (project == null)
             {
                 return NotFound();
+            }
+            if (IsGuestMode() && !IsOwnedByCurrentUser(project.CreatedBy))
+            {
+                return Forbid();
             }
             if (User.IsInRole("Designer"))
             {
@@ -421,7 +471,7 @@ namespace NBDProject2024.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Supervisor,Designer")]
+        [Authorize(Roles = "Admin,Supervisor,Designer,Guest")]
         
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -433,6 +483,16 @@ namespace NBDProject2024.Controllers
                .Include(p => p.Client)
                .Include(p => p.City)
                .FirstOrDefaultAsync(m => m.ID == id);
+
+            if (project == null)
+            {
+                return NotFound();
+            }
+
+            if (IsGuestMode() && !IsOwnedByCurrentUser(project.CreatedBy))
+            {
+                return Forbid();
+            }
 
             if (User.IsInRole("Designer"))
             {
@@ -477,9 +537,18 @@ namespace NBDProject2024.Controllers
         //Select Clients
         private SelectList ClientSelectList(int? selectedId)
         {
-            return new SelectList(_context.Clients
+            var query = _context.Clients
                 .OrderBy(c => c.FirstName)
-                .ThenBy(c => c.LastName), "ID", "FormalName", selectedId);
+                .ThenBy(c => c.LastName)
+                .AsQueryable();
+
+            if (IsGuestMode())
+            {
+                string owner = CurrentOwnerName();
+                query = query.Where(c => c.CreatedBy == owner);
+            }
+
+            return new SelectList(query, "ID", "FormalName", selectedId);
         }
         //Populate DropdownLists
         private void PopulateDropDownLists(Project project = null)
@@ -487,6 +556,15 @@ namespace NBDProject2024.Controllers
             var dQuery = from c in _context.Clients
                          orderby c.CompanyName
                          select c;
+
+            if (IsGuestMode())
+            {
+                string owner = CurrentOwnerName();
+                dQuery = from c in _context.Clients
+                         where c.CreatedBy == owner
+                         orderby c.CompanyName
+                         select c;
+            }
             ViewData["ClientID"] = new SelectList(dQuery, "ID", "ClientName", project?.ClientID);
             ViewData["ClientID"] = ClientSelectList(project?.ClientID);
         }
@@ -555,6 +633,76 @@ namespace NBDProject2024.Controllers
             return city.ID;
         }
         #endregion
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Supervisor,Designer,Guest")]
+        public async Task<IActionResult> CreateWorkOrder(int id)
+        {
+            var project = await _context.Projects
+                .Include(p => p.Client)
+                .FirstOrDefaultAsync(p => p.ID == id);
+
+            if (project == null)
+            {
+                return NotFound();
+            }
+
+            if (IsGuestMode() && !IsOwnedByCurrentUser(project.CreatedBy))
+            {
+                return Forbid();
+            }
+
+            var existingWorkOrder = await _context.WorkOrders
+                .AsNoTracking()
+                .FirstOrDefaultAsync(w => w.ProjectID == project.ID
+                    && w.ScheduledDate.Date == project.StartTime.Date
+                    && w.Status != WorkOrderStatus.Cancelled);
+
+            if (existingWorkOrder != null)
+            {
+                TempData["AlertMessage"] = "A work order already exists for this project on the same date.";
+                return RedirectToAction("Details", "WorkOrders", new { id = existingWorkOrder.ID });
+            }
+
+            var workOrder = new WorkOrder
+            {
+                Title = "WO - " + project.ProjectName,
+                ProjectID = project.ID,
+                ScheduledDate = project.StartTime.Date,
+                Status = WorkOrderStatus.Scheduled,
+                Notes = "Auto-created from Project " + project.ProjectName + "."
+            };
+
+            try
+            {
+                _context.WorkOrders.Add(workOrder);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException dex)
+            {
+                if (dex.GetBaseException().Message.Contains("UNIQUE constraint failed"))
+                {
+                    var existing = await _context.WorkOrders
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(w => w.ProjectID == project.ID
+                            && w.ScheduledDate.Date == project.StartTime.Date
+                            && w.Status != WorkOrderStatus.Cancelled);
+
+                    if (existing != null)
+                    {
+                        TempData["AlertMessage"] = "A work order already exists for this project on the same date.";
+                        return RedirectToAction("Details", "WorkOrders", new { id = existing.ID });
+                    }
+                }
+
+                TempData["AlertMessage"] = "Unable to create work order right now. Please try again.";
+                return RedirectToAction("Index");
+            }
+
+            TempData["AlertMessage"] = "Work Order created from project successfully.";
+            return RedirectToAction("Details", "WorkOrders", new { id = workOrder.ID });
+        }
 
         private bool ProjectExists(int id)
         {

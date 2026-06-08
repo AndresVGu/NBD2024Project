@@ -1,0 +1,66 @@
+@model IEnumerable<NBDProject2024.Models.InventoryMovement>
+
+@{
+    ViewData["Title"] = "Inventory Movements (Kardex)";
+}
+
+<partial name="_ViewHeading" />
+
+<form asp-action="Movements" method="get" class="card card-body bg-light mb-3">
+    <div class="row g-2 align-items-end">
+        <div class="col-12 col-md-4">
+            <label class="control-label">Location</label>
+            @Html.DropDownList("locationID", null, "All Locations", new { @class = "form-control" })
+        </div>
+        <div class="col-12 col-md-4">
+            <label class="control-label">Material</label>
+            @Html.DropDownList("materialID", null, "All Materials", new { @class = "form-control" })
+        </div>
+        <div class="col-12 col-md-4 d-flex gap-2">
+            <button type="submit" class="btn btn-outline-success">Filter</button>
+            <a asp-action="Movements" class="btn btn-outline-danger">Clear</a>
+            <a asp-action="Index" class="btn btn-outline-secondary ms-auto">Back</a>
+        </div>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead class="table-primary">
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Material</th>
+                <th>Location</th>
+                <th>Before</th>
+                <th>Delta</th>
+                <th>After</th>
+                <th>Unit Cost</th>
+                <th>Reference</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.MovementDate.ToString("yyyy-MMM-dd")</td>
+                        <td>@item.MovementType</td>
+                        <td>@item.Material?.Name</td>
+                        <td>@item.StockLocation?.Name</td>
+                        <td>@item.QuantityBefore.ToString("0.##")</td>
+                        <td class="@(item.QuantityDelta < 0 ? "text-danger" : "text-success")">@item.QuantityDelta.ToString("0.##")</td>
+                        <td>@item.QuantityAfter.ToString("0.##")</td>
+                        <td>@item.UnitCost.ToString("C2")</td>
+                        <td>@item.ReferenceCode</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr><td colspan="9" class="text-center text-muted">No movements found.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>

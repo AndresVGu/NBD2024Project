@@ -25,6 +25,7 @@ namespace NBDProject2024.Areas.Identity.Pages.Account
         private readonly ILogger<LoginModel> _logger;
         private readonly NBDContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private const string RootExceptionEmail = "root@test.com";
 
         public LoginModel(SignInManager<IdentityUser> signInManager, 
             ILogger<LoginModel> logger,
@@ -121,14 +122,52 @@ namespace NBDProject2024.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                var normalizedInputEmail = Input.Email?.Trim();
+                var isRootExceptionEmail = string.Equals(normalizedInputEmail, RootExceptionEmail, StringComparison.OrdinalIgnoreCase);
+                var identityUser = await _userManager.FindByEmailAsync(normalizedInputEmail);
+                var signInUserName = identityUser?.UserName ?? normalizedInputEmail;
+
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(signInUserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    // Root is manually managed and is allowed without an Employee row.
+                    if (isRootExceptionEmail)
+                    {
+                        var isRootRole = identityUser != null && await _userManager.IsInRoleAsync(identityUser, "Root");
+                        if (!isRootRole)
+                        {
+                            await _signInManager.SignOutAsync();
+                            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                            return Page();
+                        }
+                    }
+
                     //Code
-                    var emp = _context.Employees.Where(e => e.Email == Input.Email).FirstOrDefault();
-                    var displayName = emp?.FullName ?? Input.Email;
+                    var emp = _context.Employees.Where(e => e.Email == normalizedInputEmail).FirstOrDefault();
+
+                    // Keep non-root accounts constrained to admin-created employee records.
+                    if (!isRootExceptionEmail)
+                    {
+                        if (emp == null)
+                        {
+                            await _signInManager.SignOutAsync();
+                            string msg = "Error: Account for " + Input.Email + " has not been created by the Admin.";
+                            ModelState.AddModelError(string.Empty, msg);
+                            return Page();
+                        }
+
+                        if (!emp.Active)
+                        {
+                            await _signInManager.SignOutAsync();
+                            string msg = "Error: Account for login " + Input.Email + " is not active.";
+                            ModelState.AddModelError(string.Empty, msg);
+                            return Page();
+                        }
+                    }
+
+                    var displayName = emp?.FullName ?? normalizedInputEmail;
                     CookieHelper.CookieSet(HttpContext, "userName", displayName, 3200);
 
                     if (emp != null && String.IsNullOrEmpty(emp.Phone))
@@ -152,12 +191,13 @@ namespace NBDProject2024.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    var emp = _context.Employees.Where(e => e.Email == Input.Email).FirstOrDefault();
-                    if (emp == null)
+                    var emp = _context.Employees.Where(e => e.Email == normalizedInputEmail).FirstOrDefault();
+                    if (emp == null && !isRootExceptionEmail)
                     {
                         string msg = "Error: Account for " + Input.Email + " has not been created by the Admin.";
                         ModelState.AddModelError(string.Empty, msg);
-                    }else if (!emp.Active)
+                    }
+                    else if (emp != null && !emp.Active)
                     {
                         string msg = "Error: Account for login " + Input.Email + " is not active.";
                         ModelState.AddModelError(string.Empty, msg);

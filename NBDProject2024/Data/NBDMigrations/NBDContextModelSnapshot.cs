@@ -15,7 +15,7 @@ namespace NBDProject2024.Data.NBDMigrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.17");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.17");
 
             modelBuilder.Entity("NBDProject2024.Models.Bid", b =>
                 {
@@ -263,6 +263,83 @@ namespace NBDProject2024.Data.NBDMigrations
                     b.ToTable("Employees");
                 });
 
+            modelBuilder.Entity("NBDProject2024.Models.EmployeeSkill", b =>
+                {
+                    b.Property<int>("EmployeeID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Skill")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("EmployeeID", "Skill");
+
+                    b.ToTable("EmployeeSkills");
+                });
+
+            modelBuilder.Entity("NBDProject2024.Models.InventoryMovement", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("MaterialID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("MovementDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("MovementType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("QuantityAfter")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("QuantityBefore")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("QuantityDelta")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("ReferenceCode")
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("StockLocationID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("UnitCost")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("MaterialID");
+
+                    b.HasIndex("StockLocationID", "MaterialID", "MovementDate");
+
+                    b.ToTable("InventoryMovements");
+                });
+
             modelBuilder.Entity("NBDProject2024.Models.Labour", b =>
                 {
                     b.Property<int>("ID")
@@ -313,6 +390,51 @@ namespace NBDProject2024.Data.NBDMigrations
                         .IsUnique();
 
                     b.ToTable("Materials");
+                });
+
+            modelBuilder.Entity("NBDProject2024.Models.MaterialStock", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("LastUnitCost")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("MaterialID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("MinQuantity")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("QuantityOnHand")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("StockLocationID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("StockLocationID");
+
+                    b.HasIndex("MaterialID", "StockLocationID")
+                        .IsUnique();
+
+                    b.ToTable("MaterialStocks");
                 });
 
             modelBuilder.Entity("NBDProject2024.Models.Project", b =>
@@ -391,6 +513,162 @@ namespace NBDProject2024.Data.NBDMigrations
                     b.ToTable("Provinces");
                 });
 
+            modelBuilder.Entity("NBDProject2024.Models.PurchaseReceiptLine", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("ActualUnitCost")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("MaterialID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PurchaseRequestID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("ReceivedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("ReceivedQty")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("StockLocationID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("SupplierInvoice")
+                        .HasMaxLength(120)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("MaterialID");
+
+                    b.HasIndex("PurchaseRequestID");
+
+                    b.HasIndex("StockLocationID");
+
+                    b.ToTable("PurchaseReceiptLines");
+                });
+
+            modelBuilder.Entity("NBDProject2024.Models.PurchaseRequest", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ApprovedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("ApprovedOn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("RequestDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("SupplierName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("PurchaseRequests");
+                });
+
+            modelBuilder.Entity("NBDProject2024.Models.PurchaseRequestLine", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("EstimatedUnitCost")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("MaterialID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PurchaseRequestID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("RequestedQty")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("MaterialID");
+
+                    b.HasIndex("PurchaseRequestID");
+
+                    b.ToTable("PurchaseRequestLines");
+                });
+
+            modelBuilder.Entity("NBDProject2024.Models.StockLocation", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("LocationType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("Name", "LocationType")
+                        .IsUnique();
+
+                    b.ToTable("StockLocations");
+                });
+
             modelBuilder.Entity("NBDProject2024.Models.Subscription", b =>
                 {
                     b.Property<int>("Id")
@@ -417,6 +695,144 @@ namespace NBDProject2024.Data.NBDMigrations
                     b.HasIndex("EmployeeID");
 
                     b.ToTable("Subscriptions");
+                });
+
+            modelBuilder.Entity("NBDProject2024.Models.WorkOrder", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AssignedCrew")
+                        .HasMaxLength(120)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("CompletedOn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(3000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ProjectID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("BLOB");
+
+                    b.Property<DateTime>("ScheduledDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ProjectID", "ScheduledDate")
+                        .IsUnique()
+                        .HasFilter("Status <> 4");
+
+                    b.ToTable("WorkOrders");
+                });
+
+            modelBuilder.Entity("NBDProject2024.Models.WorkOrderCrewAssignment", b =>
+                {
+                    b.Property<int>("WorkOrderID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("EmployeeID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("ActualHours")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("AssignedSkill")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("EstimatedHours")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("WorkOrderID", "EmployeeID");
+
+                    b.HasIndex("EmployeeID");
+
+                    b.HasIndex("AssignedSkill", "WorkOrderID");
+
+                    b.ToTable("WorkOrderCrewAssignments");
+                });
+
+            modelBuilder.Entity("NBDProject2024.Models.WorkOrderMaterialConsumption", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("ConsumedOn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("MaterialID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("QuantityUsed")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("StockLocationID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("UnitCostAtUse")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("WorkOrderID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("MaterialID");
+
+                    b.HasIndex("StockLocationID");
+
+                    b.HasIndex("WorkOrderID", "ConsumedOn");
+
+                    b.ToTable("WorkOrderMaterialConsumptions");
                 });
 
             modelBuilder.Entity("NBDProject2024.Models.Bid", b =>
@@ -488,6 +904,55 @@ namespace NBDProject2024.Data.NBDMigrations
                     b.Navigation("City");
                 });
 
+            modelBuilder.Entity("NBDProject2024.Models.EmployeeSkill", b =>
+                {
+                    b.HasOne("NBDProject2024.Models.Employee", "Employee")
+                        .WithMany("EmployeeSkills")
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("NBDProject2024.Models.InventoryMovement", b =>
+                {
+                    b.HasOne("NBDProject2024.Models.Material", "Material")
+                        .WithMany()
+                        .HasForeignKey("MaterialID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("NBDProject2024.Models.StockLocation", "StockLocation")
+                        .WithMany()
+                        .HasForeignKey("StockLocationID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Material");
+
+                    b.Navigation("StockLocation");
+                });
+
+            modelBuilder.Entity("NBDProject2024.Models.MaterialStock", b =>
+                {
+                    b.HasOne("NBDProject2024.Models.Material", "Material")
+                        .WithMany()
+                        .HasForeignKey("MaterialID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("NBDProject2024.Models.StockLocation", "StockLocation")
+                        .WithMany("MaterialStocks")
+                        .HasForeignKey("StockLocationID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Material");
+
+                    b.Navigation("StockLocation");
+                });
+
             modelBuilder.Entity("NBDProject2024.Models.Project", b =>
                 {
                     b.HasOne("NBDProject2024.Models.City", "City")
@@ -505,6 +970,52 @@ namespace NBDProject2024.Data.NBDMigrations
                     b.Navigation("Client");
                 });
 
+            modelBuilder.Entity("NBDProject2024.Models.PurchaseReceiptLine", b =>
+                {
+                    b.HasOne("NBDProject2024.Models.Material", "Material")
+                        .WithMany()
+                        .HasForeignKey("MaterialID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("NBDProject2024.Models.PurchaseRequest", "PurchaseRequest")
+                        .WithMany("Receipts")
+                        .HasForeignKey("PurchaseRequestID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("NBDProject2024.Models.StockLocation", "StockLocation")
+                        .WithMany()
+                        .HasForeignKey("StockLocationID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Material");
+
+                    b.Navigation("PurchaseRequest");
+
+                    b.Navigation("StockLocation");
+                });
+
+            modelBuilder.Entity("NBDProject2024.Models.PurchaseRequestLine", b =>
+                {
+                    b.HasOne("NBDProject2024.Models.Material", "Material")
+                        .WithMany()
+                        .HasForeignKey("MaterialID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("NBDProject2024.Models.PurchaseRequest", "PurchaseRequest")
+                        .WithMany("Lines")
+                        .HasForeignKey("PurchaseRequestID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Material");
+
+                    b.Navigation("PurchaseRequest");
+                });
+
             modelBuilder.Entity("NBDProject2024.Models.Subscription", b =>
                 {
                     b.HasOne("NBDProject2024.Models.Employee", "Employee")
@@ -514,6 +1025,63 @@ namespace NBDProject2024.Data.NBDMigrations
                         .IsRequired();
 
                     b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("NBDProject2024.Models.WorkOrder", b =>
+                {
+                    b.HasOne("NBDProject2024.Models.Project", "Project")
+                        .WithMany("WorkOrders")
+                        .HasForeignKey("ProjectID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("NBDProject2024.Models.WorkOrderCrewAssignment", b =>
+                {
+                    b.HasOne("NBDProject2024.Models.Employee", "Employee")
+                        .WithMany("WorkOrderAssignments")
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("NBDProject2024.Models.WorkOrder", "WorkOrder")
+                        .WithMany("CrewAssignments")
+                        .HasForeignKey("WorkOrderID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("WorkOrder");
+                });
+
+            modelBuilder.Entity("NBDProject2024.Models.WorkOrderMaterialConsumption", b =>
+                {
+                    b.HasOne("NBDProject2024.Models.Material", "Material")
+                        .WithMany()
+                        .HasForeignKey("MaterialID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("NBDProject2024.Models.StockLocation", "StockLocation")
+                        .WithMany()
+                        .HasForeignKey("StockLocationID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("NBDProject2024.Models.WorkOrder", "WorkOrder")
+                        .WithMany("MaterialConsumptions")
+                        .HasForeignKey("WorkOrderID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Material");
+
+                    b.Navigation("StockLocation");
+
+                    b.Navigation("WorkOrder");
                 });
 
             modelBuilder.Entity("NBDProject2024.Models.Bid", b =>
@@ -535,7 +1103,11 @@ namespace NBDProject2024.Data.NBDMigrations
 
             modelBuilder.Entity("NBDProject2024.Models.Employee", b =>
                 {
+                    b.Navigation("EmployeeSkills");
+
                     b.Navigation("Subscriptions");
+
+                    b.Navigation("WorkOrderAssignments");
                 });
 
             modelBuilder.Entity("NBDProject2024.Models.Labour", b =>
@@ -551,11 +1123,32 @@ namespace NBDProject2024.Data.NBDMigrations
             modelBuilder.Entity("NBDProject2024.Models.Project", b =>
                 {
                     b.Navigation("Bids");
+
+                    b.Navigation("WorkOrders");
                 });
 
             modelBuilder.Entity("NBDProject2024.Models.Province", b =>
                 {
                     b.Navigation("Cities");
+                });
+
+            modelBuilder.Entity("NBDProject2024.Models.PurchaseRequest", b =>
+                {
+                    b.Navigation("Lines");
+
+                    b.Navigation("Receipts");
+                });
+
+            modelBuilder.Entity("NBDProject2024.Models.StockLocation", b =>
+                {
+                    b.Navigation("MaterialStocks");
+                });
+
+            modelBuilder.Entity("NBDProject2024.Models.WorkOrder", b =>
+                {
+                    b.Navigation("CrewAssignments");
+
+                    b.Navigation("MaterialConsumptions");
                 });
 #pragma warning restore 612, 618
         }

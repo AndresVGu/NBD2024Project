@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "xE49vBOLq7mjzjrRs0Sii3p+w0yvDldSHqhTga5XdJw=",
+  "Hash": "8awh2wAUCVYCAAjbTgr4GRqwVWUTbZEa+DPKjwtxE7c=",
   "Source": "NBDProject2024",
   "BasePath": "_content/NBDProject2024",
   "Mode": "Default",
@@ -1402,6 +1402,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/js/alerts.js"
+    },
+    {
+      "Identity": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/js/clients-address.js",
+      "SourceId": "NBDProject2024",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/",
+      "BasePath": "_content/NBDProject2024",
+      "RelativePath": "js/clients-address.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/js/clients-address.js"
     },
     {
       "Identity": "/home/andres-v/Documents/projects/myprojects/NBD2024Project/NBDProject2024/wwwroot/js/dashboard.js",

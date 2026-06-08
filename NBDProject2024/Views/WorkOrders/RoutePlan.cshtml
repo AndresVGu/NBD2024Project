@@ -1,0 +1,57 @@
+@model NBDProject2024.ViewModels.RoutePlanViewModel
+
+<partial name="_ViewHeading" />
+
+<form asp-action="RoutePlan" method="get" class="card card-body bg-light mb-3">
+    <div class="row g-2 align-items-end">
+        <div class="col-12 col-md-4">
+            <label class="control-label">Date</label>
+            <input type="date" name="date" class="form-control" value="@Model.Date.ToString("yyyy-MM-dd")" />
+        </div>
+        <div class="col-12 col-md-8 d-flex gap-2">
+            <button type="submit" class="btn btn-outline-success">Generate Route</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Back to Work Orders</a>
+        </div>
+    </div>
+</form>
+
+@if (!Model.Stops.Any())
+{
+    <div class="alert alert-info">No work orders were found for this date.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-primary">
+                <tr>
+                    <th>#</th>
+                    <th>Work Order</th>
+                    <th>Project</th>
+                    <th>Client</th>
+                    <th>City</th>
+                    <th>Distance (km)</th>
+                    <th>Cumulative (km)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var stop in Model.Stops)
+                {
+                    <tr>
+                        <td>@stop.Sequence</td>
+                        <td>@stop.WorkOrderTitle</td>
+                        <td>@stop.ProjectName</td>
+                        <td>@stop.ClientName</td>
+                        <td>@stop.CityName</td>
+                        <td>@stop.DistanceFromPreviousKm</td>
+                        <td>@stop.CumulativeDistanceKm</td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@stop.WorkOrderID" class="btn btn-sm btn-outline-primary">View</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

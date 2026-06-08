@@ -1,32 +1,38 @@
 ﻿@{
-    if (ViewData["ActionName"].ToString() == "Details")
+    var actionName = ViewData["ActionName"]?.ToString()
+        ?? ViewContext?.RouteData?.Values["action"]?.ToString()
+        ?? string.Empty;
+    var controllerFriendlyName = ViewData["ControllerFriendlyName"]?.ToString()
+        ?? ViewContext?.RouteData?.Values["controller"]?.ToString()
+        ?? "Record";
+
+    if (actionName == "Details")
     {
-        @:<h2>@ViewData["ControllerFriendlyName"] Details</h2>
+        @:<h2>@controllerFriendlyName Details</h2>
     }
-    else if (ViewData["ActionName"].ToString() == "Index")
+    else if (actionName == "Index")
     {
-        @:<h2>@ViewData["ControllerFriendlyName"]</h2>
+        @:<h2>@controllerFriendlyName</h2>
     }
-    else if (ViewData["ActionName"].ToString() == "Delete" ||
-                ViewData["ActionName"].ToString() == "Remove")
+    else if (actionName == "Delete" || actionName == "Remove")
     {
         //Prepare the quesiton about deleting this record
         //Assume we do not have a summary property
-        string summary = "this " + ViewData["ControllerFriendlyName"];
+        string summary = "this " + controllerFriendlyName;
         if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == "Summary") != null)
         {
             // We DO, we DO have a Summary Property!
             summary = Model.Summary.ToString();
         }
 
-        @:<h2>@ViewData["ActionName"] @ViewData["ControllerFriendlyName"]</h2>
+        @:<h2>@actionName @controllerFriendlyName</h2>
         <p>
-            <h4>Are you sure you want to @(ViewData["ActionName"].ToString().ToLower()) @(summary)?</h4>
+            <h4>Are you sure you want to @(actionName.ToLower()) @(summary)?</h4>
         </p>
     }
     else
     {
-        @:<h2>@ViewData["ActionName"] @ViewData["ControllerFriendlyName"]</h2>
+        @:<h2>@actionName @controllerFriendlyName</h2>
     }
 }
 

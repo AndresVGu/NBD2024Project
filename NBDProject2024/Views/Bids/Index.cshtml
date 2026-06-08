@@ -84,7 +84,7 @@
 
 
                 </th>
-                @if (User.IsInRole("Sales")){
+                @if (User.IsInRole("Sales") && !User.IsInRole("Guest")){
                     <th class="text-center">
                         <label>Details</label>
                     </th>
@@ -220,7 +220,7 @@
                     </td>
 
                     <td class="text-center">
-                        @if (User.IsInRole("Sales"))
+                        @if (User.IsInRole("Sales") && !User.IsInRole("Guest"))
                         {
                             <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-sm btn-outline-primary"
                                role="button" data-bs-toggle="tooltip" title="@ViewData["ControllerFriendlyName"] Details">
